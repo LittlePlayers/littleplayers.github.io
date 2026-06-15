@@ -1,0 +1,14 @@
+{
+  "name": "Little Players — Games for Kids",
+  "short_name": "Little Players",
+  "description": "A free game zone for kids: learning, word, math, puzzle, creativity and mythology games.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#faf7ff",
+  "theme_color": "#7c5cff",
+  "icons": [
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
