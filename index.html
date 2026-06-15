@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Little Players — a fun zone of games for kids. Pick a type, choose a game, and play!" />
+  <title>🎮 Little Players — Game Zone for Kids</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎮</text></svg>" />
+</head>
+<body>
+  <header class="hero">
+    <h1>🎮 Little Players</h1>
+    <p class="tagline">Pick a game type, choose a game, and play!</p>
+  </header>
+
+  <main class="container">
+    <section class="controls">
+      <div class="filters" id="categoryFilters">
+        <!-- category chips injected here -->
+      </div>
+      <div class="toggles">
+        <label class="switch">
+          <input type="checkbox" id="favOnly" />
+          <span>⭐ Favorites only</span>
+        </label>
+      </div>
+    </section>
+
+    <section id="recentSection" class="recent hidden">
+      <h2>🕘 Recently Played</h2>
+      <div class="grid" id="recentGrid"></div>
+    </section>
+
+    <section>
+      <h2 id="allHeading">All Games</h2>
+      <div class="grid" id="gameGrid"></div>
+      <p id="emptyMsg" class="empty hidden">No games here yet — try another type! 🧩</p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Made with ❤️ for little players · <a href="https://github.com/gauravs19" target="_blank" rel="noopener">gauravs19</a></p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
