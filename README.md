@@ -1,9 +1,14 @@
 # 🎮 Little Players
 
 A kid-friendly **game zone** homepage. Browse games by type, mark favorites, and
-jump straight into any game. Each game lives in its **own repo** and is linked here.
+jump straight into any game.
 
-**Live site:** https://gauravs19.github.io/
+- **Homepage** lives on the personal account → https://gauravs19.github.io/
+- **Games** each live in their own repo under the **LittlePlayers** org →
+  served at `https://littleplayers.github.io/<repo-name>/`
+
+The homepage just links out to each game's URL, so the two can live in different
+places — `games.json` is the only glue.
 
 ## How it works
 
@@ -14,16 +19,16 @@ jump straight into any game. Each game lives in its **own repo** and is linked h
 
 ## Adding a new game
 
-1. Create a new repo under `gauravs19` (e.g. `code-the-robot`) with an `index.html`.
+1. Create a new repo under the **LittlePlayers** org (e.g. `code-the-robot`) with an `index.html`.
 2. Enable **GitHub Pages** on that repo (Settings → Pages → deploy from `main`).
-   It will be served at `https://gauravs19.github.io/<repo-name>/`.
+   It will be served at `https://littleplayers.github.io/<repo-name>/`.
 3. Add one entry to `games.json` here:
 
    ```json
    {
      "title": "Code the Robot",
      "slug": "code-the-robot",
-     "url": "https://gauravs19.github.io/code-the-robot/",
+     "url": "https://littleplayers.github.io/code-the-robot/",
      "category": "coding",
      "ages": "7-11",
      "icon": "🤖",
@@ -43,4 +48,4 @@ root: **https://gauravs19.github.io/**. Enable Pages in repo Settings if not alr
 
 | Game | Type | Ages | Repo |
 |------|------|------|------|
-| 🧠 Brain Quest | learning | 6–10 | [brain-quest](https://github.com/gauravs19/brain-quest) |
+| 🧠 Brain Quest | learning | 6–10 | [LittlePlayers/brain-quest](https://github.com/LittlePlayers/brain-quest) |
