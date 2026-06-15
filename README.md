@@ -59,4 +59,4 @@ repo Settings if not already.
 | 👗 Dress Up | creativity | [LittlePlayers/dress-up](https://github.com/LittlePlayers/dress-up) |
 | 🚩 Hanuman Run | arcade | [LittlePlayers/hanuman-run](https://github.com/LittlePlayers/hanuman-run) |
 | 🪈 Krishna's Cows | adventure | [LittlePlayers/krishnas-cows](https://github.com/LittlePlayers/krishnas-cows) |
-| 🏹 Arjuna's Aim | action | [LittlePlayers/arjunas-aim](https://github.com/LittlePlayers/arjunas-aim) |
+| 🏹💪 Arjuna's Aim | action | [LittlePlayers/arjunas-aim](https://github.com/LittlePlayers/arjunas-aim) |
