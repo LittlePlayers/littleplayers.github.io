@@ -49,3 +49,6 @@ repo Settings if not already.
 | Game | Type | Ages | Repo |
 |------|------|------|------|
 | 🧠 Brain Quest | learning | 6–10 | [LittlePlayers/brain-quest](https://github.com/LittlePlayers/brain-quest) |
+| 🔠 Word Scramble | word | 6–11 | [LittlePlayers/word-scramble](https://github.com/LittlePlayers/word-scramble) |
+| ➗ Math Blast | math | 6–11 | [LittlePlayers/math-blast](https://github.com/LittlePlayers/math-blast) |
+| 🐝 Spelling Bee | word | 6–11 | [LittlePlayers/spelling-bee](https://github.com/LittlePlayers/spelling-bee) |

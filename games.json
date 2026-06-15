@@ -8,5 +8,35 @@
     "icon": "🧠",
     "color": "#7c5cff",
     "description": "Quick brain teasers and learning challenges. Learn while you play!"
+  },
+  {
+    "title": "Word Scramble",
+    "slug": "word-scramble",
+    "url": "https://littleplayers.github.io/word-scramble/",
+    "category": "word",
+    "ages": "6-11",
+    "icon": "🔠",
+    "color": "#ff8c42",
+    "description": "Unscramble the letters before the timer runs out. Levels, lives and combos!"
+  },
+  {
+    "title": "Math Blast",
+    "slug": "math-blast",
+    "url": "https://littleplayers.github.io/math-blast/",
+    "category": "math",
+    "ages": "6-11",
+    "icon": "➗",
+    "color": "#22a0ff",
+    "description": "Solve quick math problems against the clock. Pick your difficulty and beat your best!"
+  },
+  {
+    "title": "Spelling Bee",
+    "slug": "spelling-bee",
+    "url": "https://littleplayers.github.io/spelling-bee/",
+    "category": "word",
+    "ages": "6-11",
+    "icon": "🐝",
+    "color": "#f5b500",
+    "description": "Listen to the word and type it correctly. Hear it again, use hints, beat the timer!"
   }
 ]
