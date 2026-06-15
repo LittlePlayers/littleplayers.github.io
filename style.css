@@ -13,6 +13,7 @@
 
 body {
   margin: 0;
+  position: relative;
   font-family: "Baloo 2", "Comic Sans MS", "Trebuchet MS", system-ui, sans-serif;
   background:
     radial-gradient(circle at 12% 18%, #ffe9f3 0, transparent 40%),
@@ -20,6 +21,47 @@ body {
     var(--bg);
   color: var(--ink);
   min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Subtle animated background blobs */
+.bg-blobs {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(46px);
+  opacity: 0.45;
+  will-change: transform;
+}
+.b1 { width: 320px; height: 320px; background: #ffc6e3; top: -60px; left: -40px;
+      animation: drift1 22s ease-in-out infinite; }
+.b2 { width: 280px; height: 280px; background: #c6e0ff; top: 20%; right: -60px;
+      animation: drift2 26s ease-in-out infinite; }
+.b3 { width: 300px; height: 300px; background: #d8ffe6; bottom: -80px; left: 12%;
+      animation: drift3 30s ease-in-out infinite; }
+.b4 { width: 240px; height: 240px; background: #ece0ff; bottom: 6%; right: 14%;
+      animation: drift1 28s ease-in-out infinite reverse; }
+
+@keyframes drift1 {
+  0%,100% { transform: translate(0, 0) scale(1); }
+  50%     { transform: translate(40px, 50px) scale(1.12); }
+}
+@keyframes drift2 {
+  0%,100% { transform: translate(0, 0) scale(1); }
+  50%     { transform: translate(-50px, 40px) scale(1.08); }
+}
+@keyframes drift3 {
+  0%,100% { transform: translate(0, 0) scale(1); }
+  50%     { transform: translate(30px, -40px) scale(1.15); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .blob { animation: none; }
 }
 
 /* Hero */

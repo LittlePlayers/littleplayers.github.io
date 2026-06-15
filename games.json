@@ -4,7 +4,6 @@
     "slug": "brain-quest",
     "url": "https://littleplayers.github.io/brain-quest/",
     "category": "learning",
-    "ages": "6-10",
     "icon": "🧠",
     "color": "#7c5cff",
     "description": "Quick brain teasers and learning challenges. Learn while you play!"
@@ -14,7 +13,6 @@
     "slug": "word-scramble",
     "url": "https://littleplayers.github.io/word-scramble/",
     "category": "word",
-    "ages": "6-11",
     "icon": "🔠",
     "color": "#ff8c42",
     "description": "Unscramble the letters before the timer runs out. Levels, lives and combos!"
@@ -24,7 +22,6 @@
     "slug": "math-blast",
     "url": "https://littleplayers.github.io/math-blast/",
     "category": "math",
-    "ages": "6-11",
     "icon": "➗",
     "color": "#22a0ff",
     "description": "Solve quick math problems against the clock. Pick your difficulty and beat your best!"
@@ -34,7 +31,6 @@
     "slug": "spelling-bee",
     "url": "https://littleplayers.github.io/spelling-bee/",
     "category": "word",
-    "ages": "6-11",
     "icon": "🐝",
     "color": "#f5b500",
     "description": "Listen to the word and type it correctly. Hear it again, use hints, beat the timer!"
@@ -44,9 +40,53 @@
     "slug": "maze-runner",
     "url": "https://littleplayers.github.io/maze-runner/",
     "category": "puzzle",
-    "ages": "5-11",
     "icon": "🌀",
     "color": "#16b5a3",
     "description": "Find your way through the maze to the flag. Arrow keys, buttons or swipe. Beat the clock!"
+  },
+  {
+    "title": "Spirograph",
+    "slug": "spirograph",
+    "url": "https://littleplayers.github.io/spirograph/",
+    "category": "creativity",
+    "icon": "🌀",
+    "color": "#5cc8ff",
+    "description": "Slide the gears and watch beautiful spiral patterns draw themselves. Save your art!"
+  },
+  {
+    "title": "Doodle Pad",
+    "slug": "doodle-pad",
+    "url": "https://littleplayers.github.io/doodle-pad/",
+    "category": "creativity",
+    "icon": "🎨",
+    "color": "#e857c4",
+    "description": "Draw, paint and stamp emojis to make your own picture, then save it!"
+  },
+  {
+    "title": "Kaleidoscope Draw",
+    "slug": "kaleidoscope-draw",
+    "url": "https://littleplayers.github.io/kaleidoscope-draw/",
+    "category": "creativity",
+    "icon": "🔮",
+    "color": "#ff6bcb",
+    "description": "Every line you draw is mirrored into a magical kaleidoscope pattern."
+  },
+  {
+    "title": "Animal Band",
+    "slug": "animal-band",
+    "url": "https://littleplayers.github.io/animal-band/",
+    "category": "creativity",
+    "icon": "🐸",
+    "color": "#2bbf6a",
+    "description": "Tap the animals to make funny sounds, record a song and play it back!"
+  },
+  {
+    "title": "Dress Up",
+    "slug": "dress-up",
+    "url": "https://littleplayers.github.io/dress-up/",
+    "category": "creativity",
+    "icon": "👗",
+    "color": "#ff5d9e",
+    "description": "Mix and match characters, hats and accessories to create your own friend. Save it!"
   }
 ]

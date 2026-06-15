@@ -1,10 +1,9 @@
 // Little Players — homepage logic
 // Loads games.json, renders category filters + cards, and remembers
-// the child's preferences (favorites + recently played) in localStorage.
+// favorite games in localStorage.
 
 const STORE = {
   favs: "lp_favorites",
-  recent: "lp_recent",
 };
 
 const state = {
@@ -29,13 +28,6 @@ function toggleFav(slug) {
   if (i >= 0) favs.splice(i, 1); else favs.push(slug);
   save(STORE.favs, favs);
 }
-function getRecent() { return load(STORE.recent, []); }
-function pushRecent(slug) {
-  let recent = getRecent().filter((s) => s !== slug);
-  recent.unshift(slug);
-  recent = recent.slice(0, 4);
-  save(STORE.recent, recent);
-}
 
 // ---- rendering ----
 function cardHTML(game) {
@@ -50,7 +42,6 @@ function cardHTML(game) {
       <p>${game.description || ""}</p>
       <div class="meta">
         <span class="tag">${game.category}</span>
-        <span class="tag">Ages ${game.ages || "all"}</span>
       </div>
     </a>`;
 }
@@ -75,18 +66,6 @@ function visibleGames() {
   });
 }
 
-function renderRecent() {
-  const recentSlugs = getRecent();
-  const section = document.getElementById("recentSection");
-  const grid = document.getElementById("recentGrid");
-  const games = recentSlugs
-    .map((s) => state.games.find((g) => g.slug === s))
-    .filter(Boolean);
-  if (!games.length) { section.classList.add("hidden"); return; }
-  section.classList.remove("hidden");
-  grid.innerHTML = games.map(cardHTML).join("");
-}
-
 function renderGames() {
   const grid = document.getElementById("gameGrid");
   const games = visibleGames();
@@ -96,7 +75,6 @@ function renderGames() {
 
 function renderAll() {
   renderCategories();
-  renderRecent();
   renderGames();
 }
 
@@ -114,10 +92,6 @@ document.addEventListener("click", (e) => {
     state.activeCategory = chip.dataset.cat;
     renderAll();
     return;
-  }
-  const card = e.target.closest(".card");
-  if (card) {
-    pushRecent(card.dataset.slug); // remember before navigating
   }
 });
 
