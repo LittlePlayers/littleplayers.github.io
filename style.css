@@ -28,15 +28,18 @@ body {
 .bg-blobs {
   position: fixed;
   inset: 0;
-  z-index: -1;
+  z-index: 0;          /* above body background, below content */
   overflow: hidden;
   pointer-events: none;
 }
+/* keep all page content above the blobs */
+.hero, .container, .footer { position: relative; z-index: 1; }
+
 .blob {
   position: absolute;
   border-radius: 50%;
-  filter: blur(46px);
-  opacity: 0.45;
+  filter: blur(50px);
+  opacity: 0.6;
   will-change: transform;
 }
 .b1 { width: 320px; height: 320px; background: #ffc6e3; top: -60px; left: -40px;
