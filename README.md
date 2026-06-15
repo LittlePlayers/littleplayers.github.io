@@ -3,12 +3,11 @@
 A kid-friendly **game zone** homepage. Browse games by type, mark favorites, and
 jump straight into any game.
 
-- **Homepage** lives on the personal account → https://gauravs19.github.io/
-- **Games** each live in their own repo under the **LittlePlayers** org →
-  served at `https://littleplayers.github.io/<repo-name>/`
+Everything lives under the **LittlePlayers** org:
+- **Homepage** (this repo, `littleplayers.github.io`) → https://littleplayers.github.io/
+- **Games** each live in their own repo → served at `https://littleplayers.github.io/<repo-name>/`
 
-The homepage just links out to each game's URL, so the two can live in different
-places — `games.json` is the only glue.
+The homepage just links out to each game's URL — `games.json` is the only glue.
 
 ## How it works
 
@@ -41,8 +40,9 @@ places — `games.json` is the only glue.
 
 ## Deploy
 
-This repo is named `gauravs19.github.io`, so pushing to `main` publishes it at the
-root: **https://gauravs19.github.io/**. Enable Pages in repo Settings if not already.
+This repo is named `littleplayers.github.io` (matching the org), so pushing to `main`
+publishes it at the org root: **https://littleplayers.github.io/**. Enable Pages in
+repo Settings if not already.
 
 ## Games
 
