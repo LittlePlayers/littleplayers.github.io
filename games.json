@@ -97,5 +97,14 @@
     "icon": "🚩",
     "color": "#ff7a00",
     "description": "An Indian-mythology endless runner — leap over rakshasas, duck under arrows, race to Lanka!"
+  },
+  {
+    "title": "Krishna's Cows",
+    "slug": "krishnas-cows",
+    "url": "https://littleplayers.github.io/krishnas-cows/",
+    "category": "adventure",
+    "icon": "🪈",
+    "color": "#2a6cf0",
+    "description": "Be Krishna the Gopala — play your flute and herd all the cows safely home before sunset!"
   }
 ]

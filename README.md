@@ -58,3 +58,4 @@ repo Settings if not already.
 | 🐸 Animal Band | creativity | [LittlePlayers/animal-band](https://github.com/LittlePlayers/animal-band) |
 | 👗 Dress Up | creativity | [LittlePlayers/dress-up](https://github.com/LittlePlayers/dress-up) |
 | 🚩 Hanuman Run | arcade | [LittlePlayers/hanuman-run](https://github.com/LittlePlayers/hanuman-run) |
+| 🪈 Krishna's Cows | adventure | [LittlePlayers/krishnas-cows](https://github.com/LittlePlayers/krishnas-cows) |
