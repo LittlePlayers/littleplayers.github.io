@@ -51,10 +51,10 @@ repo Settings if not already.
 | 🔠 Word Scramble | word | [LittlePlayers/word-scramble](https://github.com/LittlePlayers/word-scramble) |
 | ➗ Math Blast | math | [LittlePlayers/math-blast](https://github.com/LittlePlayers/math-blast) |
 | 🐝 Spelling Bee | word | [LittlePlayers/spelling-bee](https://github.com/LittlePlayers/spelling-bee) |
-| 🌀 Maze Runner | puzzle | [LittlePlayers/maze-runner](https://github.com/LittlePlayers/maze-runner) |
+| 🧭 Maze Runner | puzzle | [LittlePlayers/maze-runner](https://github.com/LittlePlayers/maze-runner) |
 | 🌀 Spirograph | creativity | [LittlePlayers/spirograph](https://github.com/LittlePlayers/spirograph) |
 | 🎨 Doodle Pad | creativity | [LittlePlayers/doodle-pad](https://github.com/LittlePlayers/doodle-pad) |
 | 🔮 Kaleidoscope Draw | creativity | [LittlePlayers/kaleidoscope-draw](https://github.com/LittlePlayers/kaleidoscope-draw) |
 | 🐸 Animal Band | creativity | [LittlePlayers/animal-band](https://github.com/LittlePlayers/animal-band) |
 | 👗 Dress Up | creativity | [LittlePlayers/dress-up](https://github.com/LittlePlayers/dress-up) |
-| 🐒 Hanuman Run | arcade | [LittlePlayers/hanuman-run](https://github.com/LittlePlayers/hanuman-run) |
+| 🚩 Hanuman Run | arcade | [LittlePlayers/hanuman-run](https://github.com/LittlePlayers/hanuman-run) |

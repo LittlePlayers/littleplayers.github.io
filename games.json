@@ -40,7 +40,7 @@
     "slug": "maze-runner",
     "url": "https://littleplayers.github.io/maze-runner/",
     "category": "puzzle",
-    "icon": "🌀",
+    "icon": "🧭",
     "color": "#16b5a3",
     "description": "Find your way through the maze to the flag. Arrow keys, buttons or swipe. Beat the clock!"
   },
@@ -94,7 +94,7 @@
     "slug": "hanuman-run",
     "url": "https://littleplayers.github.io/hanuman-run/",
     "category": "arcade",
-    "icon": "🐒",
+    "icon": "🚩",
     "color": "#ff7a00",
     "description": "An Indian-mythology endless runner — leap over rakshasas, duck under arrows, race to Lanka!"
   }
