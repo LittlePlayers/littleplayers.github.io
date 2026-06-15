@@ -106,5 +106,14 @@
     "icon": "🪈",
     "color": "#2a6cf0",
     "description": "Be Krishna the Gopala — play your flute and herd all the cows safely home before sunset!"
+  },
+  {
+    "title": "Arjuna's Aim",
+    "slug": "arjunas-aim",
+    "url": "https://littleplayers.github.io/arjunas-aim/",
+    "category": "action",
+    "icon": "🏹",
+    "color": "#d35400",
+    "description": "Physics archery — set the angle, pull for power, read the wind, and strike the eye of the fish!"
   }
 ]
