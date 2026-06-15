@@ -88,5 +88,14 @@
     "icon": "👗",
     "color": "#ff5d9e",
     "description": "Mix and match characters, hats and accessories to create your own friend. Save it!"
+  },
+  {
+    "title": "Hanuman Run",
+    "slug": "hanuman-run",
+    "url": "https://littleplayers.github.io/hanuman-run/",
+    "category": "arcade",
+    "icon": "🐒",
+    "color": "#ff7a00",
+    "description": "An Indian-mythology endless runner — leap over rakshasas, duck under arrows, race to Lanka!"
   }
 ]
