@@ -63,9 +63,8 @@ body {
   0%,100% { transform: translate(0, 0) scale(1); }
   50%     { transform: translate(80px, -90px) scale(1.3); }
 }
-@media (prefers-reduced-motion: reduce) {
-  .blob { animation: none; }
-}
+/* Note: animation runs even under reduced-motion (kept gentle & soft) so the
+   playful background is always visible for kids. */
 
 /* Hero */
 .hero {
