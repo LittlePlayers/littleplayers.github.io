@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+<meta name="description" content="Krishna's Cows — a top-down herding game. As little Krishna the Gopala, play your flute and guide all the cows safely home to the goshala before sunset. An Indian mythology game for kids." />
+  <link rel="canonical" href="https://littleplayers.github.io/krishnas-cows/" />
+  <meta name="keywords" content="kids games, adventure game, Krishna's Cows, free online game for kids, Little Players, Indian mythology games" />
+  <meta name="author" content="gauravs19" />
+  <meta name="theme-color" content="#2a6cf0" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Little Players" />
+  <meta property="og:title" content="Krishna's Cows — Little Players" />
+  <meta property="og:description" content="Krishna's Cows — a top-down herding game. As little Krishna the Gopala, play your flute and guide all the cows safely home to the goshala before sunset. An Indian mythology game for kids." />
+  <meta property="og:url" content="https://littleplayers.github.io/krishnas-cows/" />
+  <meta property="og:image" content="https://littleplayers.github.io/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Krishna's Cows — Little Players" />
+  <meta name="twitter:description" content="Krishna's Cows — a top-down herding game. As little Krishna the Gopala, play your flute and guide all the cows safely home to the goshala before sunset. An Indian mythology game for kids." />
+  <meta name="twitter:image" content="https://littleplayers.github.io/og-image.png" />
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "VideoGame", "name": "Krishna's Cows", "url": "https://littleplayers.github.io/krishnas-cows/", "image": "https://littleplayers.github.io/og-image.png", "description": "Krishna's Cows — a top-down herding game. As little Krishna the Gopala, play your flute and guide all the cows safely home to the goshala before sunset. An Indian mythology game for kids.", "applicationCategory": "Game", "operatingSystem": "Web Browser", "genre": "adventure", "author": {"@type": "Organization", "name": "Little Players"}, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "audience": {"@type": "PeopleAudience", "suggestedMinAge": 5}, "isPartOf": {"@type": "WebSite", "name": "Little Players", "url": "https://littleplayers.github.io/"}}</script>
+<title>🪈 Krishna's Cows — Little Players</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐄</text></svg>" />
+<style>
+  :root{ --blue:#2a6cf0; --gold:#ffcf40; }
+  *{box-sizing:border-box}
+  html,body{overscroll-behavior:none; margin:0}
+  body{
+    min-height:100vh; color:#fff;
+    font-family:"Baloo 2","Trebuchet MS",system-ui,sans-serif;
+    background:linear-gradient(180deg,#0e2a14,#06160b);
+    display:flex; flex-direction:column; align-items:center; padding:14px;
+  }
+  h1{margin:6px 0 2px; font-size:clamp(1.6rem,6vw,2.4rem); color:var(--gold); text-shadow:0 2px 0 #1b6b3a}
+  .sub{margin:0 0 10px; color:#cdebd2; font-weight:700}
+
+  .diffbar{display:flex; gap:10px; justify-content:center; margin:0 0 10px; flex-wrap:wrap}
+  .diffbar button{border:none; cursor:pointer; font:inherit; font-weight:800; padding:8px 20px;
+    border-radius:999px; background:#163b22; color:#bfe9c8; box-shadow:0 4px 0 #0c2415}
+  .diffbar button.on{background:var(--gold); color:#163b22}
+  .diffbar button:active{transform:translateY(2px); box-shadow:0 2px 0 #0c2415}
+
+  .frame{width:min(820px,96vw); border-radius:16px; overflow:hidden;
+    box-shadow:0 12px 36px rgba(0,0,0,.5); border:4px solid var(--gold)}
+  canvas{display:block; width:100%; height:auto; background:#8fcf63; touch-action:none}
+
+  .touch{display:none; gap:12px; margin-top:12px; justify-content:center}
+  .touch button{border:none; cursor:pointer; font:inherit; font-weight:900; font-size:1.1rem;
+    padding:14px 26px; border-radius:16px; color:#163b22; box-shadow:0 6px 0 #b37700;
+    background:linear-gradient(180deg,#ffe07a,#ffcf40)}
+  .touch button:active{transform:translateY(4px); box-shadow:0 2px 0 #b37700}
+  body.touch-on .touch{display:flex}
+
+  .help{margin-top:10px; color:#cdebd2; font-weight:700; font-size:.9rem; text-align:center; line-height:1.6}
+  .help b{color:var(--gold)}
+  .back{margin-top:12px}
+  .back a{color:var(--gold); font-weight:800; text-decoration:none}
+  /* --- mobile/tablet responsiveness guard --- */
+  html,body{overflow-x:hidden}
+  body>*{max-width:100%}
+  @media (max-width:600px){ .sub,.help{font-size:.84rem} }
+</style>
+</head>
+<body>
+  <h1>🪈 Krishna's Cows</h1>
+  <p class="sub">Herd all the cows safely home before sunset!</p>
+
+  <div class="diffbar" id="diffbar">
+    <button data-d="easy" class="on">😀 Easy</button>
+    <button data-d="hard">🔥 Hard</button>
+  </div>
+
+  <div class="frame"><canvas id="cv" width="820" height="470"></canvas></div>
+
+  <div class="touch">
+    <button id="btnFlute">🪈 Flute</button>
+  </div>
+
+  <p class="help">
+    Move with <b>Arrows / WASD</b> (or <b>tap</b> where to go) &nbsp;·&nbsp; <b>SPACE</b> = 🪈 Flute<br/>
+    Walk close to nudge cows · play the flute to charm nearby cows to follow you
+  </p>
+  <p class="back"><a href="https://littleplayers.github.io/">← Back to Little Players</a></p>
+
+<script>
+(function(){
+  const cv=document.getElementById("cv"), ctx=cv.getContext("2d");
+  const W=cv.width, H=cv.height;
+  const PEN={x:W-150,y:18,w:132,h:128};            // goshala (cowshed yard) top-right
+  const CHARM=130, PUSH=72, COWMAX=2.2, KSPD=3.7;
+
+  const LEVELS=[
+    {name:"🌿 Vrindavan Meadow", cows:5, time:80, river:false},
+    {name:"🌊 By the Yamuna",    cows:7, time:92, river:true},
+    {name:"🌅 Sunset Round-up",  cows:9, time:105, river:true},
+  ];
+  const DIFF={ easy:{cowAdd:0,timeMul:1.3,label:"Easy"}, hard:{cowAdd:2,timeMul:0.85,label:"Hard"} };
+  let diff="easy";
+
+  let hi=+(localStorage.getItem("krishnaCowsHi")||0);
+  let state="idle";                     // idle | playing | clear | win | fail
+  let level=0, score=0, tick=0;
+  let cows=[], total=0, penned=0, timeLeft=0, timeMax=0, river=false;
+  let fluteT=0, fluteCd=0, fluteRings=[];
+  let banner="", bannerT=0;
+
+  const k={x:W/2,y:H-60,vx:0,vy:0,r:14};
+  const keys={};
+  let target=null;
+
+  const RIVER={x:0,y:0,w:90,h:H};
+
+  // ---------- input ----------
+  function action(){
+    if(state==="idle"||state==="win") startGame();
+    else if(state==="fail"){ state="playing"; beginLevel(); }
+  }
+  function flute(){ if(state==="playing" && fluteCd<=0){ fluteT=80; fluteCd=150; fluteRings.push({r:10}); } }
+
+  addEventListener("keydown",e=>{
+    if(state!=="playing"){ if(e.code==="Space"||e.code==="Enter"){ e.preventDefault(); action(); } return; }
+    if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].includes(e.code)||["KeyW","KeyA","KeyS","KeyD"].includes(e.code)){ e.preventDefault(); keys[e.code]=true; target=null; }
+    else if(e.code==="Space"){ e.preventDefault(); flute(); }
+  });
+  addEventListener("keyup",e=>{ keys[e.code]=false; });
+
+  function canvasPos(e){
+    const r=cv.getBoundingClientRect();
+    const cx=(e.touches?e.touches[0].clientX:e.clientX)-r.left;
+    const cy=(e.touches?e.touches[0].clientY:e.clientY)-r.top;
+    return { x:cx*(cv.width/r.width), y:cy*(cv.height/r.height) };
+  }
+  cv.addEventListener("pointerdown",e=>{ e.preventDefault();
+    if(state!=="playing"){ action(); return; }
+    target=canvasPos(e); });
+  cv.addEventListener("pointermove",e=>{ if(state==="playing" && (e.pressure>0||e.buttons)) target=canvasPos(e); });
+
+  const bf=document.getElementById("btnFlute");
+  bf.addEventListener("touchstart",e=>{e.preventDefault();flute();},{passive:false});
+  bf.addEventListener("mousedown",flute);
+  if(("ontouchstart" in window)||navigator.maxTouchPoints>0) document.body.classList.add("touch-on");
+
+  document.querySelectorAll("#diffbar button").forEach(b=>{
+    b.onclick=()=>{ diff=b.dataset.d;
+      document.querySelectorAll("#diffbar button").forEach(x=>x.classList.toggle("on",x===b)); startGame(); };
+  });
+
+  // ---------- setup ----------
+  function rnd(a,b){ return a+Math.random()*(b-a); }
+  const COW_COLORS=["#ffffff","#e9d9c3","#c79a6a","#bfae98"];
+
+  function inPen(x,y){ return x>PEN.x && x<PEN.x+PEN.w && y>PEN.y && y<PEN.y+PEN.h; }
+  function inRiver(x,y){ return river && x<RIVER.w; }
+
+  function makeCows(n){
+    cows=[];
+    for(let i=0;i<n;i++){
+      let x,y,tries=0;
+      do{ x=rnd(120,W-180); y=rnd(60,H-50); tries++; }
+      while((inPen(x,y)||x<RIVER.w+30) && tries<60);
+      cows.push({x,y,vx:0,vy:0,penned:false,charm:false,col:COW_COLORS[i%COW_COLORS.length],ang:0,wob:rnd(0,9)});
+    }
+  }
+
+  function startGame(){ score=0; level=0; state="playing"; beginLevel(); }
+  function beginLevel(){
+    const L=LEVELS[level], D=DIFF[diff];
+    total=L.cows+D.cowAdd; river=L.river;
+    timeMax=Math.round(L.time*D.timeMul); timeLeft=timeMax;
+    penned=0; fluteT=0; fluteCd=0; fluteRings=[];
+    k.x=W/2; k.y=H-60; k.vx=k.vy=0; target=null;
+    banner=L.name; bannerT=130;
+    makeCows(total);
+  }
+  function completeLevel(){
+    score+=Math.round(timeLeft*4)+(level+1)*50;
+    if(hi<score){ hi=score; localStorage.setItem("krishnaCowsHi",hi); }
+    if(level<LEVELS.length-1){ state="clear"; setTimeout(()=>{ level++; beginLevel(); state="playing"; },1400); }
+    else win();
+  }
+  function win(){ state="win"; if(hi<score){ hi=score; localStorage.setItem("krishnaCowsHi",hi);} }
+  function fail(){ state="fail"; }
+
+  // ---------- update ----------
+  function update(dt){
+    // Krishna movement
+    let dx=(keys.ArrowRight||keys.KeyD?1:0)-(keys.ArrowLeft||keys.KeyA?1:0);
+    let dy=(keys.ArrowDown||keys.KeyS?1:0)-(keys.ArrowUp||keys.KeyW?1:0);
+    if(dx||dy){ const m=Math.hypot(dx,dy); k.x+=dx/m*KSPD*dt; k.y+=dy/m*KSPD*dt; }
+    else if(target){ const ddx=target.x-k.x, ddy=target.y-k.y, d=Math.hypot(ddx,ddy);
+      if(d>3){ k.x+=ddx/d*Math.min(KSPD,d*0.2)*dt; k.y+=ddy/d*Math.min(KSPD,d*0.2)*dt; } else target=null; }
+    k.x=Math.max(k.r,Math.min(W-k.r,k.x)); k.y=Math.max(k.r,Math.min(H-k.r,k.y));
+
+    if(fluteT>0) fluteT-=dt; if(fluteCd>0) fluteCd-=dt;
+    fluteRings.forEach(r=>r.r+=4); fluteRings=fluteRings.filter(r=>r.r<CHARM);
+
+    // cows
+    for(const c of cows){
+      if(c.penned) continue;
+      const dkx=k.x-c.x, dky=k.y-c.y, dk=Math.hypot(dkx,dky)||1;
+      if(fluteT>0 && dk<CHARM){            // charmed: follow Krishna
+        c.charm=true;
+        if(dk>46){ c.vx+=dkx/dk*0.4*dt; c.vy+=dky/dk*0.4*dt; }
+      } else {
+        c.charm=false;
+        if(dk<PUSH){ const f=(PUSH-dk)/PUSH*0.7; c.vx-=dkx/dk*f*dt; c.vy-=dky/dk*f*dt; } // flee (shepherd push)
+        if(Math.random()<0.03){ c.vx+=rnd(-0.5,0.5); c.vy+=rnd(-0.5,0.5); }              // wander
+      }
+      // friction + speed cap
+      c.vx*=0.93; c.vy*=0.93;
+      const sp=Math.hypot(c.vx,c.vy), cap=c.charm?2.6:COWMAX;
+      if(sp>cap){ c.vx=c.vx/sp*cap; c.vy=c.vy/sp*cap; }
+      c.x+=c.vx*dt; c.y+=c.vy*dt;
+      // bounds
+      if(c.x<14){c.x=14;c.vx=Math.abs(c.vx);} if(c.x>W-14){c.x=W-14;c.vx=-Math.abs(c.vx);}
+      if(c.y<14){c.y=14;c.vy=Math.abs(c.vy);} if(c.y>H-14){c.y=H-14;c.vy=-Math.abs(c.vy);}
+      // Yamuna: scare cows out of the river (Kaliya)
+      if(inRiver(c.x,c.y)){ c.x=RIVER.w+14; c.vx=Math.abs(c.vx)+1.2; }
+      // facing
+      if(sp>0.2) c.ang=Math.atan2(c.vy,c.vx);
+      c.wob+=sp*0.2;
+      // reached the goshala
+      if(inPen(c.x,c.y)){ c.penned=true; c.x=rnd(PEN.x+18,PEN.x+PEN.w-18); c.y=rnd(PEN.y+74,PEN.y+PEN.h-16);
+        c.vx=c.vy=0; penned++; score+=20; }
+    }
+
+    if(bannerT>0) bannerT-=dt;
+    if(penned>=total){ completeLevel(); return; }
+
+    timeLeft-=dt/60;
+    if(timeLeft<=0){ timeLeft=0; fail(); }
+  }
+
+  // ---------- draw ----------
+  // fixed scenery (computed once, deterministic positions)
+  const HILLS=[{x:170,y:70,rx:150,ry:42},{x:560,y:54,rx:175,ry:38},{x:360,y:330,rx:215,ry:56}];
+  const TREES=[{x:150,y:115},{x:305,y:80},{x:470,y:120},{x:120,y:300},{x:250,y:420},{x:430,y:392},{x:615,y:350},{x:705,y:432}];
+  const STONES=[{x:215,y:200},{x:400,y:165},{x:545,y:255},{x:330,y:258},{x:480,y:402},{x:175,y:412},{x:615,y:185},{x:690,y:300}];
+
+  function dtree(t){
+    ctx.fillStyle="rgba(0,0,0,.12)"; ctx.beginPath(); ctx.ellipse(t.x,t.y+15,22,8,0,0,7); ctx.fill();
+    ctx.fillStyle="#2f7a3a"; ctx.beginPath(); ctx.arc(t.x,t.y,23,0,7); ctx.fill();
+    ctx.fillStyle="#3c9148"; ctx.beginPath(); ctx.arc(t.x-7,t.y-7,15,0,7); ctx.fill();
+    ctx.fillStyle="#57ad60"; ctx.beginPath(); ctx.arc(t.x-10,t.y-10,7,0,7); ctx.fill();
+  }
+  function dstone(s){
+    ctx.fillStyle="rgba(0,0,0,.10)"; ctx.beginPath(); ctx.ellipse(s.x,s.y+5,13,5,0,0,7); ctx.fill();
+    ctx.fillStyle="#9b9387"; ctx.beginPath(); ctx.ellipse(s.x,s.y,12,8,0,0,7); ctx.fill();
+    ctx.fillStyle="#b6ada0"; ctx.beginPath(); ctx.ellipse(s.x-3,s.y-2,6,4,0,0,7); ctx.fill();
+  }
+
+  function drawKaliya(){
+    const cx=RIVER.w/2, phase=tick*0.025, amp=18;
+    const wave=y=>cx+Math.sin(y*0.028+phase)*amp;
+    // body
+    ctx.lineCap="round"; ctx.lineJoin="round";
+    ctx.strokeStyle="#235e3f"; ctx.lineWidth=16;
+    ctx.beginPath(); for(let y=-20;y<=H+20;y+=8){ const x=wave(y); y<=-20?ctx.moveTo(x,y):ctx.lineTo(x,y); } ctx.stroke();
+    ctx.strokeStyle="#3aa06a"; ctx.lineWidth=8;
+    ctx.beginPath(); for(let y=-20;y<=H+20;y+=8){ const x=wave(y); y<=-20?ctx.moveTo(x,y):ctx.lineTo(x,y); } ctx.stroke();
+    // scales
+    ctx.strokeStyle="rgba(255,255,255,.25)"; ctx.lineWidth=2;
+    for(let y=4;y<H;y+=20){ const x=wave(y); ctx.beginPath(); ctx.moveTo(x-5,y); ctx.lineTo(x+5,y); ctx.stroke(); }
+    // cobra head + hood near the top
+    const hy=46, hx=wave(hy);
+    ctx.fillStyle="#235e3f"; ctx.beginPath(); ctx.ellipse(hx,hy,22,16,0,0,7); ctx.fill();   // hood
+    ctx.fillStyle="#2f7a4f"; ctx.beginPath(); ctx.ellipse(hx,hy,13,12,0,0,7); ctx.fill();
+    ctx.fillStyle="#cde7d6"; ctx.beginPath(); ctx.ellipse(hx,hy-1,5,8,0,0,7); ctx.fill();    // hood mark
+    ctx.fillStyle="#2f7a4f"; ctx.beginPath(); ctx.ellipse(hx,hy+12,9,8,0,0,7); ctx.fill();   // head
+    ctx.fillStyle="#ffd23f"; ctx.beginPath(); ctx.arc(hx-4,hy+10,2.4,0,7); ctx.arc(hx+4,hy+10,2.4,0,7); ctx.fill();
+    ctx.fillStyle="#000"; ctx.beginPath(); ctx.arc(hx-4,hy+10,1.1,0,7); ctx.arc(hx+4,hy+10,1.1,0,7); ctx.fill();
+    // flicking forked tongue
+    const tl=5+Math.max(0,Math.sin(tick*0.25))*5;
+    ctx.strokeStyle="#e23b2e"; ctx.lineWidth=1.6; ctx.beginPath();
+    ctx.moveTo(hx,hy+19); ctx.lineTo(hx,hy+19+tl);
+    ctx.moveTo(hx,hy+19+tl); ctx.lineTo(hx-3,hy+22+tl); ctx.moveTo(hx,hy+19+tl); ctx.lineTo(hx+3,hy+22+tl); ctx.stroke();
+  }
+
+  function drawGoshala(){
+    const x=PEN.x, y=PEN.y, w=PEN.w, h=PEN.h;
+    // yard floor (hay tone)
+    ctx.fillStyle="rgba(190,150,80,.22)"; ctx.fillRect(x,y,w,h);
+    // barn
+    const bx=x+w/2, by=y+6, bw=78, bh=40;
+    ctx.fillStyle="rgba(0,0,0,.12)"; ctx.fillRect(bx-bw/2,by+19,bw,bh+3);
+    ctx.fillStyle="#c07f33"; ctx.fillRect(bx-bw/2,by+18,bw,bh);                                  // wall
+    ctx.fillStyle="rgba(0,0,0,.10)"; for(let px=bx-bw/2+6; px<bx+bw/2; px+=12) ctx.fillRect(px,by+18,1,bh); // planks
+    ctx.fillStyle="#8a4f1e"; ctx.beginPath(); ctx.moveTo(bx-bw/2-7,by+20); ctx.lineTo(bx,by); ctx.lineTo(bx+bw/2+7,by+20); ctx.closePath(); ctx.fill(); // roof
+    ctx.fillStyle="#e7c764"; ctx.beginPath(); ctx.arc(bx,by+9,3,0,7); ctx.fill();
+    ctx.fillStyle="#5e3411"; ctx.fillRect(bx-13,by+30,26,28);                                    // doorway
+    ctx.fillStyle="#7a4a18"; ctx.fillRect(bx-13,by+30,26,4);
+    ctx.fillStyle="#e3c463"; ctx.fillRect(bx-bw/2+3,by+49,16,8); ctx.fillStyle="#d4b24f"; ctx.fillRect(bx+bw/2-19,by+51,16,6); // hay
+    // wooden fence: 3 full sides + bottom with a gate gap on the left
+    ctx.strokeStyle="#9a6326"; ctx.lineWidth=5; ctx.lineCap="round";
+    ctx.beginPath(); ctx.moveTo(x,y+h); ctx.lineTo(x,y); ctx.lineTo(x+w,y); ctx.lineTo(x+w,y+h); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x+w*0.46,y+h); ctx.lineTo(x+w,y+h); ctx.stroke();                // bottom-right rail
+    ctx.beginPath(); ctx.moveTo(x,y+h); ctx.lineTo(x+w*0.12,y+h); ctx.stroke();                  // left gate stub
+    // posts
+    ctx.fillStyle="#7a4a18";
+    for(let px=x; px<=x+w+1; px+=20) ctx.fillRect(px-2,y-4,4,9);
+    for(let py=y; py<=y+h+1; py+=20){ ctx.fillRect(x-2,py-2,4,7); ctx.fillRect(x+w-2,py-2,4,7); }
+    // taller gate posts marking the open entrance
+    ctx.fillStyle="#5e3411"; ctx.fillRect(x+w*0.12-3,y+h-13,5,18); ctx.fillRect(x+w*0.46-3,y+h-13,5,18);
+  }
+
+  function field(){
+    const g=ctx.createLinearGradient(0,0,0,H); g.addColorStop(0,"#9bd86a"); g.addColorStop(1,"#7cc04e");
+    ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+    // soft hills
+    ctx.fillStyle="rgba(122,196,94,.5)"; HILLS.forEach(h=>{ ctx.beginPath(); ctx.ellipse(h.x,h.y,h.rx,h.ry,0,0,7); ctx.fill(); });
+    // grass tufts
+    ctx.fillStyle="rgba(60,130,50,.22)";
+    for(let i=0;i<70;i++){ const x=(i*137)%W, y=(i*89)%H; ctx.fillRect(x,y,3,6); }
+    // scenery
+    STONES.forEach(dstone); TREES.forEach(dtree);
+    // river Yamuna (gentle flow)
+    if(river){
+      const rg=ctx.createLinearGradient(0,0,RIVER.w,0); rg.addColorStop(0,"#2f7fc4"); rg.addColorStop(1,"#5fb3e0");
+      ctx.fillStyle=rg; ctx.fillRect(0,0,RIVER.w,H);
+      ctx.fillStyle="rgba(255,255,255,.3)"; const wo=(tick*0.3)%36;
+      for(let y=-wo;y<H;y+=36){ ctx.fillRect(8,y,18,2); ctx.fillRect(64,y+18,16,2); }
+      drawKaliya();
+    }
+    drawGoshala();
+  }
+
+  function drawCow(c){
+    ctx.save(); ctx.translate(c.x,c.y); ctx.rotate(c.ang);
+    const bob=Math.sin(c.wob)*1.2;
+    // body
+    ctx.fillStyle=c.penned?"#cfcabf":c.col; ctx.beginPath(); ctx.ellipse(0,bob,15,10,0,0,7); ctx.fill();
+    // spots
+    ctx.fillStyle="rgba(90,70,50,.35)"; ctx.beginPath(); ctx.ellipse(-4,bob-2,4,3,0,0,7); ctx.ellipse(5,bob+3,3,2,0,0,7); ctx.fill();
+    // head (front = +x)
+    ctx.fillStyle=c.col; ctx.beginPath(); ctx.ellipse(15,bob,7,6,0,0,7); ctx.fill();
+    ctx.fillStyle="#f0c89a"; ctx.beginPath(); ctx.ellipse(20,bob,4,4,0,0,7); ctx.fill(); // muzzle
+    // horns/ears
+    ctx.strokeStyle="#7a5a3a"; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(12,bob-5); ctx.lineTo(10,bob-9); ctx.moveTo(16,bob-5); ctx.lineTo(18,bob-9); ctx.stroke();
+    // tail
+    ctx.strokeStyle=c.col; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(-15,bob); ctx.lineTo(-21,bob+4); ctx.stroke();
+    ctx.restore();
+    if(c.charm){ ctx.fillStyle="#ffcf40"; ctx.font="13px serif"; ctx.textAlign="center"; ctx.fillText("🎶",c.x,c.y-16); }
+  }
+
+  function drawKrishna(){
+    const x=k.x,y=k.y;
+    ctx.save();
+    // charm rings
+    fluteRings.forEach(r=>{ ctx.strokeStyle="rgba(255,207,64,"+(1-r.r/CHARM)*0.6+")"; ctx.lineWidth=3;
+      ctx.beginPath(); ctx.arc(x,y,r.r,0,7); ctx.stroke(); });
+    // shadow
+    ctx.fillStyle="rgba(0,0,0,.18)"; ctx.beginPath(); ctx.ellipse(x,y+14,14,5,0,0,7); ctx.fill();
+    // body (blue) + yellow dhoti
+    ctx.fillStyle="#ffd23f"; ctx.beginPath(); ctx.ellipse(x,y+6,12,9,0,0,7); ctx.fill();
+    ctx.fillStyle="#2a6cf0"; ctx.beginPath(); ctx.ellipse(x,y-2,11,9,0,0,7); ctx.fill();
+    // head
+    ctx.fillStyle="#caa06a"; ctx.beginPath(); ctx.arc(x,y-12,8,0,7); ctx.fill();
+    // hair
+    ctx.fillStyle="#23314d"; ctx.beginPath(); ctx.arc(x,y-15,8,Math.PI,0); ctx.fill();
+    // peacock feather
+    ctx.save(); ctx.translate(x,y-21); ctx.rotate(-0.3);
+    ctx.fillStyle="#1f9e6a"; ctx.beginPath(); ctx.ellipse(0,-6,3,9,0,0,7); ctx.fill();
+    ctx.fillStyle="#2a6cf0"; ctx.beginPath(); ctx.arc(0,-10,3,0,7); ctx.fill();
+    ctx.fillStyle="#ffcf40"; ctx.beginPath(); ctx.arc(0,-10,1.4,0,7); ctx.fill();
+    ctx.restore();
+    // flute
+    ctx.strokeStyle="#caa23a"; ctx.lineWidth=2.5; ctx.beginPath(); ctx.moveTo(x-2,y-10); ctx.lineTo(x+14,y-6); ctx.stroke();
+    ctx.restore();
+  }
+
+  function timerBar(){
+    const pct=Math.max(0,timeLeft/timeMax);
+    ctx.fillStyle="rgba(0,0,0,.25)"; ctx.fillRect(14,14,W-28,12);
+    ctx.fillStyle = pct<0.25?"#ff5d6c":pct<0.5?"#ffb24a":"#ffd23f";
+    ctx.fillRect(14,14,(W-28)*pct,12);
+  }
+  function drawHUD(){
+    timerBar();
+    ctx.textAlign="left"; ctx.fillStyle="#1b3a12"; ctx.font="bold 18px 'Baloo 2',sans-serif";
+    ctx.fillText("🐄 "+penned+" / "+total,16,46);
+    ctx.textAlign="right"; ctx.fillStyle="#1b3a12";
+    ctx.fillText("⭐ "+score+"   🏆 "+hi,W-16,46);
+    // flute cooldown pip
+    ctx.textAlign="center"; ctx.font="13px 'Baloo 2',sans-serif";
+    ctx.fillStyle=fluteCd>0?"rgba(27,58,18,.5)":"#1b3a12";
+    ctx.fillText(fluteCd>0?"🪈 charging…":"🪈 ready (Space)",W/2,46);
+  }
+  function banner_(){
+    if(bannerT<=0) return; const a=Math.min(1,bannerT/30);
+    ctx.globalAlpha=a; ctx.textAlign="center";
+    ctx.fillStyle="rgba(0,0,0,.4)"; ctx.fillRect(W/2-150,60,300,40);
+    ctx.fillStyle="#ffcf40"; ctx.font="bold 22px 'Baloo 2',sans-serif"; ctx.fillText("Level "+(level+1)+": "+banner,W/2,87);
+    ctx.globalAlpha=1;
+  }
+  function sunsetTint(){
+    const p=1-Math.max(0,timeLeft/timeMax);
+    if(p>0.45){ ctx.fillStyle="rgba(255,120,30,"+((p-0.45)*0.5)+")"; ctx.fillRect(0,0,W,H); }
+  }
+  function center(title,sub,col){
+    ctx.fillStyle="rgba(10,20,8,.6)"; ctx.fillRect(0,0,W,H); ctx.textAlign="center";
+    ctx.fillStyle=col; ctx.font="bold 38px 'Baloo 2',sans-serif"; ctx.fillText(title,W/2,H/2-8);
+    ctx.fillStyle="#fff"; ctx.font="bold 18px 'Baloo 2',sans-serif"; ctx.fillText(sub,W/2,H/2+26);
+    ctx.fillStyle="#cdebd2"; ctx.font="14px 'Baloo 2',sans-serif"; ctx.fillText("High Score: "+hi,W/2,H/2+52);
+  }
+  function drawIntro(){
+    ctx.fillStyle="rgba(8,22,11,.66)"; ctx.fillRect(0,0,W,H); ctx.textAlign="center";
+    ctx.fillStyle="#ffcf40"; ctx.font="bold 30px 'Baloo 2',sans-serif"; ctx.fillText("🪈 Krishna's Cows",W/2,52);
+    ctx.fillStyle="#cdebd2"; ctx.font="italic 14px 'Baloo 2',sans-serif"; ctx.fillText("— The Gopala of Gokul —",W/2,74);
+    ctx.fillStyle="#fff"; ctx.font="14px 'Baloo 2',sans-serif";
+    const story=[
+      "Little Krishna takes the village cows to graze in Vrindavan.",
+      "The playful cows wander everywhere — and the sun is setting!",
+      "Walk close to nudge cows along, and play your 🪈 flute to",
+      "charm nearby cows to follow you. Bring every cow home to the",
+      "goshala before night falls. Beware the river Yamuna!",
+    ];
+    let y=104; story.forEach(t=>{ ctx.fillText(t,W/2,y); y+=20; });
+    ctx.font="18px 'Baloo 2',sans-serif"; ctx.fillStyle="#ffe0a8"; ctx.fillText("🌿 ➜ 🌊 ➜ 🌅",W/2,y+10);
+    ctx.font="bold 14px 'Baloo 2',sans-serif"; ctx.fillStyle="#ffcf40";
+    ctx.fillText("Move: Arrows / WASD / Tap      🪈 Flute: Space",W/2,y+38);
+    const a=0.55+0.45*Math.sin(tick*0.12);
+    ctx.globalAlpha=a; ctx.fillStyle="#fff"; ctx.font="bold 18px 'Baloo 2',sans-serif";
+    ctx.fillText("▶ Press SPACE / Tap to begin",W/2,y+66); ctx.globalAlpha=1;
+  }
+
+  // ---------- loop ----------
+  let last=performance.now();
+  function frame(now){
+    const dt=Math.min(2.5,(now-last)/16.67); last=now; tick+=dt;
+    if(state==="playing") update(dt);
+    field();
+    cows.forEach(drawCow);
+    drawKrishna();
+    if(state==="playing"||state==="clear"){ sunsetTint(); drawHUD(); banner_(); }
+    if(state==="clear") center("Level Complete! 🎉","All cows are home","#ffcf40");
+    if(state==="idle") drawIntro();
+    if(state==="fail") center("The sun set! 🌙","Press SPACE / Tap to try again","#ff9a6b");
+    if(state==="win") center("🎉 All Cows Home!","You are the true Gopala! Tap to play again","#ffcf40");
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

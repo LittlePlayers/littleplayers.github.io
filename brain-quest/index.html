@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>🧠 Brain Quest — Learn & Play!</title>
+<style>
+  :root{
+    --bg1:#7c4dff; --bg2:#18cfff; --card:#ffffff; --ink:#2b2d42;
+    --good:#22c55e; --bad:#ef4444; --warn:#f59e0b; --accent:#ff4d8d;
+    --shadow:0 12px 30px rgba(0,0,0,.18);
+    --r:22px;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{
+    margin:0; font-family:"Baloo 2","Comic Sans MS","Trebuchet MS",system-ui,sans-serif;
+    color:var(--ink);
+    background:linear-gradient(135deg,var(--bg1),var(--bg2));
+    background-attachment:fixed;
+    display:flex; align-items:center; justify-content:center;
+    min-height:100dvh; padding:14px; overflow-x:hidden;
+  }
+  /* floating background blobs */
+  .blob{position:fixed; border-radius:50%; filter:blur(6px); opacity:.18; z-index:0; pointer-events:none}
+  .b1{width:180px;height:180px;background:#fff;top:-40px;left:-30px;animation:float 9s ease-in-out infinite}
+  .b2{width:120px;height:120px;background:#ffe600;bottom:6%;right:-20px;animation:float 11s ease-in-out infinite reverse}
+  .b3{width:90px;height:90px;background:#ff4d8d;top:30%;right:8%;animation:float 7s ease-in-out infinite}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-26px)}}
+
+  .app{
+    position:relative; z-index:1; width:100%; max-width:560px;
+    background:var(--card); border-radius:var(--r); box-shadow:var(--shadow);
+    padding:22px 20px 26px; overflow:hidden;
+  }
+
+  h1{margin:.1em 0 .1em; font-size:clamp(28px,7vw,40px); text-align:center; letter-spacing:.5px}
+  .sub{text-align:center; margin:0 0 16px; color:#6b7280; font-size:15px}
+
+  /* generic button */
+  .btn{
+    border:none; cursor:pointer; font-family:inherit; font-weight:800;
+    border-radius:16px; padding:15px 18px; font-size:18px; color:#fff;
+    background:linear-gradient(180deg,#ff6aa6,#ff2d77);
+    box-shadow:0 6px 0 #d11f5c, var(--shadow); transition:transform .06s, box-shadow .06s;
+    width:100%;
+  }
+  .btn:active{transform:translateY(4px); box-shadow:0 2px 0 #d11f5c}
+  .btn.alt{background:linear-gradient(180deg,#5eead4,#14b8a6); box-shadow:0 6px 0 #0d8c7e, var(--shadow)}
+  .btn.alt:active{box-shadow:0 2px 0 #0d8c7e}
+  .btn.ghost{background:#eef2ff; color:#4338ca; box-shadow:0 4px 0 #c7d2fe}
+  .btn.ghost:active{box-shadow:0 1px 0 #c7d2fe}
+
+  .hidden{display:none !important}
+
+  /* category grid */
+  .grid{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:6px}
+  .cat{
+    border:none; cursor:pointer; font-family:inherit; font-weight:800; color:#fff;
+    border-radius:18px; padding:18px 10px; font-size:16px; text-align:center;
+    box-shadow:var(--shadow); transition:transform .08s; line-height:1.2;
+  }
+  .cat:active{transform:scale(.96)}
+  .cat .emo{display:block; font-size:34px; margin-bottom:6px}
+
+  /* difficulty pills */
+  .pills{display:flex; gap:8px; justify-content:center; margin:14px 0 4px; flex-wrap:wrap}
+  .pill{
+    border:2px solid #e5e7eb; background:#fff; color:#374151; font-family:inherit;
+    font-weight:800; border-radius:999px; padding:8px 16px; cursor:pointer; font-size:14px;
+  }
+  .pill.on{background:#7c4dff; color:#fff; border-color:#7c4dff}
+
+  /* HUD */
+  .hud{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px}
+  .lives{font-size:22px; letter-spacing:2px}
+  .score{font-weight:900; font-size:20px}
+  .streak{font-size:14px; color:var(--warn); font-weight:800; min-height:18px; text-align:center}
+  .bar{height:12px; background:#eef2ff; border-radius:999px; overflow:hidden; margin-bottom:14px}
+  .bar > i{display:block; height:100%; width:0%; background:linear-gradient(90deg,#34d399,#10b981); transition:width .4s}
+
+  .qmeta{display:flex; justify-content:space-between; font-size:13px; color:#6b7280; margin-bottom:6px; font-weight:700}
+  .question{font-size:clamp(19px,5vw,24px); font-weight:800; margin:4px 0 16px; min-height:64px}
+
+  .answers{display:grid; gap:10px}
+  .ans{
+    border:3px solid #e5e7eb; background:#fff; color:var(--ink); font-family:inherit;
+    font-weight:800; font-size:17px; border-radius:16px; padding:14px 16px; cursor:pointer;
+    text-align:left; transition:transform .06s, background .15s, border-color .15s; display:flex; gap:10px; align-items:center;
+  }
+  .ans .key{
+    flex:0 0 30px; height:30px; border-radius:8px; background:#eef2ff; color:#4338ca;
+    display:flex; align-items:center; justify-content:center; font-size:15px;
+  }
+  .ans:active{transform:scale(.98)}
+  .ans.correct{background:#dcfce7; border-color:var(--good); color:#166534}
+  .ans.correct .key{background:var(--good); color:#fff}
+  .ans.wrong{background:#fee2e2; border-color:var(--bad); color:#991b1b}
+  .ans.wrong .key{background:var(--bad); color:#fff}
+  .ans.lock{pointer-events:none; opacity:.85}
+  .ans.dim{opacity:.45}
+
+  .fact{
+    margin-top:14px; background:#fff7ed; border:2px dashed #fdba74; color:#9a3412;
+    border-radius:16px; padding:12px 14px; font-size:15px; font-weight:600; line-height:1.4;
+  }
+  .fact b{color:#c2410c}
+  .next{margin-top:12px}
+
+  /* result */
+  .result{text-align:center}
+  .stars{font-size:46px; margin:6px 0 2px; letter-spacing:6px}
+  .big{font-size:54px; font-weight:900; margin:4px 0}
+  .badge{
+    display:inline-block; background:linear-gradient(180deg,#fde68a,#f59e0b); color:#7c2d12;
+    font-weight:900; padding:8px 18px; border-radius:999px; margin:8px 0 4px; font-size:18px; box-shadow:var(--shadow)
+  }
+  .statline{color:#6b7280; font-weight:700; margin:6px 0 16px}
+  .hi{color:#7c4dff}
+
+  .row{display:flex; gap:10px; margin-top:10px}
+  .row .btn{flex:1}
+
+  .mute{
+    position:absolute; top:14px; right:14px; z-index:5; width:42px; height:42px; border-radius:50%;
+    border:none; background:#eef2ff; cursor:pointer; font-size:20px;
+  }
+
+  /* pop animation */
+  @keyframes pop{0%{transform:scale(.8);opacity:0}60%{transform:scale(1.06)}100%{transform:scale(1);opacity:1}}
+  .pop{animation:pop .35s ease}
+  @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
+  .shake{animation:shake .4s}
+
+  /* confetti canvas */
+  #confetti{position:fixed; inset:0; pointer-events:none; z-index:50}
+
+  footer{text-align:center; margin-top:18px; color:#9ca3af; font-size:12px}
+  /* --- mobile/tablet responsiveness guard --- */
+  html,body{overflow-x:hidden}
+  body>*{max-width:100%}
+  @media (max-width:600px){ .sub,.help{font-size:.84rem} }
+</style>
+  <link rel="canonical" href="https://littleplayers.github.io/brain-quest/" />
+  <meta name="keywords" content="kids games, learning game, Brain Quest, free online game for kids, Little Players, Indian mythology games" />
+  <meta name="author" content="gauravs19" />
+  <meta name="theme-color" content="#7c5cff" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Little Players" />
+  <meta property="og:title" content="Brain Quest — Little Players" />
+  <meta property="og:description" content="" />
+  <meta property="og:url" content="https://littleplayers.github.io/brain-quest/" />
+  <meta property="og:image" content="https://littleplayers.github.io/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Brain Quest — Little Players" />
+  <meta name="twitter:description" content="" />
+  <meta name="twitter:image" content="https://littleplayers.github.io/og-image.png" />
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "VideoGame", "name": "Brain Quest", "url": "https://littleplayers.github.io/brain-quest/", "image": "https://littleplayers.github.io/og-image.png", "description": "", "applicationCategory": "Game", "operatingSystem": "Web Browser", "genre": "learning", "author": {"@type": "Organization", "name": "Little Players"}, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "audience": {"@type": "PeopleAudience", "suggestedMinAge": 5}, "isPartOf": {"@type": "WebSite", "name": "Little Players", "url": "https://littleplayers.github.io/"}}</script>
+</head>
+<body>
+  <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+  <canvas id="confetti"></canvas>
+
+  <div class="app">
+    <button class="mute" id="muteBtn" title="Sound on/off">🔊</button>
+
+    <!-- ===== HOME ===== -->
+    <section id="home">
+      <h1>🧠 Brain Quest</h1>
+      <p class="sub">Pick a topic, answer questions, learn cool facts!</p>
+
+      <div class="pills" id="diffPills">
+        <button class="pill on" data-diff="easy">😀 Easy</button>
+        <button class="pill" data-diff="medium">🙂 Medium</button>
+        <button class="pill" data-diff="hard">🤓 Hard</button>
+      </div>
+
+      <div class="grid" id="catGrid"></div>
+
+      <p class="sub" style="margin-top:16px">🏆 Best score: <b class="hi" id="homeBest">0</b></p>
+    </section>
+
+    <!-- ===== QUIZ ===== -->
+    <section id="quiz" class="hidden">
+      <div class="hud">
+        <div class="lives" id="lives">❤️❤️❤️</div>
+        <div class="score">⭐ <span id="score">0</span></div>
+      </div>
+      <div class="streak" id="streak"></div>
+      <div class="bar"><i id="barFill"></i></div>
+
+      <div class="qmeta">
+        <span id="catLabel">Topic</span>
+        <span id="qCount">1 / 10</span>
+      </div>
+      <div class="question" id="question">…</div>
+      <div class="answers" id="answers"></div>
+
+      <div class="fact hidden" id="fact"></div>
+      <button class="btn next hidden" id="nextBtn">Next ➜</button>
+      <button class="btn ghost next" id="quitBtn" style="margin-top:10px">🏠 Quit to menu</button>
+    </section>
+
+    <!-- ===== RESULT ===== -->
+    <section id="result" class="hidden result">
+      <div class="stars" id="stars">⭐️⭐️⭐️</div>
+      <div class="big" id="finalScore">0</div>
+      <div class="badge" id="badge">Brain Star!</div>
+      <div class="statline" id="resultStats"></div>
+      <button class="btn" id="againBtn">🔁 Play Again</button>
+      <div class="row">
+        <button class="btn alt" id="newCatBtn">🎯 New Topic</button>
+        <button class="btn ghost" id="homeBtn">🏠 Home</button>
+      </div>
+    </section>
+
+    <footer>Made for curious minds • Ages 8–12 & beyond</footer>
+  </div>
+
+<script>
+/* ============================================================
+   BRAIN QUEST — single-file educational quiz game
+   ============================================================ */
+
+/* ---------- QUESTION BANK ----------
+   Each category has easy / medium / hard tiers.
+   q=question, a=answers[4], c=index of correct, f=fun fact */
+const BANK = {
+  Science: { emo:"🔬", color:"linear-gradient(180deg,#60a5fa,#2563eb)", q:{
+    easy:[
+      {q:"What do plants need to make their food?",a:["Sunlight","Moonlight","Darkness","Ice"],c:0,f:"Plants use sunlight in a process called <b>photosynthesis</b> to turn water and air into food!"},
+      {q:"Which part of your body pumps blood?",a:["Brain","Heart","Lungs","Liver"],c:1,f:"Your heart beats about <b>100,000 times a day</b> — that's a lot of work!"},
+      {q:"What is H₂O better known as?",a:["Salt","Air","Water","Gold"],c:2,f:"Every water molecule has 2 hydrogen atoms and 1 oxygen atom. That's the '2' in H₂O!"},
+      {q:"What do bees collect from flowers?",a:["Nectar","Sand","Paper","Rocks"],c:0,f:"Bees turn nectar into <b>honey</b> — and they pollinate the flowers we need for food!"},
+      {q:"Which sense do your ears give you?",a:["Smell","Taste","Hearing","Sight"],c:2,f:"Your ears also help you keep your <b>balance</b> so you don't fall over!"},
+    ],
+    medium:[
+      {q:"What gas do humans breathe IN to live?",a:["Oxygen","Helium","Carbon dioxide","Hydrogen"],c:0,f:"We breathe in oxygen and breathe out <b>carbon dioxide</b>, which plants then use!"},
+      {q:"What is the center of an atom called?",a:["Shell","Nucleus","Cell","Core"],c:1,f:"The nucleus holds protons and neutrons. Electrons zoom around it super fast!"},
+      {q:"Which force pulls objects toward Earth?",a:["Magnetism","Friction","Gravity","Wind"],c:2,f:"<b>Gravity</b> is why things fall down. The bigger an object, the stronger its pull!"},
+      {q:"What state of matter is steam?",a:["Solid","Liquid","Plasma","Gas"],c:3,f:"Water can be solid (ice), liquid (water), or gas (steam) — same stuff, different forms!"},
+      {q:"What do we call animals that eat only plants?",a:["Herbivores","Carnivores","Omnivores","Insects"],c:0,f:"Cows and rabbits are herbivores. Meat-eaters are <b>carnivores</b>!"},
+    ],
+    hard:[
+      {q:"What is the powerhouse of the cell?",a:["Nucleus","Mitochondria","Ribosome","Membrane"],c:1,f:"<b>Mitochondria</b> make energy for the cell — that's why they're called the powerhouse!"},
+      {q:"What is the chemical symbol for gold?",a:["Go","Gd","Au","Ag"],c:2,f:"'Au' comes from the Latin word <b>aurum</b>, meaning 'shining dawn'!"},
+      {q:"At what temperature (°C) does water boil at sea level?",a:["50°","75°","90°","100°"],c:3,f:"Water boils at 100°C and freezes at 0°C at sea level. Up a mountain it boils cooler!"},
+      {q:"What type of energy does a moving object have?",a:["Kinetic","Potential","Solar","Chemical"],c:0,f:"<b>Kinetic</b> energy is motion energy. Stored energy is called <b>potential</b> energy!"},
+      {q:"Which scientist explained gravity & motion laws?",a:["Edison","Newton","Darwin","Tesla"],c:1,f:"Legend says <b>Isaac Newton</b> got the idea after seeing an apple fall from a tree!"},
+    ]}},
+
+  Space: { emo:"🚀", color:"linear-gradient(180deg,#a78bfa,#6d28d9)", q:{
+    easy:[
+      {q:"What is the closest star to Earth?",a:["The Moon","The Sun","Mars","Pluto"],c:1,f:"The Sun is a giant ball of hot gas — over <b>1 million Earths</b> could fit inside it!"},
+      {q:"What do we call Earth's natural satellite?",a:["The Moon","Venus","A comet","The Sun"],c:0,f:"The Moon causes ocean <b>tides</b> by gently pulling the water with gravity!"},
+      {q:"Which planet do we live on?",a:["Mars","Jupiter","Earth","Saturn"],c:2,f:"Earth is the only planet we know of with <b>liquid water</b> and life!"},
+      {q:"What shape is a planet's orbit?",a:["Square","Triangle","Straight line","Oval"],c:3,f:"Planets travel in oval-shaped paths called <b>ellipses</b> around the Sun!"},
+      {q:"What do astronauts wear in space?",a:["Spacesuits","Raincoats","Pajamas","Armor"],c:0,f:"Spacesuits give astronauts <b>oxygen</b> and protect them from extreme cold and heat!"},
+    ],
+    medium:[
+      {q:"Which is the largest planet in our solar system?",a:["Jupiter","Earth","Mars","Neptune"],c:0,f:"Jupiter is so big that <b>1,300 Earths</b> could fit inside it!"},
+      {q:"What is the name of our galaxy?",a:["Andromeda","Milky Way","Orion","Big Dipper"],c:1,f:"The Milky Way has over <b>100 billion stars</b> — and we're just one tiny dot!"},
+      {q:"Which planet is known as the Red Planet?",a:["Venus","Saturn","Mars","Mercury"],c:2,f:"Mars looks red because its soil is full of <b>rusty iron</b>!"},
+      {q:"How long does light from the Sun take to reach Earth?",a:["1 second","1 hour","1 day","About 8 minutes"],c:3,f:"Sunlight travels 150 million km in about <b>8 minutes</b> at the speed of light!"},
+      {q:"What are the rings of Saturn mostly made of?",a:["Ice & rock","Fire","Plastic","Gas"],c:0,f:"Saturn's rings are billions of pieces of <b>ice and rock</b>, some tiny, some huge!"},
+    ],
+    hard:[
+      {q:"What is a star that has collapsed and traps light called?",a:["Comet","Black hole","Nebula","Quasar"],c:1,f:"A <b>black hole's</b> gravity is so strong that not even light can escape it!"},
+      {q:"Which planet spins on its side?",a:["Mars","Venus","Uranus","Earth"],c:2,f:"Uranus is tilted about 98° — it basically rolls around the Sun like a ball!"},
+      {q:"What is the smallest planet in our solar system?",a:["Mars","Earth","Pluto","Mercury"],c:3,f:"Mercury is the smallest planet and the <b>closest to the Sun</b>. Pluto is a dwarf planet!"},
+      {q:"What galaxy is closest to the Milky Way?",a:["Andromeda","Triangulum","Whirlpool","Sombrero"],c:0,f:"Andromeda is heading our way and will meet the Milky Way in ~4 billion years!"},
+      {q:"What do you call a rock that burns up in our atmosphere?",a:["Asteroid","Meteor","Planet","Star"],c:1,f:"A space rock is a <b>meteor</b> when it streaks across the sky — a 'shooting star'!"},
+    ]}},
+
+  Animals: { emo:"🦁", color:"linear-gradient(180deg,#fbbf24,#d97706)", q:{
+    easy:[
+      {q:"Which animal is known as the King of the Jungle?",a:["Lion","Mouse","Frog","Duck"],c:0,f:"A lion's roar can be heard up to <b>8 km away</b>!"},
+      {q:"What do you call a baby dog?",a:["Kitten","Puppy","Calf","Chick"],c:1,f:"Puppies are born blind and deaf, but they grow fast!"},
+      {q:"Which animal can fly?",a:["Shark","Snake","Eagle","Whale"],c:2,f:"Eagles have amazing eyesight — they can spot a rabbit from <b>3 km away</b>!"},
+      {q:"What do bees make?",a:["Milk","Silk","Bread","Honey"],c:3,f:"To make 1 jar of honey, bees visit about <b>2 million flowers</b>!"},
+      {q:"Which animal has a long neck?",a:["Giraffe","Pig","Cat","Hen"],c:0,f:"A giraffe's neck can be 2 metres long, but it has the same <b>7 neck bones</b> as you!"},
+    ],
+    medium:[
+      {q:"What is the largest animal on Earth?",a:["Blue whale","Elephant","Giraffe","Shark"],c:0,f:"A blue whale's heart is as big as a <b>small car</b>!"},
+      {q:"How many legs does a spider have?",a:["6","8","10","4"],c:1,f:"Spiders have 8 legs — insects have 6, so a spider is <b>not an insect</b>!"},
+      {q:"Which animal sleeps standing up?",a:["Cat","Dog","Horse","Rabbit"],c:2,f:"Horses can lock their leg joints to sleep standing — handy for quick escapes!"},
+      {q:"What do we call animals active at night?",a:["Diurnal","Aquatic","Tropical","Nocturnal"],c:3,f:"<b>Nocturnal</b> animals like owls and bats hunt at night and sleep by day!"},
+      {q:"Which sea animal has eight arms?",a:["Octopus","Crab","Seahorse","Jellyfish"],c:0,f:"An octopus has <b>three hearts</b> and blue blood!"},
+    ],
+    hard:[
+      {q:"What is a group of lions called?",a:["Herd","Pride","Pack","Flock"],c:1,f:"A group of lions is a <b>pride</b>. A group of crows? A 'murder'!"},
+      {q:"Which animal can regrow lost body parts?",a:["Dog","Cat","Starfish","Cow"],c:2,f:"A starfish can <b>regrow a whole arm</b> — some can even grow a new body from one arm!"},
+      {q:"What is the fastest land animal?",a:["Lion","Horse","Greyhound","Cheetah"],c:3,f:"A cheetah can sprint up to <b>110 km/h</b> — faster than cars on a highway!"},
+      {q:"Which animal never drinks water its whole life (gets it from food)?",a:["Kangaroo rat","Camel","Cat","Frog"],c:0,f:"The kangaroo rat gets all its water from <b>seeds</b> — it almost never drinks!"},
+      {q:"What do you call an animal that eats both plants and meat?",a:["Herbivore","Omnivore","Carnivore","Insectivore"],c:1,f:"<b>Omnivores</b> (like humans and bears) eat both plants and animals!"},
+    ]}},
+
+  Geography: { emo:"🌍", color:"linear-gradient(180deg,#34d399,#059669)", q:{
+    easy:[
+      {q:"What do we call the frozen continent at the bottom of Earth?",a:["Antarctica","Africa","Asia","Europe"],c:0,f:"Antarctica is the <b>coldest</b> place on Earth — colder than your freezer!"},
+      {q:"Which is bigger, an ocean or a lake?",a:["A lake","An ocean","Same size","Neither"],c:1,f:"Oceans cover about <b>71%</b> of Earth's surface — most of our planet is water!"},
+      {q:"What is the tallest type of landform?",a:["Hill","Valley","Mountain","Plain"],c:2,f:"<b>Mount Everest</b> is the tallest mountain — almost 9 km high!"},
+      {q:"What do we call a very dry, sandy place?",a:["Forest","Ocean","Swamp","Desert"],c:3,f:"The Sahara Desert in Africa is almost as big as the <b>whole USA</b>!"},
+      {q:"Which direction does the Sun rise from?",a:["East","West","North","South"],c:0,f:"The Sun rises in the east and sets in the west, every single day!"},
+    ],
+    medium:[
+      {q:"What is the largest ocean on Earth?",a:["Pacific","Atlantic","Indian","Arctic"],c:0,f:"The Pacific Ocean is so big it holds more than <b>half</b> of all Earth's water!"},
+      {q:"Which is the longest river in the world?",a:["Amazon","Nile","Ganges","Yangtze"],c:1,f:"The Nile in Africa is about <b>6,650 km</b> long — though the Amazon is a close rival!"},
+      {q:"How many continents are there?",a:["5","6","7","8"],c:2,f:"The 7 continents: Asia, Africa, North & South America, Antarctica, Europe, Australia!"},
+      {q:"Which country has the most people?",a:["USA","Brazil","Russia","India"],c:3,f:"India is now the <b>most populated</b> country, with over 1.4 billion people!"},
+      {q:"What imaginary line splits Earth into North and South?",a:["Equator","Horizon","Axis","Border"],c:0,f:"The <b>Equator</b> is the warmest zone — it gets the most direct sunlight!"},
+    ],
+    hard:[
+      {q:"What is the smallest country in the world?",a:["Monaco","Vatican City","Malta","Nauru"],c:1,f:"Vatican City is only about <b>0.49 km²</b> — you could walk across it in minutes!"},
+      {q:"Which desert is the largest hot desert?",a:["Gobi","Kalahari","Sahara","Mojave"],c:2,f:"The Sahara is about 9 million km² — and it's slowly <b>growing</b> each year!"},
+      {q:"What is the capital of Australia?",a:["Sydney","Melbourne","Perth","Canberra"],c:3,f:"Many think it's Sydney, but the capital is <b>Canberra</b> — a planned city!"},
+      {q:"Which mountain range has Mount Everest?",a:["Himalayas","Andes","Alps","Rockies"],c:0,f:"The Himalayas are still <b>growing</b> a few cm taller every year!"},
+      {q:"What line is at 0° longitude?",a:["Equator","Prime Meridian","Tropic","Date Line"],c:1,f:"The <b>Prime Meridian</b> runs through Greenwich, London, and sets world time!"},
+    ]}},
+
+  Math: { emo:"🔢", color:"linear-gradient(180deg,#f472b6,#db2777)", q:{
+    easy:[
+      {q:"What is 7 + 6?",a:["13","12","14","11"],c:0,f:"Trick: 7 + 6 = 7 + 7 − 1 = 13. Doubles make adding easier!"},
+      {q:"What is 9 × 3?",a:["18","27","24","21"],c:1,f:"To ×9, do ×10 then subtract: 9×3 = 30 − 3 = 27!"},
+      {q:"How many sides does a triangle have?",a:["4","2","3","5"],c:2,f:"'Tri' means three — like a <b>tricycle</b> has three wheels!"},
+      {q:"What is half of 10?",a:["2","10","20","5"],c:3,f:"Half means split into two equal parts: 10 ÷ 2 = 5!"},
+      {q:"What number comes after 19?",a:["20","18","21","30"],c:0,f:"After 19 comes 20 — a brand new 'tens' group begins!"},
+    ],
+    medium:[
+      {q:"What is 12 × 12?",a:["144","124","132","154"],c:0,f:"12 × 12 = 144 — known as a 'gross', an old word for 144 items!"},
+      {q:"What is 100 − 37?",a:["73","63","67","53"],c:1,f:"Trick: 100 − 37 → think 37 + 63 = 100. So the answer is 63!"},
+      {q:"How many minutes are in 2 hours?",a:["100","90","120","140"],c:2,f:"1 hour = 60 min, so 2 hours = 120 minutes!"},
+      {q:"What is ¾ as a percentage?",a:["25%","50%","60%","75%"],c:3,f:"¾ means 3 out of 4 = 75%. Half (½) is 50%, a quarter (¼) is 25%!"},
+      {q:"What is the next number: 2, 4, 8, 16, …?",a:["32","24","20","30"],c:0,f:"Each number <b>doubles</b>! 16 × 2 = 32. This is called a pattern!"},
+    ],
+    hard:[
+      {q:"What is 15 × 15?",a:["215","225","250","205"],c:1,f:"Trick for ×15 squares: 1×2=2, add '25' → 225!"},
+      {q:"What is the value of π (pi) rounded to 2 places?",a:["3.41","3.12","3.14","3.16"],c:2,f:"<b>Pi (π) ≈ 3.14</b> — it shows up whenever you measure circles!"},
+      {q:"What is 144 ÷ 12?",a:["10","14","16","12"],c:3,f:"Division undoes multiplication: 12 × 12 = 144, so 144 ÷ 12 = 12!"},
+      {q:"How many degrees are in a full circle?",a:["360","180","270","90"],c:0,f:"A full turn is <b>360°</b>. A right angle (a corner) is 90°!"},
+      {q:"What is 2³ (2 to the power of 3)?",a:["6","8","9","16"],c:1,f:"2³ means 2 × 2 × 2 = 8. The little 3 means 'multiply three times'!"},
+    ]}},
+
+  Words: { emo:"📚", color:"linear-gradient(180deg,#22d3ee,#0891b2)", q:{
+    easy:[
+      {q:"Which word means the opposite of 'happy'?",a:["Sad","Glad","Joyful","Merry"],c:0,f:"Opposites are called <b>antonyms</b>. Happy ↔ Sad!"},
+      {q:"How many letters are in the word 'cat'?",a:["2","3","4","5"],c:1,f:"C-A-T — three letters, one tiny purring animal!"},
+      {q:"Which is a question word?",a:["Apple","Why","Run","Blue"],c:2,f:"Question words include who, what, when, where, <b>why</b>, and how!"},
+      {q:"What do we call words that sound the same, like 'cat' and 'hat'?",a:["Verbs","Nouns","Adverbs","Rhymes"],c:3,f:"Words that <b>rhyme</b> end with the same sound — great for poems and songs!"},
+      {q:"Which word is a naming word (noun)?",a:["Dog","Quickly","Jump","Shiny"],c:0,f:"A <b>noun</b> names a person, place, animal, or thing — like 'dog'!"},
+    ],
+    medium:[
+      {q:"Which word means 'very big'?",a:["Enormous","Tiny","Quick","Quiet"],c:0,f:"<b>Enormous, gigantic, huge</b> — all great words for 'very big'!"},
+      {q:"What is the plural of 'mouse'?",a:["Mouses","Mice","Mouse","Meese"],c:1,f:"'Mouse' becomes <b>mice</b> — English has many tricky plurals!"},
+      {q:"Which word is an action word (verb)?",a:["Table","Happy","Swim","Yellow"],c:2,f:"A <b>verb</b> shows action: run, jump, <b>swim</b>, think!"},
+      {q:"A 'synonym' is a word that means…?",a:["The opposite","A number","A name","The same"],c:3,f:"<b>Synonyms</b> mean the same: big = large = huge!"},
+      {q:"Which word is spelled correctly?",a:["Beautiful","Beutiful","Beautifull","Beatiful"],c:0,f:"Remember: <b>'Big Elephants Are Useful'</b> helps spell BEAU-tiful!"},
+    ],
+    hard:[
+      {q:"What do we call a word that describes a noun?",a:["Adjective","Adverb","Pronoun","Conjunction"],c:0,f:"<b>Adjectives</b> describe nouns: a <i>shiny</i> car, a <i>brave</i> hero!"},
+      {q:"Which is the correct contraction for 'they are'?",a:["Their","They're","There","Theyre"],c:1,f:"<b>They're</b> = they are. 'Their' = belonging, 'there' = a place!"},
+      {q:"What is a 'palindrome'?",a:["A long word","A rhyme","Same backward","A question"],c:2,f:"A <b>palindrome</b> reads the same backward: 'level', 'racecar', 'mom'!"},
+      {q:"Which word means 'to make something better'?",a:["Worsen","Ignore","Break","Improve"],c:3,f:"To <b>improve</b> is to make better — like your quiz score right now!"},
+      {q:"What part of speech is the word 'quickly'?",a:["Adverb","Noun","Adjective","Verb"],c:0,f:"<b>Adverbs</b> often end in '-ly' and describe how an action is done!"},
+    ]}},
+};
+
+/* ---------- STATE ---------- */
+const QPER = 10;             // questions per round (filled by repeating/shuffling pool)
+let state = {};
+let muted = false;
+
+/* ---------- DOM ---------- */
+const $ = id => document.getElementById(id);
+const screens = { home:$("home"), quiz:$("quiz"), result:$("result") };
+function show(name){ for(const k in screens) screens[k].classList.toggle("hidden", k!==name); }
+
+/* ---------- SOUND (Web Audio, no files) ---------- */
+let actx;
+function beep(freq, dur=0.12, type="sine", vol=0.2, when=0){
+  if(muted) return;
+  try{
+    actx = actx || new (window.AudioContext||window.webkitAudioContext)();
+    const o=actx.createOscillator(), g=actx.createGain();
+    o.type=type; o.frequency.value=freq;
+    o.connect(g); g.connect(actx.destination);
+    const t=actx.currentTime+when;
+    g.gain.setValueAtTime(0.0001,t);
+    g.gain.exponentialRampToValueAtTime(vol,t+0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+    o.start(t); o.stop(t+dur+0.02);
+  }catch(e){}
+}
+const sCorrect = ()=>{ beep(660,0.12,"triangle",0.25,0); beep(880,0.14,"triangle",0.25,0.1); beep(1175,0.18,"triangle",0.22,0.22); };
+const sWrong   = ()=>{ beep(220,0.18,"sawtooth",0.18,0); beep(160,0.22,"sawtooth",0.18,0.12); };
+const sClick   = ()=> beep(520,0.06,"square",0.12);
+const sWin     = ()=>{ [523,659,784,1046].forEach((f,i)=>beep(f,0.18,"triangle",0.25,i*0.13)); };
+
+/* ---------- BUILD HOME ---------- */
+function buildHome(){
+  const grid=$("catGrid"); grid.innerHTML="";
+  Object.keys(BANK).forEach(name=>{
+    const c=BANK[name];
+    const b=document.createElement("button");
+    b.className="cat"; b.style.background=c.color;
+    b.innerHTML=`<span class="emo">${c.emo}</span>${name}`;
+    b.onclick=()=>{ sClick(); startGame(name); };
+    grid.appendChild(b);
+  });
+  $("homeBest").textContent = localStorage.getItem("bq_best") || 0;
+}
+
+/* difficulty pills */
+let difficulty="easy";
+$("diffPills").addEventListener("click",e=>{
+  const p=e.target.closest(".pill"); if(!p) return;
+  sClick();
+  [...$("diffPills").children].forEach(x=>x.classList.remove("on"));
+  p.classList.add("on"); difficulty=p.dataset.diff;
+});
+
+/* ---------- SHUFFLE ---------- */
+function shuffle(arr){ for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; } return arr; }
+
+/* build a round: take the pool for category+difficulty, shuffle, repeat if needed to reach QPER */
+function buildRound(cat){
+  const pool = BANK[cat].q[difficulty].map(o=>({...o, a:[...o.a]}));
+  let qs = shuffle([...pool]);
+  while(qs.length < QPER){ qs = qs.concat(shuffle([...pool])); }
+  qs = qs.slice(0, QPER);
+  // shuffle answer order per question, keep track of correct
+  return qs.map(o=>{
+    const correctText = o.a[o.c];
+    const opts = shuffle([...o.a]);
+    return { q:o.q, a:opts, c:opts.indexOf(correctText), f:o.f };
+  });
+}
+
+/* ---------- START GAME ---------- */
+function startGame(cat){
+  state = { cat, qs:buildRound(cat), idx:0, score:0, lives:3, streak:0, correct:0, answered:false };
+  $("catLabel").textContent = `${BANK[cat].emo} ${cat} · ${difficulty}`;
+  show("quiz");
+  renderQuestion();
+}
+
+function renderLives(){ $("lives").textContent = "❤️".repeat(state.lives) + "🤍".repeat(3-state.lives); }
+
+function renderQuestion(){
+  const item = state.qs[state.idx];
+  state.answered=false;
+  renderLives();
+  $("score").textContent = state.score;
+  $("qCount").textContent = `${state.idx+1} / ${QPER}`;
+  $("barFill").style.width = `${(state.idx/QPER)*100}%`;
+  $("streak").textContent = state.streak>=2 ? `🔥 ${state.streak} in a row! Bonus active!` : "";
+
+  const qEl=$("question"); qEl.textContent=item.q; qEl.classList.remove("pop"); void qEl.offsetWidth; qEl.classList.add("pop");
+
+  const wrap=$("answers"); wrap.innerHTML="";
+  const keys=["A","B","C","D"];
+  item.a.forEach((text,i)=>{
+    const b=document.createElement("button");
+    b.className="ans"; b.innerHTML=`<span class="key">${keys[i]}</span><span>${text}</span>`;
+    b.onclick=()=>choose(i,b);
+    wrap.appendChild(b);
+  });
+
+  $("fact").classList.add("hidden");
+  $("nextBtn").classList.add("hidden");
+}
+
+function choose(i, btn){
+  if(state.answered) return;
+  state.answered=true;
+  const item=state.qs[state.idx];
+  const buttons=[...$("answers").children];
+  buttons.forEach((b,idx)=>{
+    b.classList.add("lock");
+    if(idx===item.c) b.classList.add("correct");
+    if(idx!==item.c && idx!==i) b.classList.add("dim");
+  });
+
+  if(i===item.c){
+    sCorrect();
+    state.correct++;
+    state.streak++;
+    const bonus = state.streak>=2 ? (state.streak>=4?20:10) : 0;
+    const gained = 10 + bonus;
+    state.score += gained;
+    btn.classList.add("pop");
+    $("streak").textContent = bonus ? `🔥 Streak x${state.streak}! +${gained} points!` : `✅ +${gained} points!`;
+  } else {
+    sWrong();
+    state.streak=0;
+    state.lives--;
+    btn.classList.add("wrong"); btn.classList.add("shake");
+    renderLives();
+    $("streak").textContent = "💔 Oops! Streak reset.";
+  }
+  $("score").textContent = state.score;
+
+  // show fun fact (always — that's the learning part!)
+  const fact=$("fact");
+  fact.innerHTML = `💡 <b>Did you know?</b> ${item.f}`;
+  fact.classList.remove("hidden");
+
+  // out of lives -> end early
+  if(state.lives<=0){
+    $("nextBtn").textContent="See results ➜";
+    $("nextBtn").classList.remove("hidden");
+    $("nextBtn").onclick=()=>{ sClick(); endGame(); };
+    return;
+  }
+
+  const last = state.idx===QPER-1;
+  $("nextBtn").textContent = last ? "Finish ➜" : "Next ➜";
+  $("nextBtn").classList.remove("hidden");
+  $("nextBtn").onclick=()=>{
+    sClick();
+    if(last){ endGame(); }
+    else { state.idx++; renderQuestion(); }
+  };
+}
+
+/* ---------- END ---------- */
+function endGame(){
+  $("barFill").style.width="100%";
+  const total = state.correct;
+  const pct = total/QPER;
+  let stars = pct>=0.9?3 : pct>=0.6?2 : pct>=0.3?1 : 0;
+  $("stars").textContent = "⭐".repeat(stars) + "☆".repeat(3-stars);
+  $("finalScore").textContent = state.score;
+
+  const badges = [
+    {min:0.9, t:"🏆 Genius Brain!"},
+    {min:0.7, t:"🌟 Super Smart!"},
+    {min:0.5, t:"👍 Great Job!"},
+    {min:0.3, t:"💪 Keep Going!"},
+    {min:0,   t:"🌱 Nice Try!"},
+  ];
+  $("badge").textContent = badges.find(b=>pct>=b.min).t;
+
+  const best = +(localStorage.getItem("bq_best")||0);
+  let newRecord=false;
+  if(state.score>best){ localStorage.setItem("bq_best", state.score); newRecord=true; }
+
+  $("resultStats").innerHTML =
+    `You got <b>${total} / ${QPER}</b> correct!<br>` +
+    (newRecord ? `🎉 <b class="hi">NEW HIGH SCORE!</b>` : `🏆 Best: <b class="hi">${Math.max(best,state.score)}</b>`);
+
+  show("result");
+  if(stars>=1){ sWin(); confettiBurst(); }
+
+  // buttons
+  $("againBtn").onclick=()=>{ sClick(); startGame(state.cat); };
+  $("newCatBtn").onclick=()=>{ sClick(); buildHome(); show("home"); };
+  $("homeBtn").onclick=()=>{ sClick(); buildHome(); show("home"); };
+}
+
+$("quitBtn").onclick=()=>{ sClick(); buildHome(); show("home"); };
+
+/* ---------- MUTE ---------- */
+$("muteBtn").onclick=()=>{ muted=!muted; $("muteBtn").textContent=muted?"🔇":"🔊"; if(!muted) sClick(); };
+
+/* ---------- CONFETTI ---------- */
+const cv=$("confetti"), cx=cv.getContext("2d");
+let parts=[], raf=null;
+function resize(){ cv.width=innerWidth; cv.height=innerHeight; }
+addEventListener("resize",resize); resize();
+function confettiBurst(){
+  const colors=["#ff4d8d","#ffd166","#06d6a0","#4dabff","#b388ff","#ff9f1c"];
+  parts=[];
+  for(let i=0;i<140;i++){
+    parts.push({
+      x:innerWidth/2, y:innerHeight*0.35,
+      vx:(Math.random()-0.5)*12, vy:(Math.random()*-12)-4,
+      g:0.35+Math.random()*0.2, s:6+Math.random()*8,
+      c:colors[i%colors.length], r:Math.random()*Math.PI, vr:(Math.random()-0.5)*0.3, life:0
+    });
+  }
+  if(raf) cancelAnimationFrame(raf);
+  tick();
+}
+function tick(){
+  cx.clearRect(0,0,cv.width,cv.height);
+  let alive=false;
+  parts.forEach(p=>{
+    p.vy+=p.g; p.x+=p.vx; p.y+=p.vy; p.r+=p.vr; p.life++;
+    if(p.y<cv.height+30) alive=true;
+    cx.save(); cx.translate(p.x,p.y); cx.rotate(p.r); cx.fillStyle=p.c;
+    cx.fillRect(-p.s/2,-p.s/2,p.s,p.s*0.6); cx.restore();
+  });
+  if(alive) raf=requestAnimationFrame(tick);
+  else cx.clearRect(0,0,cv.width,cv.height);
+}
+
+/* keyboard support: A/B/C/D or 1-4, Enter for next */
+addEventListener("keydown",e=>{
+  if(!screens.quiz.classList.contains("hidden") && !state.answered){
+    const map={a:0,b:1,c:2,d:3,"1":0,"2":1,"3":2,"4":3};
+    const k=e.key.toLowerCase();
+    if(k in map){ const btns=[...$("answers").children]; if(btns[map[k]]) btns[map[k]].click(); }
+  }
+  if(e.key==="Enter"){ const n=$("nextBtn"); if(!n.classList.contains("hidden")) n.click(); }
+});
+
+/* ---------- INIT ---------- */
+buildHome();
+show("home");
+</script>
+</body>
+</html>

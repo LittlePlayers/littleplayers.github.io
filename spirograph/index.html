@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+<meta name="description" content="Spirograph — move the sliders and watch beautiful spiral patterns draw themselves. Save your art!" />
+  <link rel="canonical" href="https://littleplayers.github.io/spirograph/" />
+  <meta name="keywords" content="kids games, creativity game, Spirograph, free online game for kids, Little Players, Indian mythology games" />
+  <meta name="author" content="gauravs19" />
+  <meta name="theme-color" content="#5cc8ff" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Little Players" />
+  <meta property="og:title" content="Spirograph — Little Players" />
+  <meta property="og:description" content="Spirograph — move the sliders and watch beautiful spiral patterns draw themselves. Save your art!" />
+  <meta property="og:url" content="https://littleplayers.github.io/spirograph/" />
+  <meta property="og:image" content="https://littleplayers.github.io/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Spirograph — Little Players" />
+  <meta name="twitter:description" content="Spirograph — move the sliders and watch beautiful spiral patterns draw themselves. Save your art!" />
+  <meta name="twitter:image" content="https://littleplayers.github.io/og-image.png" />
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "VideoGame", "name": "Spirograph", "url": "https://littleplayers.github.io/spirograph/", "image": "https://littleplayers.github.io/og-image.png", "description": "Spirograph — move the sliders and watch beautiful spiral patterns draw themselves. Save your art!", "applicationCategory": "Game", "operatingSystem": "Web Browser", "genre": "creativity", "author": {"@type": "Organization", "name": "Little Players"}, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "audience": {"@type": "PeopleAudience", "suggestedMinAge": 5}, "isPartOf": {"@type": "WebSite", "name": "Little Players", "url": "https://littleplayers.github.io/"}}</script>
+<title>🌀 Spirograph — Little Players</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌀</text></svg>" />
+<style>
+  :root{
+    --bg:#0d1030; --card:#171a40; --ink:#eef0ff; --muted:#9aa0d8;
+    --accent:#5cc8ff; --accent2:#b06bff; --shadow:0 10px 30px rgba(0,0,0,.4); --radius:16px;
+  }
+  *{box-sizing:border-box}
+  html,body{overscroll-behavior:none}
+  body{
+    margin:0; min-height:100vh; color:var(--ink);
+    font-family:"Baloo 2","Comic Sans MS","Trebuchet MS",system-ui,sans-serif;
+    background:radial-gradient(circle at 50% 0,#23265e 0,#0d1030 60%);
+    display:flex; flex-direction:column; align-items:center; padding:16px;
+  }
+  header{text-align:center; margin:8px 0 4px}
+  h1{margin:0; font-size:clamp(1.7rem,6vw,2.6rem)}
+  .sub{margin:5px 0 0; color:var(--muted); font-weight:700}
+
+  .stage{background:#05061a; border-radius:var(--radius); box-shadow:var(--shadow); padding:10px; margin-top:12px}
+  canvas{display:block; border-radius:10px; background:#05061a}
+
+  .panel{background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow);
+    padding:16px 18px; margin-top:14px; width:min(480px,94vw)}
+  .row{display:flex; align-items:center; gap:12px; margin:10px 0}
+  .row label{width:96px; font-weight:800; font-size:.92rem; color:var(--muted)}
+  input[type=range]{flex:1; accent-color:var(--accent2)}
+  .val{width:34px; text-align:right; font-weight:800}
+
+  .colors{display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin:6px 0 2px}
+  .swatch{width:28px; height:28px; border-radius:50%; cursor:pointer; border:3px solid transparent}
+  .swatch.on{border-color:#fff}
+
+  .actions{display:flex; gap:10px; margin-top:14px; flex-wrap:wrap; justify-content:center}
+  .actions button{border:none; cursor:pointer; font:inherit; font-weight:800; padding:11px 18px;
+    border-radius:999px; color:#fff; box-shadow:var(--shadow); transition:transform .1s}
+  .actions button:hover{transform:translateY(-2px)}
+  .b-draw{background:linear-gradient(180deg,#5cc8ff,#3aa0ff)}
+  .b-rnd{background:linear-gradient(180deg,#b06bff,#8b46e0)}
+  .b-clear{background:#ff6f8a}.b-save{background:#22b07d}
+
+  .back{margin-top:14px}
+  .back a{color:var(--accent); font-weight:800; text-decoration:none}
+  /* --- mobile/tablet responsiveness guard --- */
+  html,body{overflow-x:hidden}
+  body>*{max-width:100%}
+  @media (max-width:600px){ .sub,.help{font-size:.84rem} }
+</style>
+</head>
+<body>
+  <header>
+    <h1>🌀 Spirograph</h1>
+    <p class="sub">Slide the gears and watch the magic draw!</p>
+  </header>
+
+  <div class="stage"><canvas id="cv" width="440" height="440"></canvas></div>
+
+  <div class="panel">
+    <div class="row"><label>Outer gear</label><input type="range" id="R" min="60" max="200" value="150"><span class="val" id="Rv"></span></div>
+    <div class="row"><label>Inner gear</label><input type="range" id="r" min="10" max="120" value="52"><span class="val" id="rv"></span></div>
+    <div class="row"><label>Pen reach</label><input type="range" id="d" min="10" max="120" value="70"><span class="val" id="dv"></span></div>
+    <div class="row"><label>Speed</label><input type="range" id="spd" min="1" max="10" value="6"><span class="val" id="spdv"></span></div>
+    <div class="colors" id="colors"></div>
+    <div class="actions">
+      <button class="b-draw" id="draw">▶ Draw</button>
+      <button class="b-rnd" id="rnd">🎲 Surprise</button>
+      <button class="b-clear" id="clear">🗑️ Clear</button>
+      <button class="b-save" id="save">💾 Save</button>
+    </div>
+  </div>
+
+  <p class="back"><a href="https://littleplayers.github.io/">← Back to Little Players</a></p>
+
+<script>
+  const COLORS=["#5cc8ff","#b06bff","#ff6bcb","#ffd23f","#3ec46d","#ff8c42","#ffffff"];
+  const $=id=>document.getElementById(id);
+  const cv=$("cv"), ctx=cv.getContext("2d");
+  const cx=cv.width/2, cy=cv.height/2;
+  let color="#5cc8ff", anim=null, rainbow=false;
+
+  function fit(){ const m=Math.min(440,window.innerWidth-52); cv.style.width=m+"px"; cv.style.height=m+"px"; }
+
+  // color palette (+ rainbow option)
+  COLORS.forEach((c,i)=>{
+    const s=document.createElement("div"); s.className="swatch"+(i===0?" on":""); s.style.background=c; s.dataset.c=c;
+    s.onclick=()=>{ color=c; rainbow=false; sel(s); }; $("colors").appendChild(s);
+  });
+  const rb=document.createElement("div"); rb.className="swatch"; rb.title="Rainbow";
+  rb.style.background="conic-gradient(red,orange,yellow,green,blue,violet,red)";
+  rb.onclick=()=>{ rainbow=true; sel(rb); }; $("colors").appendChild(rb);
+  function sel(node){ document.querySelectorAll(".swatch").forEach(n=>n.classList.toggle("on",n===node)); }
+
+  const gcd=(a,b)=>b?gcd(b,a%b):a;
+  function vals(){
+    const R=+$("R").value, r=+$("r").value, d=+$("d").value, spd=+$("spd").value;
+    $("Rv").textContent=R; $("rv").textContent=r; $("dv").textContent=d; $("spdv").textContent=spd;
+    return {R,r,d,spd};
+  }
+  ["R","r","d","spd"].forEach(id=>$(id).addEventListener("input",vals));
+
+  function clear(){ ctx.clearRect(0,0,cv.width,cv.height); }
+
+  function drawSpiro(){
+    if(anim){ cancelAnimationFrame(anim); anim=null; }
+    clear();
+    const {R,r,d,spd}=vals();
+    const k=(R-r)/r;
+    // total angle so the curve closes: depends on r/gcd
+    const turns = r/gcd(R,r);
+    const tEnd = Math.PI*2*turns;
+    let t=0;
+    const step=0.02;
+    const perFrame=spd*6;
+    let first=true, hue=0;
+    ctx.lineWidth=1.6; ctx.lineCap="round";
+    function frame(){
+      ctx.beginPath();
+      for(let i=0;i<perFrame && t<=tEnd;i++,t+=step){
+        const x=cx+(R-r)*Math.cos(t)+d*Math.cos(k*t);
+        const y=cy+(R-r)*Math.sin(t)-d*Math.sin(k*t);
+        if(first){ ctx.moveTo(x,y); first=false; } else ctx.lineTo(x,y);
+      }
+      ctx.strokeStyle = rainbow ? `hsl(${hue%360},90%,65%)` : color;
+      hue+=4; ctx.stroke();
+      if(t<=tEnd) anim=requestAnimationFrame(frame); else anim=null;
+    }
+    frame();
+  }
+
+  $("draw").onclick=drawSpiro;
+  $("clear").onclick=()=>{ if(anim)cancelAnimationFrame(anim); anim=null; clear(); };
+  $("rnd").onclick=()=>{
+    $("R").value=80+Math.floor(Math.random()*120);
+    $("r").value=15+Math.floor(Math.random()*90);
+    $("d").value=20+Math.floor(Math.random()*90);
+    $("spd").value=4+Math.floor(Math.random()*6);
+    if(Math.random()<0.4){ rainbow=true; sel(rb); }
+    else { color=COLORS[Math.floor(Math.random()*COLORS.length)]; rainbow=false;
+      document.querySelectorAll(".swatch").forEach(n=>n.classList.toggle("on",n.dataset.c===color)); }
+    drawSpiro();
+  };
+  $("save").onclick=()=>{
+    // flatten onto dark bg for a nice saved image
+    const out=document.createElement("canvas"); out.width=cv.width; out.height=cv.height;
+    const o=out.getContext("2d"); o.fillStyle="#05061a"; o.fillRect(0,0,out.width,out.height); o.drawImage(cv,0,0);
+    const a=document.createElement("a"); a.download="my-spirograph.png"; a.href=out.toDataURL("image/png"); a.click();
+  };
+
+  fit(); vals(); drawSpiro();
+  window.addEventListener("resize",fit);
+</script>
+</body>
+</html>

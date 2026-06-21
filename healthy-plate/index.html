@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Healthy Plate — build a balanced meal by sorting foods into the right food groups! A fun nutrition game for kids with levels, lives and star ratings." />
+  <link rel="canonical" href="https://littleplayers.github.io/healthy-plate/" />
+  <meta name="keywords" content="kids games, nutrition game, Healthy Plate, food groups, balanced meal, free online game for kids, Little Players" />
+  <meta name="author" content="gauravs19" />
+  <meta name="theme-color" content="#e11d48" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Little Players" />
+  <meta property="og:title" content="Healthy Plate — Little Players" />
+  <meta property="og:description" content="Healthy Plate — build a balanced meal by sorting foods into the right food groups! A fun nutrition game for kids with levels, lives and star ratings." />
+  <meta property="og:url" content="https://littleplayers.github.io/healthy-plate/" />
+  <meta property="og:image" content="https://littleplayers.github.io/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Healthy Plate — Little Players" />
+  <meta name="twitter:description" content="Healthy Plate — build a balanced meal by sorting foods into the right food groups! A fun nutrition game for kids with levels, lives and star ratings." />
+  <meta name="twitter:image" content="https://littleplayers.github.io/og-image.png" />
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "VideoGame", "name": "Healthy Plate", "url": "https://littleplayers.github.io/healthy-plate/", "image": "https://littleplayers.github.io/og-image.png", "description": "Healthy Plate — build a balanced meal by sorting foods into the right food groups! A fun nutrition game for kids with levels, lives and star ratings.", "applicationCategory": "Game", "operatingSystem": "Web Browser", "genre": "education", "author": {"@type": "Organization", "name": "Little Players"}, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "audience": {"@type": "PeopleAudience", "suggestedMinAge": 5}, "isPartOf": {"@type": "WebSite", "name": "Little Players", "url": "https://littleplayers.github.io/"}}</script>
+<title>🥗 Healthy Plate — Little Players</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🥗</text></svg>" />
+<style>
+  :root{
+    --bg:#fff1f4; --card:#fff; --ink:#3a1d28; --muted:#9a7a86;
+    --accent:#e11d48; --accent2:#22b07d; --good:#22b07d; --bad:#ff5d6c;
+    --shadow:0 10px 28px rgba(225,29,72,.16); --radius:18px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; min-height:100vh; color:var(--ink);
+    font-family:"Baloo 2","Comic Sans MS","Trebuchet MS",system-ui,sans-serif;
+    background:
+      radial-gradient(circle at 12% 10%,#ffd6e0 0,transparent 42%),
+      radial-gradient(circle at 88% 8%,#d2f5e6 0,transparent 44%),
+      var(--bg);
+    display:flex; flex-direction:column; align-items:center; padding:20px;
+  }
+  header{text-align:center; margin:14px 0 6px}
+  h1{margin:0; font-size:clamp(1.8rem,6vw,2.8rem)}
+  .sub{margin:6px 0 0; color:var(--muted); font-weight:700}
+
+  .scoreboard{display:flex; gap:10px; margin:16px 0 6px; flex-wrap:wrap; justify-content:center}
+  .pill{background:var(--card); border-radius:999px; padding:8px 15px; font-weight:800;
+    box-shadow:var(--shadow); font-size:.92rem; display:flex; align-items:center; gap:6px}
+
+  .timerwrap{width:min(560px,94vw); margin:8px 0 2px}
+  .timerbar{height:12px; border-radius:999px; background:#f6dce4; overflow:hidden}
+  .timerfill{height:100%; width:100%; border-radius:999px;
+    background:linear-gradient(90deg,#22b07d,#7bd88f); transition:width .25s linear}
+  .timerfill.warn{background:linear-gradient(90deg,#ffb24a,#ffd27a)}
+  .timerfill.danger{background:linear-gradient(90deg,#ff5d6c,#ff8aa0)}
+
+  .game{background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow);
+    padding:20px 18px; width:min(560px,94vw); margin-top:10px; text-align:center}
+
+  /* The plate: sections to fill */
+  .plate{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:4px 0 14px}
+  .section{border:3px solid #f0dbe2; border-radius:16px; padding:10px 8px; cursor:pointer;
+    background:#fff9fb; transition:transform .08s,border-color .15s,background .15s;
+    user-select:none; -webkit-tap-highlight-color:transparent}
+  .section .label{font-weight:800; font-size:1rem; display:flex; align-items:center;
+    justify-content:center; gap:6px}
+  .section .prog{font-size:.82rem; color:var(--muted); font-weight:800; margin-top:2px}
+  .section .slots{display:flex; flex-wrap:wrap; gap:4px; justify-content:center; margin-top:6px;
+    min-height:30px; align-items:center}
+  .section .slots span{font-size:1.35rem; line-height:1}
+  .section.armed{border-color:var(--accent); background:#fff}
+  .section.done{border-color:var(--good); background:#eafaf2}
+  .section.flash-good{animation:flashGood .4s ease}
+  .section.flash-bad{animation:flashBad .4s ease}
+  .section.bin{grid-column:1 / -1; border-style:dashed; background:#fbf3f6}
+
+  @keyframes flashGood{0%{background:#c5f3dd}100%{background:#eafaf2}}
+  @keyframes flashBad{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+
+  /* The tray of foods to place */
+  .trayLabel{font-weight:800; color:var(--muted); margin:4px 0 6px; font-size:.95rem}
+  .tray{display:flex; flex-wrap:wrap; gap:10px; justify-content:center; min-height:64px;
+    align-items:center}
+  .food{border:none; cursor:pointer; font:inherit; font-size:2rem; width:58px; height:58px;
+    border-radius:16px; background:linear-gradient(180deg,#fff,#ffe9ef);
+    box-shadow:0 4px 0 #f3c7d4; transition:transform .08s,box-shadow .08s,opacity .2s;
+    display:flex; align-items:center; justify-content:center}
+  .food:active{transform:translateY(3px); box-shadow:0 1px 0 #f3c7d4}
+  .food.armed{transform:translateY(-4px) scale(1.08); box-shadow:0 8px 0 var(--accent),0 0 0 3px var(--accent);
+    background:#fff}
+  .food.placed{animation:pop .3s ease}
+
+  .feedback{min-height:1.6em; font-weight:800; font-size:1.1rem; margin:14px 0 0}
+  .feedback.good{color:var(--good)} .feedback.bad{color:var(--bad)}
+  .hint{color:var(--muted); font-weight:700; font-size:.88rem; margin:8px 0 0}
+
+  .overlay{position:fixed; inset:0; background:rgba(60,20,40,.55); display:none;
+    align-items:center; justify-content:center; padding:20px; z-index:9}
+  .overlay.show{display:flex}
+  .panel{background:var(--card); border-radius:22px; padding:30px 26px; text-align:center;
+    box-shadow:var(--shadow); width:min(420px,92vw)}
+  .panel h2{margin:0 0 6px; font-size:1.8rem}
+  .panel p{margin:6px 0; color:var(--muted); font-weight:700}
+  .panel .big{font-size:2.4rem; font-weight:800; color:var(--accent); margin:8px 0}
+  .panel .stars{font-size:2rem; margin:4px 0}
+  .panel button{margin-top:14px; border:none; cursor:pointer; font:inherit; font-weight:800;
+    padding:13px 26px; border-radius:999px; background:var(--accent); color:#fff; font-size:1.1rem}
+
+  .back{margin-top:18px}
+  .back a{color:var(--accent); font-weight:800; text-decoration:none}
+  @keyframes pop{0%{transform:scale(.9)}60%{transform:scale(1.12)}100%{transform:scale(1)}}
+  .pop{animation:pop .25s ease}
+  /* --- mobile/tablet responsiveness guard --- */
+  html,body{overflow-x:hidden}
+  body>*{max-width:100%}
+  @media (max-width:600px){ .sub,.hint{font-size:.82rem} .food{width:52px;height:52px;font-size:1.7rem} }
+</style>
+</head>
+<body>
+  <header>
+    <h1>🥗 Healthy Plate</h1>
+    <p class="sub">Tap a food, then tap where it belongs to build a balanced meal!</p>
+  </header>
+
+  <div class="scoreboard">
+    <div class="pill">⭐ <span id="score">0</span></div>
+    <div class="pill">🏆 Best: <span id="best">0</span></div>
+    <div class="pill">📈 Lvl <span id="level">1</span></div>
+    <div class="pill">🍽️ Plates <span id="plates">0</span></div>
+    <div class="pill hearts" id="hearts">❤️❤️❤️</div>
+  </div>
+
+  <div class="timerwrap"><div class="timerbar"><div class="timerfill" id="timerfill"></div></div></div>
+
+  <main class="game">
+    <div class="plate" id="plate"></div>
+    <p class="trayLabel">Foods to sort:</p>
+    <div class="tray" id="tray"></div>
+    <p class="feedback" id="feedback"></p>
+    <p class="hint">Tip: the biggest part of your plate should be 🥦 veggies. Treats like 🍭 go in the 🗑️ bin!</p>
+  </main>
+
+  <p class="back"><a href="https://littleplayers.github.io/">← Back to Little Players</a></p>
+
+  <div class="overlay" id="overlay">
+    <div class="panel">
+      <h2 id="ovTitle">Game Over</h2>
+      <p id="ovMsg"></p>
+      <div class="big" id="ovScore">0</div>
+      <p id="ovBest"></p>
+      <button id="ovBtn">▶ Play Again</button>
+    </div>
+  </div>
+
+<script>
+  const SK="hp_best";
+  const $=id=>document.getElementById(id);
+  const plateEl=$("plate"), trayEl=$("tray"), fb=$("feedback"), fill=$("timerfill");
+
+  // Food-group definitions. Each group has a target proportion on the plate.
+  const GROUPS=[
+    {key:"veg",   emoji:"🥦", name:"Vegetables", target:3, foods:["🥦","🥕","🌽","🥬","🫑","🍅","🥒","🍆"]},
+    {key:"fruit", emoji:"🍎", name:"Fruits",     target:2, foods:["🍎","🍌","🍇","🍓","🍊","🍉","🍐","🥝"]},
+    {key:"grain", emoji:"🍚", name:"Grains",     target:2, foods:["🍚","🍞","🍝","🥖","🥯","🌾"]},
+    {key:"protein",emoji:"🍗",name:"Protein",    target:2, foods:["🍗","🥚","🐟","🫘","🥩","🍤"]},
+    {key:"dairy", emoji:"🥛", name:"Dairy",      target:1, foods:["🥛","🧀","🧈"]},
+  ];
+  // Junk / "sometimes" foods belong in the bin, never the plate.
+  const JUNK=["🍭","🍟","🥤","🍩","🎂","🍪","🍫","🧁","🍰","🍬"];
+  const BIN_KEY="bin";
+
+  // Map every food emoji -> its correct group key (built once).
+  const FOOD_GROUP={};
+  GROUPS.forEach(g=>g.foods.forEach(f=>FOOD_GROUP[f]=g.key));
+  JUNK.forEach(f=>FOOD_GROUP[f]=BIN_KEY);
+
+  let score=0, level=1, lives=3, platesDone=0;
+  let best=load(SK,0);
+  let armed=null;            // currently selected food button
+  let counts={};             // current count placed per section key
+  let binNeeded=0, binDone=0;
+  let trayItems=[];          // remaining foods in tray
+  let timeLeft=0, timeMax=0, timer=null, running=false, locked=false;
+
+  function load(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}}
+  function save(k,v){localStorage.setItem(k,JSON.stringify(v))}
+  function ri(a,b){return a+Math.floor(Math.random()*(b-a+1))}
+  function shuffle(a){const x=[...a];for(let i=x.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[x[i],x[j]]=[x[j],x[i]]}return x}
+  function pick(a){return a[Math.floor(Math.random()*a.length)]}
+
+  function startGame(){
+    score=0; level=1; lives=3; platesDone=0;
+    $("overlay").classList.remove("show");
+    paint(); newPlate();
+  }
+
+  // Build a fresh plate + tray for the current level.
+  function newPlate(){
+    locked=false; armed=null;
+    counts={}; GROUPS.forEach(g=>counts[g.key]=0);
+    binDone=0;
+
+    // Junk count grows a little with level (1..3).
+    binNeeded=Math.min(3,1+Math.floor((level-1)/2));
+
+    // Build the exact set of foods needed to complete the plate, plus junk.
+    let items=[];
+    GROUPS.forEach(g=>{
+      for(let i=0;i<g.target;i++) items.push(pick(g.foods));
+    });
+    for(let i=0;i<binNeeded;i++) items.push(pick(JUNK));
+    trayItems=shuffle(items);
+
+    renderPlate(); renderTray();
+    fb.textContent=""; fb.className="feedback";
+
+    // Timer tightens with level. Generous base so it teaches, not punishes.
+    timeMax=Math.max(14, 34 - (level-1)*2);
+    timeLeft=timeMax; startTimer();
+  }
+
+  function renderPlate(){
+    plateEl.innerHTML="";
+    GROUPS.forEach(g=>{
+      const d=makeSection(g.key, g.emoji+" "+g.name, counts[g.key], g.target);
+      plateEl.appendChild(d);
+    });
+    // Bin spans full width at the bottom.
+    const bin=makeSection(BIN_KEY, "🗑️ Sometimes Bin", binDone, binNeeded);
+    bin.classList.add("bin");
+    plateEl.appendChild(bin);
+  }
+
+  function makeSection(key,label,have,target){
+    const d=document.createElement("div");
+    d.className="section"+(have>=target?" done":"");
+    d.dataset.key=key;
+    const filled = key===BIN_KEY
+      ? "🗑️".repeat(0) // bin shows tossed treats below instead
+      : "";
+    d.innerHTML=`<div class="label">${label}</div>
+      <div class="prog">${have}/${target}${have>=target?" ✅":""}</div>
+      <div class="slots" data-slots="${key}"></div>`;
+    d.onclick=()=>placeInto(key,d);
+    return d;
+  }
+
+  function renderTray(){
+    trayEl.innerHTML="";
+    trayItems.forEach((f,idx)=>{
+      const b=document.createElement("button");
+      b.className="food"; b.textContent=f; b.dataset.idx=idx;
+      b.setAttribute("aria-label","Food "+f);
+      b.onclick=()=>armFood(b);
+      // drag support (desktop)
+      b.draggable=true;
+      b.addEventListener("dragstart",e=>{ armFood(b); e.dataTransfer.setData("text/plain",idx); });
+      trayEl.appendChild(b);
+    });
+    // drop targets
+    [...plateEl.children].forEach(sec=>{
+      sec.addEventListener("dragover",e=>e.preventDefault());
+      sec.addEventListener("drop",e=>{ e.preventDefault(); placeInto(sec.dataset.key,sec); });
+    });
+  }
+
+  function armFood(btn){
+    if(locked) return;
+    if(armed===btn){ btn.classList.remove("armed"); armed=null; return; }
+    if(armed) armed.classList.remove("armed");
+    armed=btn; btn.classList.add("armed");
+  }
+
+  function placeInto(key,sec){
+    if(locked||!armed) {
+      if(!armed && running) flash(fb,"👆 Tap a food first, then a plate section!","");
+      return;
+    }
+    const food=armed.textContent;
+    const correctKey=FOOD_GROUP[food];
+
+    // Determine target/limit for this section.
+    let target = key===BIN_KEY ? binNeeded : GROUPS.find(g=>g.key===key).target;
+    let have   = key===BIN_KEY ? binDone   : counts[key];
+
+    // CASE 1: correct group AND section not yet full -> good placement.
+    if(correctKey===key && have<target){
+      if(key===BIN_KEY) binDone++; else counts[key]++;
+      addSlot(sec,food);
+      consumeArmed();
+      score+=10; if(best<score){best=score;save(SK,best);}
+      paint(); markDone(sec,key);
+      goodFx(sec, key===BIN_KEY ? "🗑️ Good — that's a sometimes food!" : "🎉 Nice! +10");
+      checkWin();
+      return;
+    }
+
+    // CASE 2: correct group but section already full -> overfill mistake.
+    if(correctKey===key && have>=target){
+      mistake(sec, `That part is full! ${gName(key)} only needs ${target}.`);
+      return;
+    }
+
+    // CASE 3: junk placed on the plate (not the bin).
+    if(correctKey===BIN_KEY && key!==BIN_KEY){
+      mistake(sec, `${food} is a sometimes food — it goes in the 🗑️ bin!`);
+      return;
+    }
+
+    // CASE 4: a real food dropped in the bin.
+    if(correctKey!==BIN_KEY && key===BIN_KEY){
+      mistake(sec, `${food} is healthy — keep it on the plate, not the bin!`);
+      return;
+    }
+
+    // CASE 5: wrong food group.
+    mistake(sec, `${food} belongs in ${gName(correctKey)}, not ${gName(key)}.`);
+  }
+
+  function gName(key){
+    if(key===BIN_KEY) return "the Sometimes Bin";
+    const g=GROUPS.find(g=>g.key===key); return g?g.name:key;
+  }
+
+  function addSlot(sec,food){
+    const slots=sec.querySelector(".slots");
+    const s=document.createElement("span");
+    s.textContent=food; s.className="pop";
+    slots.appendChild(s);
+  }
+
+  function markDone(sec,key){
+    const target = key===BIN_KEY ? binNeeded : GROUPS.find(g=>g.key===key).target;
+    const have   = key===BIN_KEY ? binDone   : counts[key];
+    sec.querySelector(".prog").innerHTML = `${have}/${target}${have>=target?" ✅":""}`;
+    if(have>=target) sec.classList.add("done");
+  }
+
+  function consumeArmed(){
+    armed.classList.add("placed");
+    const btn=armed; armed=null;
+    btn.disabled=true;
+    setTimeout(()=>btn.remove(),180);
+  }
+
+  function goodFx(sec,msg){
+    sec.classList.remove("flash-good"); void sec.offsetWidth; sec.classList.add("flash-good");
+    fb.textContent=msg; fb.className="feedback good";
+  }
+
+  function mistake(sec,msg){
+    sec.classList.remove("flash-bad"); void sec.offsetWidth; sec.classList.add("flash-bad");
+    if(armed){ armed.classList.remove("armed"); armed=null; }
+    lives--; paint();
+    fb.textContent="❌ "+msg; fb.className="feedback bad";
+    if(lives<=0){ locked=true; stopTimer(); setTimeout(gameOver,1200); }
+  }
+
+  function flash(el,msg,cls){ el.textContent=msg; el.className="feedback "+cls; }
+
+  // Win when every group hits its target AND every junk item is binned.
+  function checkWin(){
+    const groupsOk=GROUPS.every(g=>counts[g.key]>=g.target);
+    const binOk=binDone>=binNeeded;
+    if(groupsOk && binOk && !locked){
+      locked=true; stopTimer();
+      const timeBonus=Math.round(timeLeft*3);
+      const bonus=50+timeBonus;
+      score+=bonus; if(best<score){best=score;save(SK,best);}
+      platesDone++;
+      const stars = timeLeft>timeMax*0.6 ? "⭐⭐⭐" : timeLeft>timeMax*0.3 ? "⭐⭐" : "⭐";
+      paint();
+      fb.textContent=`🍽️ Balanced plate! ${stars}  +${bonus} (⏱ +${timeBonus})`;
+      fb.className="feedback good";
+      level++;
+      setTimeout(newPlate,1600);
+    }
+  }
+
+  function startTimer(){
+    stopTimer(); running=true; updateBar();
+    timer=setInterval(()=>{
+      timeLeft-=0.1;
+      if(timeLeft<=0){ timeLeft=0; updateBar(); timeUp(); } else updateBar();
+    },100);
+  }
+  function stopTimer(){ if(timer){clearInterval(timer);timer=null} running=false; }
+  function updateBar(){
+    const pct=Math.max(0,(timeLeft/timeMax)*100);
+    fill.style.width=pct+"%";
+    fill.className="timerfill"+(pct<25?" danger":pct<50?" warn":"");
+  }
+
+  function timeUp(){
+    if(locked) return; locked=true; stopTimer();
+    lives--; paint();
+    fb.textContent="⏰ Time's up on this plate!"; fb.className="feedback bad";
+    if(lives<=0) setTimeout(gameOver,1300);
+    else { level=Math.max(1,level); setTimeout(newPlate,1300); }
+  }
+
+  function gameOver(){
+    stopTimer();
+    $("ovTitle").textContent = (score>=best && score>0) ? "🏆 New Best!" : "Game Over";
+    $("ovMsg").textContent=`You built ${platesDone} balanced plate${platesDone===1?"":"s"}. Great eating!`;
+    $("ovScore").textContent=score+" pts";
+    $("ovBest").textContent="Best score: "+best;
+    $("overlay").classList.add("show");
+  }
+
+  function paint(){
+    $("score").textContent=score; $("best").textContent=best;
+    $("level").textContent=level; $("plates").textContent=platesDone;
+    $("hearts").textContent="❤️".repeat(Math.max(0,lives))+"🤍".repeat(Math.max(0,3-lives));
+  }
+
+  // Keyboard: number keys 1-6 arm the next available food; arrow/click sections.
+  // Simpler approach: 1-9 select tray food by position; letters pick a section.
+  const SECTION_KEYS={v:"veg",f:"fruit",g:"grain",p:"protein",d:"dairy",b:BIN_KEY};
+  document.addEventListener("keydown",e=>{
+    if(!running||locked) return;
+    const n=parseInt(e.key,10);
+    if(n>=1 && n<=9){
+      const b=trayEl.querySelectorAll(".food")[n-1];
+      if(b) armFood(b);
+      return;
+    }
+    const key=SECTION_KEYS[e.key.toLowerCase()];
+    if(key){
+      const sec=[...plateEl.children].find(s=>s.dataset.key===key);
+      if(sec) placeInto(key,sec);
+    }
+  });
+
+  $("ovBtn").onclick=startGame;
+  startGame();
+</script>
+</body>
+</html>

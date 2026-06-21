@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Market Day — run your own shop! Add up the basket and make the right change. A fun money math game for kids with levels, lives and combos." />
+  <link rel="canonical" href="https://littleplayers.github.io/market-day/" />
+  <meta name="keywords" content="kids games, money game, Market Day, making change, addition game, free online game for kids, Little Players" />
+  <meta name="author" content="gauravs19" />
+  <meta name="theme-color" content="#16a34a" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Little Players" />
+  <meta property="og:title" content="Market Day — Little Players" />
+  <meta property="og:description" content="Market Day — run your own shop! Add up the basket and make the right change. A fun money math game for kids with levels, lives and combos." />
+  <meta property="og:url" content="https://littleplayers.github.io/market-day/" />
+  <meta property="og:image" content="https://littleplayers.github.io/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Market Day — Little Players" />
+  <meta name="twitter:description" content="Market Day — run your own shop! Add up the basket and make the right change. A fun money math game for kids with levels, lives and combos." />
+  <meta name="twitter:image" content="https://littleplayers.github.io/og-image.png" />
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "VideoGame", "name": "Market Day", "url": "https://littleplayers.github.io/market-day/", "image": "https://littleplayers.github.io/og-image.png", "description": "Market Day — run your own shop! Add up the basket and make the right change. A fun money math game for kids with levels, lives and combos.", "applicationCategory": "Game", "operatingSystem": "Web Browser", "genre": "education", "author": {"@type": "Organization", "name": "Little Players"}, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "INR"}, "audience": {"@type": "PeopleAudience", "suggestedMinAge": 5}, "isPartOf": {"@type": "WebSite", "name": "Little Players", "url": "https://littleplayers.github.io/"}}</script>
+<title>🛒 Market Day — Little Players</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛒</text></svg>" />
+<style>
+  :root{
+    --bg:#eafaf0; --card:#fff; --ink:#1f3d2b; --muted:#6f8a78;
+    --accent:#16a34a; --accent2:#0f8a3c; --good:#16a34a; --bad:#ff5d6c;
+    --shadow:0 10px 28px rgba(40,140,80,.16); --radius:18px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; min-height:100vh; color:var(--ink);
+    font-family:"Baloo 2","Comic Sans MS","Trebuchet MS",system-ui,sans-serif;
+    background:
+      radial-gradient(circle at 12% 10%,#cdf0d8 0,transparent 42%),
+      radial-gradient(circle at 88% 8%,#fff0c9 0,transparent 44%),
+      var(--bg);
+    display:flex; flex-direction:column; align-items:center; padding:20px;
+  }
+  header{text-align:center; margin:14px 0 6px}
+  h1{margin:0; font-size:clamp(1.8rem,6vw,2.8rem)}
+  .sub{margin:6px 0 0; color:var(--muted); font-weight:700}
+
+  .scoreboard{display:flex; gap:10px; margin:16px 0 6px; flex-wrap:wrap; justify-content:center}
+  .pill{background:var(--card); border-radius:999px; padding:8px 15px; font-weight:800;
+    box-shadow:var(--shadow); font-size:.92rem; display:flex; align-items:center; gap:6px}
+
+  .timerwrap{width:min(540px,94vw); margin:8px 0 2px}
+  .timerbar{height:12px; border-radius:999px; background:#d7eede; overflow:hidden}
+  .timerfill{height:100%; width:100%; border-radius:999px;
+    background:linear-gradient(90deg,#16a34a,#7bd88f); transition:width .25s linear}
+  .timerfill.warn{background:linear-gradient(90deg,#ffb24a,#ffd27a)}
+  .timerfill.danger{background:linear-gradient(90deg,#ff5d6c,#ff8aa0)}
+
+  .game{background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow);
+    padding:22px 20px; width:min(540px,94vw); margin-top:10px; text-align:center}
+
+  .step{font-weight:800; color:var(--accent); letter-spacing:.5px; font-size:.95rem; margin:0 0 4px}
+  .prompt{font-size:clamp(1.2rem,4.6vw,1.5rem); font-weight:800; margin:2px 0 16px}
+  .customer{font-size:2.4rem; margin:2px 0 6px}
+
+  /* basket items */
+  .basket{display:flex; flex-direction:column; gap:9px; margin:4px 0 16px}
+  .item{display:flex; align-items:center; justify-content:space-between; gap:10px;
+    background:#f3fbf5; border:2px solid #dcefe2; border-radius:14px; padding:11px 16px;
+    font-weight:800; font-size:1.15rem}
+  .item .name{display:flex; align-items:center; gap:10px}
+  .item .emo{font-size:1.6rem}
+  .item .price{color:var(--accent2)}
+
+  /* total display (step 1) */
+  .total{font-size:clamp(2rem,9vw,2.8rem); font-weight:800; min-height:1.2em;
+    margin:2px 0 10px; letter-spacing:1px}
+  .total .cap{color:var(--muted); font-size:1rem; font-weight:700; display:block; margin-bottom:2px; letter-spacing:0}
+
+  /* keypad */
+  .keypad{display:grid; grid-template-columns:repeat(3,1fr); gap:11px; max-width:320px; margin:0 auto}
+  .key{border:none; cursor:pointer; font:inherit; font-weight:800; font-size:1.7rem;
+    padding:16px 0; border-radius:14px; color:#fff;
+    background:linear-gradient(180deg,var(--accent),var(--accent2));
+    box-shadow:0 5px 0 #0c6f30; transition:transform .08s,box-shadow .08s}
+  .key:active{transform:translateY(4px); box-shadow:0 1px 0 #0c6f30}
+  .key.util{background:linear-gradient(180deg,#9aa7b3,#7d8b98); box-shadow:0 5px 0 #5e6b78; font-size:1.15rem}
+  .key.enter{background:linear-gradient(180deg,#ffb020,#f59300); box-shadow:0 5px 0 #c97600; font-size:1.15rem}
+
+  /* change step */
+  .change-info{display:flex; flex-direction:column; gap:4px; margin:2px 0 14px; font-weight:800}
+  .change-info .row{font-size:1.05rem}
+  .change-info .given{color:var(--accent2); font-size:1.35rem}
+  .change-info .need{color:var(--muted)}
+  .change-info .need.zero{color:var(--good)}
+
+  .denoms{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin:2px 0 14px}
+  @media (max-width:420px){ .denoms{grid-template-columns:repeat(3,1fr)} }
+  .denom{border:none; cursor:pointer; font:inherit; font-weight:800; font-size:1.15rem;
+    padding:15px 0; border-radius:14px; color:#1f3d2b;
+    background:linear-gradient(180deg,#fff4cf,#ffe89a);
+    box-shadow:0 5px 0 #d9b94e; transition:transform .08s,box-shadow .08s}
+  .denom:active{transform:translateY(4px); box-shadow:0 1px 0 #d9b94e}
+  .denom.note{background:linear-gradient(180deg,#cde8d4,#a7d8b6); box-shadow:0 5px 0 #6fae84}
+
+  .actions{display:flex; gap:10px; justify-content:center; flex-wrap:wrap}
+  .btn{border:none; cursor:pointer; font:inherit; font-weight:800; font-size:1.05rem;
+    padding:13px 22px; border-radius:999px; color:#fff;
+    background:linear-gradient(180deg,var(--accent),var(--accent2)); box-shadow:0 5px 0 #0c6f30;
+    transition:transform .08s,box-shadow .08s}
+  .btn:active{transform:translateY(4px); box-shadow:0 1px 0 #0c6f30}
+  .btn.ghost{background:linear-gradient(180deg,#9aa7b3,#7d8b98); box-shadow:0 5px 0 #5e6b78}
+
+  .feedback{min-height:1.6em; font-weight:800; font-size:1.2rem; margin:14px 0 0}
+  .feedback.good{color:var(--good)} .feedback.bad{color:var(--bad)}
+  .hearts{font-size:1.1rem; letter-spacing:2px}
+
+  .overlay{position:fixed; inset:0; background:rgba(20,60,40,.55); display:none;
+    align-items:center; justify-content:center; padding:20px; z-index:9}
+  .overlay.show{display:flex}
+  .panel{background:var(--card); border-radius:22px; padding:30px 26px; text-align:center;
+    box-shadow:var(--shadow); width:min(420px,92vw)}
+  .panel h2{margin:0 0 6px; font-size:1.8rem}
+  .panel p{margin:6px 0; color:var(--muted); font-weight:700}
+  .panel .big{font-size:2.4rem; font-weight:800; color:var(--accent); margin:8px 0}
+  .panel button{margin-top:14px; border:none; cursor:pointer; font:inherit; font-weight:800;
+    padding:13px 26px; border-radius:999px; background:var(--accent); color:#fff; font-size:1.1rem}
+
+  .back{margin-top:18px}
+  .back a{color:var(--accent); font-weight:800; text-decoration:none}
+  @keyframes pop{0%{transform:scale(.9)}60%{transform:scale(1.06)}100%{transform:scale(1)}}
+  .pop{animation:pop .25s ease}
+  @keyframes coin{0%{transform:scale(1)}40%{transform:scale(1.25) rotate(-8deg)}100%{transform:scale(1)}}
+  .coinpop{animation:coin .22s ease}
+  .hide{display:none !important}
+  /* --- mobile/tablet responsiveness guard --- */
+  html,body{overflow-x:hidden}
+  body>*{max-width:100%}
+  @media (max-width:600px){ .sub{font-size:.84rem} }
+</style>
+</head>
+<body>
+  <header>
+    <h1>🛒 Market Day</h1>
+    <p class="sub">Run your shop — add the basket, then make change!</p>
+  </header>
+
+  <div class="scoreboard">
+    <div class="pill">⭐ <span id="score">0</span></div>
+    <div class="pill">🏆 Best: <span id="best">0</span></div>
+    <div class="pill">📈 Lvl <span id="level">1</span></div>
+    <div class="pill">🔥 Combo <span id="streak">0</span></div>
+    <div class="pill hearts" id="hearts">❤️❤️❤️</div>
+  </div>
+
+  <div class="timerwrap"><div class="timerbar"><div class="timerfill" id="timerfill"></div></div></div>
+
+  <main class="game">
+    <div class="customer" id="customer">🧑</div>
+
+    <!-- STEP 1: total the basket -->
+    <section id="step1">
+      <p class="step">STEP 1 · TOTAL THE BASKET</p>
+      <p class="prompt">How much is the basket?</p>
+      <div class="basket" id="basket"></div>
+      <div class="total"><span class="cap">Your total</span><span id="entry">₹0</span></div>
+      <div class="keypad" id="keypad">
+        <button class="key" data-k="1">1</button>
+        <button class="key" data-k="2">2</button>
+        <button class="key" data-k="3">3</button>
+        <button class="key" data-k="4">4</button>
+        <button class="key" data-k="5">5</button>
+        <button class="key" data-k="6">6</button>
+        <button class="key" data-k="7">7</button>
+        <button class="key" data-k="8">8</button>
+        <button class="key" data-k="9">9</button>
+        <button class="key util" data-k="clear">⌫</button>
+        <button class="key" data-k="0">0</button>
+        <button class="key enter" data-k="enter">✓ Enter</button>
+      </div>
+    </section>
+
+    <!-- STEP 2: make change -->
+    <section id="step2" class="hide">
+      <p class="step">STEP 2 · MAKE CHANGE</p>
+      <p class="prompt" id="changePrompt">The customer paid with ₹50.</p>
+      <div class="change-info">
+        <div class="row">Change to give back: <span id="changeOwed">₹0</span></div>
+        <div class="row given">Change given: <span id="changeGiven">₹0</span></div>
+        <div class="row need" id="changeNeed">Still needed: ₹0</div>
+      </div>
+      <div class="denoms" id="denoms"></div>
+      <div class="actions">
+        <button class="btn ghost" id="resetChange">↺ Reset</button>
+        <button class="btn" id="giveChange">💰 Give Change</button>
+      </div>
+    </section>
+
+    <p class="feedback" id="feedback"></p>
+  </main>
+
+  <p class="back"><a href="https://littleplayers.github.io/">← Back to Little Players</a></p>
+
+  <div class="overlay" id="overlay">
+    <div class="panel">
+      <h2 id="ovTitle">Shop Closed</h2>
+      <p id="ovMsg"></p>
+      <div class="big" id="ovScore">0</div>
+      <p id="ovBest"></p>
+      <button id="ovBtn">▶ Play Again</button>
+    </div>
+  </div>
+
+<script>
+  const SK="md_best";
+  const $=id=>document.getElementById(id);
+  const fill=$("timerfill"), fb=$("feedback");
+
+  // grocery catalog (emoji + name). Prices are assigned per-round.
+  const GOODS=[
+    {e:"🍎",n:"Apple"},{e:"🍞",n:"Bread"},{e:"🥛",n:"Milk"},{e:"🍌",n:"Banana"},
+    {e:"🥚",n:"Eggs"},{e:"🧀",n:"Cheese"},{e:"🍅",n:"Tomato"},{e:"🥔",n:"Potato"},
+    {e:"🧅",n:"Onion"},{e:"🥕",n:"Carrot"},{e:"🍪",n:"Biscuits"},{e:"🍫",n:"Chocolate"},
+    {e:"🧃",n:"Juice"},{e:"🍚",n:"Rice"},{e:"🫖",n:"Tea"},{e:"🧈",n:"Butter"},
+    {e:"🍇",n:"Grapes"},{e:"🥥",n:"Coconut"}
+  ];
+  const CUSTOMERS=["🧑","👩","👨","👵","👴","🧒","👧","👦","🧕","👳"];
+  const DENOMS=[1,2,5,10,20,50,100,500];   // standard denominations
+  const NOTES=[10,20,50,100,200,500,1000]; // standard notes the customer pays with
+
+  let score=0, level=1, streak=0, lives=3, served=0;
+  let best=load(SK,0);
+  let locked=false, phase=1;
+  let basketTotal=0, entryStr="";
+  let paidNote=0, changeOwed=0, changeGiven=0;
+  let timeLeft=0, timeMax=0, timer=null, running=false;
+
+  function load(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}}
+  function save(k,v){localStorage.setItem(k,JSON.stringify(v))}
+  function ri(a,b){return a+Math.floor(Math.random()*(b-a+1))}
+
+  // smallest standard note that is >= total
+  function payNote(total){
+    for(const n of NOTES){ if(n>=total) return n; }
+    return NOTES[NOTES.length-1];
+  }
+
+  function makeBasket(){
+    // item count and price ceiling grow with level
+    const count = Math.min(4, 2 + Math.floor((level-1)/2));      // 2 -> 3 -> 4
+    const maxPrice = Math.min(90, 15 + (level-1)*8);             // price ceiling grows
+    const pool=[...GOODS];
+    const items=[];
+    let total=0;
+    for(let i=0;i<count;i++){
+      const idx=Math.floor(Math.random()*pool.length);
+      const g=pool.splice(idx,1)[0];
+      const price=ri(2,maxPrice);
+      items.push({...g,price});
+      total+=price;
+    }
+    return {items,total};
+  }
+
+  function startGame(){
+    score=0; level=1; streak=0; lives=3; served=0;
+    $("overlay").classList.remove("show");
+    paint(); newCustomer();
+  }
+
+  function newCustomer(){
+    locked=false;
+    const b=makeBasket();
+    basketTotal=b.total;
+    paidNote=payNote(basketTotal);
+    changeOwed=paidNote-basketTotal;
+
+    $("customer").textContent=CUSTOMERS[Math.floor(Math.random()*CUSTOMERS.length)];
+
+    // render basket
+    const wrap=$("basket"); wrap.innerHTML="";
+    b.items.forEach(it=>{
+      const row=document.createElement("div");
+      row.className="item";
+      row.innerHTML=`<span class="name"><span class="emo">${it.e}</span>${it.n}</span><span class="price">₹${it.price}</span>`;
+      wrap.appendChild(row);
+    });
+
+    // reset step 1
+    entryStr="";
+    updateEntry();
+    showStep(1);
+    fb.textContent=""; fb.className="feedback";
+    popEl($("basket"));
+
+    timeMax=Math.max(12, 26 - (level-1)*1.5);
+    timeLeft=timeMax; startTimer();
+  }
+
+  function showStep(n){
+    phase=n;
+    $("step1").classList.toggle("hide",n!==1);
+    $("step2").classList.toggle("hide",n!==2);
+  }
+
+  /* ---------- STEP 1: keypad ---------- */
+  function updateEntry(){
+    $("entry").textContent="₹"+(entryStr===""?"0":entryStr);
+  }
+  function keyPress(k){
+    if(locked||phase!==1) return;
+    if(k==="clear"){ entryStr=entryStr.slice(0,-1); updateEntry(); return; }
+    if(k==="enter"){ submitTotal(); return; }
+    // digit
+    if(entryStr.length>=5) return;            // guard absurd numbers
+    if(entryStr===""&&k==="0") return;        // no leading zero
+    entryStr+=k; updateEntry();
+  }
+  function submitTotal(){
+    if(locked||phase!==1) return;
+    if(entryStr===""){ flash("Type the total first 🙂",false,true); return; }
+    const val=parseInt(entryStr,10);
+    if(val===basketTotal){
+      // correct -> move to change step (timer keeps running for the whole customer)
+      flash("✅ Total correct!",true,true);
+      setTimeout(beginChange,650);
+    } else {
+      locked=true; stopTimer();
+      lives--; streak=0; paint();
+      fb.textContent=`❌ It was ₹${basketTotal}. Try the next one!`; fb.className="feedback bad";
+      if(lives<=0) setTimeout(gameOver,1300); else setTimeout(newCustomer,1300);
+    }
+  }
+
+  /* ---------- STEP 2: change ---------- */
+  function beginChange(){
+    changeGiven=0;
+    $("changePrompt").textContent=`The customer paid with ₹${paidNote}.`;
+    $("changeOwed").textContent="₹"+changeOwed;
+    buildDenoms();
+    updateChange();
+    showStep(2);
+    fb.textContent=""; fb.className="feedback";
+  }
+  function buildDenoms(){
+    const wrap=$("denoms"); wrap.innerHTML="";
+    DENOMS.forEach(d=>{
+      // only offer 500 when it could be useful
+      if(d===500 && changeOwed<500) return;
+      const b=document.createElement("button");
+      b.className="denom"+(d>=10?" note":"");
+      b.textContent="₹"+d;
+      b.onclick=()=>addCoin(d,b);
+      wrap.appendChild(b);
+    });
+  }
+  function addCoin(d,btn){
+    if(locked||phase!==2) return;
+    changeGiven+=d;
+    popCoin(btn);
+    updateChange();
+  }
+  function resetChange(){
+    if(locked||phase!==2) return;
+    changeGiven=0; updateChange();
+  }
+  function updateChange(){
+    $("changeGiven").textContent="₹"+changeGiven;
+    const need=changeOwed-changeGiven;
+    const el=$("changeNeed");
+    if(need>0){ el.textContent="Still needed: ₹"+need; el.className="need"; }
+    else if(need===0){ el.textContent="Perfect — ₹0 left! 🎉"; el.className="need zero"; }
+    else { el.textContent="Too much by ₹"+(-need); el.className="need"; el.style.color="var(--bad)"; return; }
+    el.style.color="";
+  }
+  function giveChange(){
+    if(locked||phase!==2) return;
+    if(changeGiven!==changeOwed){
+      // wrong change -> costs a life, reveal correct amount
+      locked=true; stopTimer();
+      lives--; streak=0; paint();
+      fb.textContent=`❌ Correct change was ₹${changeOwed}. You gave ₹${changeGiven}.`; fb.className="feedback bad";
+      if(lives<=0) setTimeout(gameOver,1500); else setTimeout(newCustomer,1500);
+      return;
+    }
+    // success!
+    locked=true; stopTimer();
+    const timeBonus=Math.round(timeLeft);
+    const pts=15+timeBonus+streak*5;
+    streak++; served++; score+=pts;
+    if(best<score){ best=score; save(SK,best); }
+    if(served%3===0) level++;
+    paint();
+    fb.textContent=`🎉 Customer happy! +${pts} (⏱ +${timeBonus})`; fb.className="feedback good";
+    popEl($("customer"));
+    setTimeout(newCustomer,1100);
+  }
+
+  /* ---------- timer ---------- */
+  function startTimer(){
+    stopTimer(); running=true; updateBar();
+    timer=setInterval(()=>{
+      timeLeft-=0.1;
+      if(timeLeft<=0){ timeLeft=0; updateBar(); timeUp(); } else updateBar();
+    },100);
+  }
+  function stopTimer(){ if(timer){clearInterval(timer);timer=null} running=false; }
+  function updateBar(){
+    const pct=Math.max(0,(timeLeft/timeMax)*100);
+    fill.style.width=pct+"%";
+    fill.className="timerfill"+(pct<25?" danger":pct<50?" warn":"");
+  }
+  function timeUp(){
+    if(locked) return; locked=true; stopTimer();
+    lives--; streak=0; paint();
+    if(phase===1) fb.textContent=`⏰ Time! The basket was ₹${basketTotal}.`;
+    else fb.textContent=`⏰ Time! Correct change was ₹${changeOwed}.`;
+    fb.className="feedback bad";
+    if(lives<=0) setTimeout(gameOver,1400); else setTimeout(newCustomer,1400);
+  }
+
+  /* ---------- helpers ---------- */
+  function flash(msg,good,keepTimer){
+    fb.textContent=msg; fb.className="feedback "+(good?"good":"bad");
+  }
+  function popEl(el){ el.classList.remove("pop"); void el.offsetWidth; el.classList.add("pop"); }
+  function popCoin(el){ el.classList.remove("coinpop"); void el.offsetWidth; el.classList.add("coinpop"); }
+
+  function gameOver(){
+    stopTimer();
+    $("ovTitle").textContent=(score>=best && score>0) ? "🏆 New Best!" : "🛒 Shop Closed";
+    $("ovMsg").textContent=`You served ${served} happy customer${served===1?"":"s"} today!`;
+    $("ovScore").textContent=score+" pts";
+    $("ovBest").textContent="Best score: "+best;
+    $("overlay").classList.add("show");
+  }
+
+  function paint(){
+    $("score").textContent=score; $("best").textContent=best;
+    $("level").textContent=level; $("streak").textContent=streak;
+    $("hearts").textContent="❤️".repeat(Math.max(0,lives))+"🤍".repeat(Math.max(0,3-lives));
+  }
+
+  /* ---------- wiring (mouse + touch) ---------- */
+  $("keypad").querySelectorAll(".key").forEach(b=>{
+    b.onclick=()=>{ keyPress(b.dataset.k); popCoin(b); };
+  });
+  $("giveChange").onclick=giveChange;
+  $("resetChange").onclick=resetChange;
+  $("ovBtn").onclick=startGame;
+
+  /* ---------- keyboard ---------- */
+  document.addEventListener("keydown",e=>{
+    if(!running||locked) return;
+    if(phase===1){
+      if(e.key>="0"&&e.key<="9"){ keyPress(e.key); }
+      else if(e.key==="Backspace"){ e.preventDefault(); keyPress("clear"); }
+      else if(e.key==="Enter"){ keyPress("enter"); }
+    } else if(phase===2){
+      if(e.key==="Enter"){ giveChange(); }
+      else if(e.key==="Backspace"){ e.preventDefault(); resetChange(); }
+    }
+  });
+
+  startGame();
+</script>
+</body>
+</html>

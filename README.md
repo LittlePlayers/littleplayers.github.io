@@ -1,62 +1,95 @@
 # 🎮 Little Players
 
-A kid-friendly **game zone** homepage. Browse games by type, mark favorites, and
-jump straight into any game.
+A kid-friendly **game zone** — browse games by category, search, mark favorites, and
+jump straight into any game. Many games quietly teach real skills (money, road safety,
+healthy eating, words, numbers).
 
-Everything lives under the **LittlePlayers** org:
-- **Homepage** (this repo, `littleplayers.github.io`) → https://littleplayers.github.io/
-- **Games** each live in their own repo → served at `https://littleplayers.github.io/<repo-name>/`
+> **This is now a monorepo.** The homepage **and every game** live in this single
+> `littleplayers.github.io` repo. Each game is a folder served at
+> `https://littleplayers.github.io/<slug>/`. No more one-repo-per-game.
 
-The homepage just links out to each game's URL — `games.json` is the only glue.
+## Structure
 
-## How it works
+```
+littleplayers.github.io/
+├── index.html / style.css / app.js   ← the landing page
+├── games.json                        ← the single source of truth (registry)
+├── build.js                          ← regenerates SEO blocks from games.json
+├── market-day/index.html             ← each game is just a folder
+├── hanuman-run/index.html
+└── …
+```
 
-- `index.html` / `style.css` / `app.js` — the landing page (category browser + preferences).
-- `games.json` — the **registry** of all games. The homepage reads this file and
-  renders a card per entry. Preferences (favorites, recently played) are stored in
-  the browser via `localStorage`.
+- `games.json` defines two things: the **categories** (order, label, icon, blurb) and
+  the **games** (title, slug, url, category, icon, color, description). The homepage
+  reads it and renders grouped category sections. Favorites are stored in `localStorage`.
+- Each game is a **single self-contained `index.html`** (inline CSS/JS, no build, no CDN).
 
 ## Adding a new game
 
-1. Create a new repo under the **LittlePlayers** org (e.g. `code-the-robot`) with an `index.html`.
-2. Enable **GitHub Pages** on that repo (Settings → Pages → deploy from `main`).
-   It will be served at `https://littleplayers.github.io/<repo-name>/`.
-3. Add one entry to `games.json` here:
+1. Create a folder `your-slug/` with a self-contained `index.html`
+   (copy an existing game like `math-blast/index.html` for the house style:
+   SEO head, Baloo 2 font, scoreboard pills, overlay, `← Back to Little Players` link).
+2. Add one entry to the `games` array in `games.json`:
 
    ```json
    {
-     "title": "Code the Robot",
-     "slug": "code-the-robot",
-     "url": "https://littleplayers.github.io/code-the-robot/",
-     "category": "coding",
-     "icon": "🤖",
+     "title": "Memory Match",
+     "slug": "memory-match",
+     "url": "https://littleplayers.github.io/memory-match/",
+     "category": "brain",
+     "icon": "🧩",
      "color": "#22c1a4",
-     "description": "Guide the robot with code blocks."
+     "description": "Flip and pair the cards from memory."
    }
    ```
 
-4. Commit & push — the new card appears automatically.
+   (If it's a brand-new category, add it to the `categories` array too.)
+3. Run the build to refresh the SEO blocks, then commit & push:
+
+   ```bash
+   node build.js
+   git add -A && git commit -m "Add Memory Match" && git push
+   ```
+
+The card appears automatically — `app.js` renders it from `games.json`.
+
+## build.js
+
+`games.json` is the **single source of truth**. `build.js` reads it and regenerates two
+auto-generated regions in `index.html` (between `*:BEGIN`/`*:END` markers):
+
+- the crawlable `<nav class="sr-only">` list of all games (SEO + no-JS fallback)
+- the schema.org `ItemList` JSON-LD
+
+Always run `node build.js` after editing `games.json` so the SEO stays in sync.
+Don't hand-edit the marked regions.
 
 ## Deploy
 
 This repo is named `littleplayers.github.io` (matching the org), so pushing to `main`
-publishes it at the org root: **https://littleplayers.github.io/**. Enable Pages in
-repo Settings if not already.
+publishes at the org root: **https://littleplayers.github.io/**, and every game folder
+is served at `https://littleplayers.github.io/<slug>/`. Enable Pages (Settings → Pages →
+deploy from `main`) if not already.
 
 ## Games
 
-| Game | Genre | Repo |
-|------|-------|------|
-| 🧠 Brain Quest | learning | [LittlePlayers/brain-quest](https://github.com/LittlePlayers/brain-quest) |
-| 🔠 Word Scramble | word | [LittlePlayers/word-scramble](https://github.com/LittlePlayers/word-scramble) |
-| ➗ Math Blast | math | [LittlePlayers/math-blast](https://github.com/LittlePlayers/math-blast) |
-| 🐝 Spelling Bee | word | [LittlePlayers/spelling-bee](https://github.com/LittlePlayers/spelling-bee) |
-| 🧭 Maze Runner | puzzle | [LittlePlayers/maze-runner](https://github.com/LittlePlayers/maze-runner) |
-| 🌀 Spirograph | creativity | [LittlePlayers/spirograph](https://github.com/LittlePlayers/spirograph) |
-| 🎨 Doodle Pad | creativity | [LittlePlayers/doodle-pad](https://github.com/LittlePlayers/doodle-pad) |
-| 🔮 Kaleidoscope Draw | creativity | [LittlePlayers/kaleidoscope-draw](https://github.com/LittlePlayers/kaleidoscope-draw) |
-| 🐸 Animal Band | creativity | [LittlePlayers/animal-band](https://github.com/LittlePlayers/animal-band) |
-| 👗 Dress Up | creativity | [LittlePlayers/dress-up](https://github.com/LittlePlayers/dress-up) |
-| 🚩 Hanuman Run | arcade | [LittlePlayers/hanuman-run](https://github.com/LittlePlayers/hanuman-run) |
-| 🪈 Krishna's Cows | adventure | [LittlePlayers/krishnas-cows](https://github.com/LittlePlayers/krishnas-cows) |
-| 🏹 Arjuna's Aim | action | [LittlePlayers/arjunas-aim](https://github.com/LittlePlayers/arjunas-aim) |
+| Game | Category | Path |
+|------|----------|------|
+| 🛒 Market Day | Life Skills | [/market-day/](https://littleplayers.github.io/market-day/) |
+| 💰 Budget Hero | Life Skills | [/budget-hero/](https://littleplayers.github.io/budget-hero/) |
+| 🚦 Cross the Road Smart | Life Skills | [/cross-the-road/](https://littleplayers.github.io/cross-the-road/) |
+| 🥗 Healthy Plate | Life Skills | [/healthy-plate/](https://littleplayers.github.io/healthy-plate/) |
+| 🚩 Hanuman Run | Indian Mythology | [/hanuman-run/](https://littleplayers.github.io/hanuman-run/) |
+| 🪈 Krishna's Cows | Indian Mythology | [/krishnas-cows/](https://littleplayers.github.io/krishnas-cows/) |
+| 🏹 Arjuna's Aim | Indian Mythology | [/arjunas-aim/](https://littleplayers.github.io/arjunas-aim/) |
+| 🔠 Word Scramble | Words & Letters | [/word-scramble/](https://littleplayers.github.io/word-scramble/) |
+| 🐝 Spelling Bee | Words & Letters | [/spelling-bee/](https://littleplayers.github.io/spelling-bee/) |
+| 🧠 Brain Quest | Brain & Numbers | [/brain-quest/](https://littleplayers.github.io/brain-quest/) |
+| ➗ Math Blast | Brain & Numbers | [/math-blast/](https://littleplayers.github.io/math-blast/) |
+| 🧭 Maze Runner | Brain & Numbers | [/maze-runner/](https://littleplayers.github.io/maze-runner/) |
+| 🌀 Spirograph | Creativity | [/spirograph/](https://littleplayers.github.io/spirograph/) |
+| 🎨 Doodle Pad | Creativity | [/doodle-pad/](https://littleplayers.github.io/doodle-pad/) |
+| 🔮 Kaleidoscope Draw | Creativity | [/kaleidoscope-draw/](https://littleplayers.github.io/kaleidoscope-draw/) |
+| 🐸 Animal Band | Creativity | [/animal-band/](https://littleplayers.github.io/animal-band/) |
+| 👗 Dress Up | Creativity | [/dress-up/](https://littleplayers.github.io/dress-up/) |

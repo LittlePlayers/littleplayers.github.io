@@ -87,6 +87,22 @@ body {
   justify-content: space-between;
   margin-bottom: 28px;
 }
+.search-wrap { flex: 1 1 100%; }
+.search {
+  width: 100%;
+  font: inherit;
+  font-weight: 600;
+  color: var(--ink);
+  background: var(--card);
+  border: 2px solid transparent;
+  border-radius: 999px;
+  padding: 14px 22px;
+  box-shadow: var(--shadow);
+  outline: none;
+  transition: border-color .15s ease, transform .12s ease;
+}
+.search::placeholder { color: var(--muted); font-weight: 600; }
+.search:focus { border-color: var(--accent); transform: translateY(-1px); }
 .filters {
   display: flex;
   flex-wrap: wrap;
@@ -126,6 +142,23 @@ body {
 h2 {
   font-size: 1.4rem;
   margin: 8px 0 16px;
+}
+.cat-section { margin: 0 0 44px; }
+.cat-section:last-child { margin-bottom: 0; }
+.cat-head { margin-bottom: 18px; }
+.cat-head h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: clamp(1.4rem, 3.4vw, 1.9rem);
+  margin: 0;
+}
+.cat-icon { font-size: 1.4em; line-height: 1; }
+.cat-blurb {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 1rem;
+  max-width: 70ch;
 }
 
 /* Grid + cards */

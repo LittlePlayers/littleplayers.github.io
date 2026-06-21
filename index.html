@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Little Players — Free Online Games for Kids</title>
-  <meta name="description" content="Little Players is a free game zone for kids: learning, word, math, puzzle, creativity and Indian-mythology adventures like Hanuman Run, Krishna's Cows and Arjuna's Aim. Pick a genre and play instantly — no downloads, no ads." />
-  <meta name="keywords" content="kids games, free online games for kids, educational games, learning games, word games, math games, puzzle games, kids browser games, Indian mythology games, Hanuman game, Krishna game, Arjuna archery, Little Players" />
+  <meta name="description" content="Little Players is a free game zone for kids: life-skills, Indian-mythology adventures, word, brain, math and creativity games. Pick a group and play instantly — no downloads, no ads." />
+  <meta name="keywords" content="kids games, free online games for kids, educational games, life skills games for kids, learning games, word games, math games, puzzle games, kids browser games, Indian mythology games, Hanuman game, Krishna game, Arjuna archery, Little Players" />
   <meta name="author" content="gauravs19" />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#7c5cff" />
@@ -15,7 +15,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Little Players" />
   <meta property="og:title" content="Little Players — Free Online Games for Kids" />
-  <meta property="og:description" content="A free, colorful game zone for kids: learning, word, math, puzzle, creativity and Indian-mythology games. Play instantly — no downloads, no ads." />
+  <meta property="og:description" content="A free, colorful game zone for kids: life-skills, Indian-mythology, word, brain and creativity games. Play instantly — no downloads, no ads." />
   <meta property="og:url" content="https://littleplayers.github.io/" />
   <meta property="og:image" content="https://littleplayers.github.io/og-image.png" />
   <meta property="og:image:width" content="1200" />
@@ -24,7 +24,7 @@
   <!-- Twitter / X -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Little Players — Free Online Games for Kids" />
-  <meta name="twitter:description" content="A free, colorful game zone for kids. Learning, word, math, puzzle, creativity and Indian-mythology games — play instantly!" />
+  <meta name="twitter:description" content="A free, colorful game zone for kids. Life-skills, Indian-mythology, word, brain and creativity games — play instantly!" />
   <meta name="twitter:image" content="https://littleplayers.github.io/og-image.png" />
 
   <link rel="manifest" href="manifest.webmanifest" />
@@ -32,26 +32,32 @@
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎮</text></svg>" />
 
-  <!-- Structured data: the site + the games collection -->
+  <!-- Structured data: the site -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "Little Players",
     "url": "https://littleplayers.github.io/",
-    "description": "A free game zone for kids with learning, word, math, puzzle, creativity and Indian-mythology games."
+    "description": "A free game zone for kids with life-skills, Indian-mythology, word, brain, math and creativity games."
   }
   </script>
 </head>
 <body>
   <header class="hero">
-    <h1>🎮 Little Players</h1>
-    <p class="tagline">Free, colorful games for kids — pick a genre and play!</p>
-    <button id="shareBtn" class="share-btn" type="button">🔗 Share</button>
+    <div class="hero-inner">
+      <h1>🎮 Little Players</h1>
+      <p class="tagline">Free, colorful games for kids — learn real skills and have fun!</p>
+      <button id="shareBtn" class="share-btn" type="button">🔗 Share</button>
+    </div>
   </header>
 
   <main class="container">
     <section class="controls">
+      <div class="search-wrap">
+        <input id="searchInput" class="search" type="search" placeholder="🔍 Search games…"
+               aria-label="Search games" autocomplete="off" />
+      </div>
       <div class="filters" id="categoryFilters">
         <!-- category chips injected here -->
       </div>
@@ -63,30 +69,34 @@
       </div>
     </section>
 
-    <section>
-      <h2 id="allHeading">All Games</h2>
-      <div class="grid" id="gameGrid"></div>
-      <p id="emptyMsg" class="empty hidden">No games here yet — try another type! 🧩</p>
-    </section>
+    <div id="sections"><!-- grouped category sections injected here --></div>
+    <p id="emptyMsg" class="empty hidden">No games here yet — try another type! 🧩</p>
   </main>
 
-  <!-- Crawlable list of all games (also a fallback if JavaScript is off) -->
+  <!-- Crawlable list of all games (also a fallback if JavaScript is off).
+       Auto-generated from games.json by build.js — run `node build.js` after editing. -->
   <nav class="sr-only" aria-label="All games">
     <h2>All Little Players games</h2>
     <ul>
-      <li><a href="https://littleplayers.github.io/brain-quest/">Brain Quest — learning game for kids</a></li>
-      <li><a href="https://littleplayers.github.io/word-scramble/">Word Scramble — unscramble the word</a></li>
-      <li><a href="https://littleplayers.github.io/math-blast/">Math Blast — quick math game</a></li>
-      <li><a href="https://littleplayers.github.io/spelling-bee/">Spelling Bee — listen and spell</a></li>
-      <li><a href="https://littleplayers.github.io/maze-runner/">Maze Runner — find your way out</a></li>
-      <li><a href="https://littleplayers.github.io/spirograph/">Spirograph — spiral art maker</a></li>
-      <li><a href="https://littleplayers.github.io/doodle-pad/">Doodle Pad — draw and paint</a></li>
-      <li><a href="https://littleplayers.github.io/kaleidoscope-draw/">Kaleidoscope Draw — mirror art</a></li>
-      <li><a href="https://littleplayers.github.io/animal-band/">Animal Band — make music</a></li>
-      <li><a href="https://littleplayers.github.io/dress-up/">Dress Up — design a character</a></li>
-      <li><a href="https://littleplayers.github.io/hanuman-run/">Hanuman Run — mythology endless runner</a></li>
-      <li><a href="https://littleplayers.github.io/krishnas-cows/">Krishna's Cows — Vrindavan herding game</a></li>
-      <li><a href="https://littleplayers.github.io/arjunas-aim/">Arjuna's Aim — physics archery game</a></li>
+      <!-- GAMES_NAV:BEGIN (auto-generated by build.js — do not edit) -->
+      <li><a href="https://littleplayers.github.io/market-day/">Market Day — life skills game for kids</a></li>
+      <li><a href="https://littleplayers.github.io/budget-hero/">Budget Hero — life skills game for kids</a></li>
+      <li><a href="https://littleplayers.github.io/cross-the-road/">Cross the Road Smart — life skills game for kids</a></li>
+      <li><a href="https://littleplayers.github.io/healthy-plate/">Healthy Plate — life skills game for kids</a></li>
+      <li><a href="https://littleplayers.github.io/hanuman-run/">Hanuman Run — indian mythology game for kids</a></li>
+      <li><a href="https://littleplayers.github.io/krishnas-cows/">Krishna's Cows — indian mythology game for kids</a></li>
+      <li><a href="https://littleplayers.github.io/arjunas-aim/">Arjuna's Aim — indian mythology game for kids</a></li>
+      <li><a href="https://littleplayers.github.io/word-scramble/">Word Scramble — words & letters game for kids</a></li>
+      <li><a href="https://littleplayers.github.io/spelling-bee/">Spelling Bee — words & letters game for kids</a></li>
+      <li><a href="https://littleplayers.github.io/brain-quest/">Brain Quest — brain & numbers game for kids</a></li>
+      <li><a href="https://littleplayers.github.io/math-blast/">Math Blast — brain & numbers game for kids</a></li>
+      <li><a href="https://littleplayers.github.io/maze-runner/">Maze Runner — brain & numbers game for kids</a></li>
+      <li><a href="https://littleplayers.github.io/spirograph/">Spirograph — creativity game for kids</a></li>
+      <li><a href="https://littleplayers.github.io/doodle-pad/">Doodle Pad — creativity game for kids</a></li>
+      <li><a href="https://littleplayers.github.io/kaleidoscope-draw/">Kaleidoscope Draw — creativity game for kids</a></li>
+      <li><a href="https://littleplayers.github.io/animal-band/">Animal Band — creativity game for kids</a></li>
+      <li><a href="https://littleplayers.github.io/dress-up/">Dress Up — creativity game for kids</a></li>
+  <!-- GAMES_NAV:END -->
     </ul>
   </nav>
 
@@ -94,28 +104,119 @@
     <p>Made with ❤️ by <a href="https://github.com/gauravs19" target="_blank" rel="noopener">gauravs19</a></p>
   </footer>
 
+  <!-- GAMES_JSONLD:BEGIN (auto-generated by build.js — do not edit) -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "ItemList",
     "name": "Little Players Games",
     "itemListElement": [
-      {"@type":"ListItem","position":1,"url":"https://littleplayers.github.io/brain-quest/","name":"Brain Quest"},
-      {"@type":"ListItem","position":2,"url":"https://littleplayers.github.io/word-scramble/","name":"Word Scramble"},
-      {"@type":"ListItem","position":3,"url":"https://littleplayers.github.io/math-blast/","name":"Math Blast"},
-      {"@type":"ListItem","position":4,"url":"https://littleplayers.github.io/spelling-bee/","name":"Spelling Bee"},
-      {"@type":"ListItem","position":5,"url":"https://littleplayers.github.io/maze-runner/","name":"Maze Runner"},
-      {"@type":"ListItem","position":6,"url":"https://littleplayers.github.io/spirograph/","name":"Spirograph"},
-      {"@type":"ListItem","position":7,"url":"https://littleplayers.github.io/doodle-pad/","name":"Doodle Pad"},
-      {"@type":"ListItem","position":8,"url":"https://littleplayers.github.io/kaleidoscope-draw/","name":"Kaleidoscope Draw"},
-      {"@type":"ListItem","position":9,"url":"https://littleplayers.github.io/animal-band/","name":"Animal Band"},
-      {"@type":"ListItem","position":10,"url":"https://littleplayers.github.io/dress-up/","name":"Dress Up"},
-      {"@type":"ListItem","position":11,"url":"https://littleplayers.github.io/hanuman-run/","name":"Hanuman Run"},
-      {"@type":"ListItem","position":12,"url":"https://littleplayers.github.io/krishnas-cows/","name":"Krishna's Cows"},
-      {"@type":"ListItem","position":13,"url":"https://littleplayers.github.io/arjunas-aim/","name":"Arjuna's Aim"}
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "url": "https://littleplayers.github.io/market-day/",
+        "name": "Market Day"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "url": "https://littleplayers.github.io/budget-hero/",
+        "name": "Budget Hero"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "url": "https://littleplayers.github.io/cross-the-road/",
+        "name": "Cross the Road Smart"
+      },
+      {
+        "@type": "ListItem",
+        "position": 4,
+        "url": "https://littleplayers.github.io/healthy-plate/",
+        "name": "Healthy Plate"
+      },
+      {
+        "@type": "ListItem",
+        "position": 5,
+        "url": "https://littleplayers.github.io/hanuman-run/",
+        "name": "Hanuman Run"
+      },
+      {
+        "@type": "ListItem",
+        "position": 6,
+        "url": "https://littleplayers.github.io/krishnas-cows/",
+        "name": "Krishna's Cows"
+      },
+      {
+        "@type": "ListItem",
+        "position": 7,
+        "url": "https://littleplayers.github.io/arjunas-aim/",
+        "name": "Arjuna's Aim"
+      },
+      {
+        "@type": "ListItem",
+        "position": 8,
+        "url": "https://littleplayers.github.io/word-scramble/",
+        "name": "Word Scramble"
+      },
+      {
+        "@type": "ListItem",
+        "position": 9,
+        "url": "https://littleplayers.github.io/spelling-bee/",
+        "name": "Spelling Bee"
+      },
+      {
+        "@type": "ListItem",
+        "position": 10,
+        "url": "https://littleplayers.github.io/brain-quest/",
+        "name": "Brain Quest"
+      },
+      {
+        "@type": "ListItem",
+        "position": 11,
+        "url": "https://littleplayers.github.io/math-blast/",
+        "name": "Math Blast"
+      },
+      {
+        "@type": "ListItem",
+        "position": 12,
+        "url": "https://littleplayers.github.io/maze-runner/",
+        "name": "Maze Runner"
+      },
+      {
+        "@type": "ListItem",
+        "position": 13,
+        "url": "https://littleplayers.github.io/spirograph/",
+        "name": "Spirograph"
+      },
+      {
+        "@type": "ListItem",
+        "position": 14,
+        "url": "https://littleplayers.github.io/doodle-pad/",
+        "name": "Doodle Pad"
+      },
+      {
+        "@type": "ListItem",
+        "position": 15,
+        "url": "https://littleplayers.github.io/kaleidoscope-draw/",
+        "name": "Kaleidoscope Draw"
+      },
+      {
+        "@type": "ListItem",
+        "position": 16,
+        "url": "https://littleplayers.github.io/animal-band/",
+        "name": "Animal Band"
+      },
+      {
+        "@type": "ListItem",
+        "position": 17,
+        "url": "https://littleplayers.github.io/dress-up/",
+        "name": "Dress Up"
+      }
     ]
   }
   </script>
+  <!-- GAMES_JSONLD:END -->
 
   <script>
     // Share button — native share sheet with clipboard fallback

@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+<meta name="description" content="Arjuna's Aim — a physics archery game. Set your angle, pull for power, read the wind and arrow weight, and hit the target — even the eye of the rotating fish! An Indian mythology game for kids." />
+  <link rel="canonical" href="https://littleplayers.github.io/arjunas-aim/" />
+  <meta name="keywords" content="kids games, action game, Arjuna's Aim, free online game for kids, Little Players, Indian mythology games" />
+  <meta name="author" content="gauravs19" />
+  <meta name="theme-color" content="#d35400" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Little Players" />
+  <meta property="og:title" content="Arjuna's Aim — Little Players" />
+  <meta property="og:description" content="Arjuna's Aim — a physics archery game. Set your angle, pull for power, read the wind and arrow weight, and hit the target — even the eye of the rotating fish! An Indian mythology game for kids." />
+  <meta property="og:url" content="https://littleplayers.github.io/arjunas-aim/" />
+  <meta property="og:image" content="https://littleplayers.github.io/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Arjuna's Aim — Little Players" />
+  <meta name="twitter:description" content="Arjuna's Aim — a physics archery game. Set your angle, pull for power, read the wind and arrow weight, and hit the target — even the eye of the rotating fish! An Indian mythology game for kids." />
+  <meta name="twitter:image" content="https://littleplayers.github.io/og-image.png" />
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "VideoGame", "name": "Arjuna's Aim", "url": "https://littleplayers.github.io/arjunas-aim/", "image": "https://littleplayers.github.io/og-image.png", "description": "Arjuna's Aim — a physics archery game. Set your angle, pull for power, read the wind and arrow weight, and hit the target — even the eye of the rotating fish! An Indian mythology game for kids.", "applicationCategory": "Game", "operatingSystem": "Web Browser", "genre": "action", "author": {"@type": "Organization", "name": "Little Players"}, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "audience": {"@type": "PeopleAudience", "suggestedMinAge": 5}, "isPartOf": {"@type": "WebSite", "name": "Little Players", "url": "https://littleplayers.github.io/"}}</script>
+<title>🏹 Arjuna's Aim — Little Players</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏹</text></svg>" />
+<style>
+  :root{ --bow:#d35400; --gold:#ffcf40; }
+  *{box-sizing:border-box}
+  html,body{overscroll-behavior:none; margin:0}
+  body{
+    min-height:100vh; color:#fff;
+    font-family:"Baloo 2","Trebuchet MS",system-ui,sans-serif;
+    background:linear-gradient(180deg,#3a1f0a,#1a0e04);
+    display:flex; flex-direction:column; align-items:center; padding:14px;
+  }
+  h1{margin:6px 0 2px; font-size:clamp(1.6rem,6vw,2.4rem); color:var(--gold); text-shadow:0 2px 0 #9a4d00}
+  .sub{margin:0 0 10px; color:#ffd9a8; font-weight:700}
+
+  .bars{display:flex; gap:18px; justify-content:center; margin:0 0 10px; flex-wrap:wrap}
+  .bar{display:flex; gap:8px; align-items:center}
+  .bar .lbl{color:#ffd9a8; font-weight:800; font-size:.8rem}
+  .bar button{border:none; cursor:pointer; font:inherit; font-weight:800; padding:7px 16px;
+    border-radius:999px; background:#5a2d00; color:#ffd9a8; box-shadow:0 4px 0 #3a1d00}
+  .bar button.on{background:var(--gold); color:#5a2d00}
+  .bar button:active{transform:translateY(2px); box-shadow:0 2px 0 #3a1d00}
+
+  .frame{width:min(820px,96vw); border-radius:16px; overflow:hidden;
+    box-shadow:0 12px 36px rgba(0,0,0,.5); border:4px solid var(--gold)}
+  canvas{display:block; width:100%; height:auto; background:#cfe3f0; touch-action:none; cursor:crosshair}
+
+  .help{margin-top:10px; color:#ffd9a8; font-weight:700; font-size:.9rem; text-align:center; line-height:1.6}
+  .help b{color:var(--gold)}
+  .back{margin-top:12px}
+  .back a{color:var(--gold); font-weight:800; text-decoration:none}
+  /* --- mobile/tablet responsiveness guard --- */
+  html,body{overflow-x:hidden}
+  body>*{max-width:100%}
+  @media (max-width:600px){ .sub,.help{font-size:.84rem} }
+</style>
+</head>
+<body>
+  <h1>🏹 Arjuna's Aim</h1>
+  <p class="sub">Set the angle, pull for power, read the wind — and hit the mark!</p>
+
+  <div class="bars">
+    <div class="bar"><span class="lbl">Skill</span>
+      <button data-d="easy" class="on">😀 Easy</button>
+      <button data-d="hard">🔥 Hard</button>
+    </div>
+    <div class="bar"><span class="lbl">Arrow</span>
+      <button data-w="light" class="on">🪶 Light</button>
+      <button data-w="heavy">🪨 Heavy</button>
+    </div>
+  </div>
+
+  <div class="frame"><canvas id="cv" width="820" height="460"></canvas></div>
+
+  <p class="help">
+    <b>Drag back</b> from Arjuna & release to shoot &nbsp;·&nbsp; or <b>↑ ↓</b> angle, <b>← →</b> power, <b>Space</b> fire<br/>
+    🪶 Light arrows fly far but drift in wind · 🪨 Heavy arrows resist wind but drop faster
+  </p>
+  <p class="back"><a href="https://littleplayers.github.io/">← Back to Little Players</a></p>
+
+<script>
+(function(){
+  const cv=document.getElementById("cv"), ctx=cv.getContext("2d");
+  const W=cv.width, H=cv.height, GROUND=H-46;
+  const ANCHOR={x:92, y:GROUND-66};       // the bow
+  const MAXPULL=170, MAXSPD=17, G=0.34;
+
+  const LEVELS=[
+    {name:"🎯 Practice Range", tx:640, ty:GROUND-110, move:0, wind:1.6, arrows:6, goal:120, size:1.0},
+    {name:"🌬️ Windy Field",    tx:700, ty:GROUND-150, move:0, wind:4.2, arrows:6, goal:160, size:0.9},
+    {name:"🐟 Matsya Yantra",  tx:710, ty:GROUND-190, move:1, wind:3.0, arrows:7, goal:170, size:0.85, fish:true},
+  ];
+  const DIFF={ easy:{windMul:0.6, arrows:2, goalMul:0.8, sizeMul:1.25, label:"Easy"},
+               hard:{windMul:1.4, arrows:-1, goalMul:1.2, sizeMul:0.85, label:"Hard"} };
+  let diff="easy", weight="light";
+
+  let hi=+(localStorage.getItem("arjunaHi")||0);
+  let state="idle";                         // idle | playing | clear | fail | win
+  let level=0, total=0, tick=0;
+  let arrowsLeft=0, levelScore=0, goal=0, wind=0, lvl=null;
+  let angle=-0.62, power=0.62;
+  let arrow=null, aiming=false;
+  let lastHit=null, banner="", bannerT=0;
+
+  const rnd=(a,b)=>a+Math.random()*(b-a);
+  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+
+  // ---------- input ----------
+  function action(){ if(state==="idle"||state==="win") startGame(); else if(state==="fail"){ state="playing"; beginLevel(); } }
+  function fire(){
+    if(state!=="playing"||arrow||arrowsLeft<=0) return;
+    const f=weight==="light"?1.12:0.9, spd=power*MAXSPD*f;
+    arrow={x:ANCHOR.x,y:ANCHOR.y,vx:Math.cos(angle)*spd,vy:Math.sin(angle)*spd,trail:[]};
+  }
+  function pos(e){ const r=cv.getBoundingClientRect();
+    return { x:((e.touches?e.touches[0].clientX:e.clientX)-r.left)*(cv.width/r.width),
+             y:((e.touches?e.touches[0].clientY:e.clientY)-r.top)*(cv.height/r.height) }; }
+  function setAimFromDrag(p){
+    const dx=ANCHOR.x-p.x, dy=ANCHOR.y-p.y, d=Math.hypot(dx,dy);
+    power=clamp(d/MAXPULL,0.08,1);
+    let a=Math.atan2(dy,dx);
+    angle=clamp(a,-1.5,-0.02);
+  }
+  cv.addEventListener("pointerdown",e=>{ e.preventDefault();
+    if(state!=="playing"){ action(); return; }
+    if(arrow) return; aiming=true; setAimFromDrag(pos(e)); });
+  cv.addEventListener("pointermove",e=>{ if(aiming){ e.preventDefault(); setAimFromDrag(pos(e)); } });
+  addEventListener("pointerup",e=>{ if(aiming){ aiming=false; fire(); } });
+
+  addEventListener("keydown",e=>{
+    if(state!=="playing"){ if(e.code==="Space"||e.code==="Enter"){ e.preventDefault(); action(); } return; }
+    if(e.code==="ArrowUp"){ e.preventDefault(); angle=clamp(angle-0.03,-1.5,-0.02); }
+    else if(e.code==="ArrowDown"){ e.preventDefault(); angle=clamp(angle+0.03,-1.5,-0.02); }
+    else if(e.code==="ArrowLeft"){ e.preventDefault(); power=clamp(power-0.03,0.08,1); }
+    else if(e.code==="ArrowRight"){ e.preventDefault(); power=clamp(power+0.03,0.08,1); }
+    else if(e.code==="Space"){ e.preventDefault(); fire(); }
+  });
+
+  document.querySelectorAll("[data-d]").forEach(b=>b.onclick=()=>{ diff=b.dataset.d;
+    document.querySelectorAll("[data-d]").forEach(x=>x.classList.toggle("on",x===b)); startGame(); });
+  document.querySelectorAll("[data-w]").forEach(b=>b.onclick=()=>{ weight=b.dataset.w;
+    document.querySelectorAll("[data-w]").forEach(x=>x.classList.toggle("on",x===b)); });
+
+  // ---------- flow ----------
+  function startGame(){ total=0; level=0; state="playing"; beginLevel(); }
+  function newWind(){ const D=DIFF[diff]; wind=rnd(-1,1)*lvl.wind*D.windMul; }
+  function beginLevel(){
+    lvl=LEVELS[level]; const D=DIFF[diff];
+    arrowsLeft=Math.max(3,lvl.arrows+D.arrows); levelScore=0;
+    goal=Math.round(lvl.goal*D.goalMul);
+    angle=-0.62; power=0.62; arrow=null; lastHit=null;
+    banner="Level "+(level+1)+": "+lvl.name; bannerT=140;
+    newWind();
+  }
+  function targetCenter(){
+    let ty=lvl.ty, tx=lvl.tx;
+    if(lvl.move){ ty=lvl.ty+Math.sin(tick*0.04)*60; tx=lvl.tx+Math.cos(tick*0.025)*30; }
+    return {x:tx,y:ty};
+  }
+  function ringR(){ const D=DIFF[diff], s=lvl.size*D.sizeMul; return {r1:9*s,r2:20*s,r3:32*s,r4:46*s}; }
+
+  function resolve(pts,hitLabel){
+    levelScore+=pts; total+=pts; if(hi<total){ hi=total; localStorage.setItem("arjunaHi",total); }
+    lastHit={pts,label:hitLabel,t:90,x:arrow?arrow.x:0,y:arrow?arrow.y:0};
+    arrow=null; arrowsLeft--; newWind();
+    if(arrowsLeft<=0) setTimeout(checkLevel,500);
+  }
+  function checkLevel(){
+    if(levelScore>=goal){
+      if(level<LEVELS.length-1){ state="clear"; setTimeout(()=>{ level++; beginLevel(); state="playing"; },1500); }
+      else { state="win"; }
+    } else state="fail";
+  }
+
+  // ---------- update ----------
+  function update(dt){
+    if(arrow){
+      const wf=weight==="light"?1.4:0.55, gf=weight==="light"?0.92:1.12;
+      arrow.vy+=G*gf*dt; arrow.vx+=wind*0.004*wf*dt;
+      arrow.x+=arrow.vx*dt; arrow.y+=arrow.vy*dt;
+      arrow.trail.push({x:arrow.x,y:arrow.y}); if(arrow.trail.length>14) arrow.trail.shift();
+      const c=targetCenter(), R=ringR(), d=Math.hypot(arrow.x-c.x,arrow.y-c.y);
+      if(d<=R.r4){
+        let pts=10,lab="Hit! +10";
+        if(d<=R.r1){ pts=100; lab=lvl.fish?"🐟 Eye! +100":"🎯 Bullseye! +100"; }
+        else if(d<=R.r2){ pts=50; lab="Great! +50"; }
+        else if(d<=R.r3){ pts=25; lab="Good! +25"; }
+        resolve(pts,lab); return;
+      }
+      if(arrow.y>=GROUND){ arrow.y=GROUND; resolve(0,"Missed"); return; }
+      if(arrow.x>W+40||arrow.y>H+40||arrow.x<-40){ resolve(0,"Missed"); return; }
+    }
+    if(bannerT>0) bannerT-=dt;
+    if(lastHit&&lastHit.t>0) lastHit.t-=dt;
+  }
+
+  // ---------- draw ----------
+  function sky(){
+    const g=ctx.createLinearGradient(0,0,0,H); g.addColorStop(0,"#bfe0f2"); g.addColorStop(1,"#eaf5ec");
+    ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+    ctx.fillStyle="rgba(255,255,255,.7)";
+    for(const c of [[150,70],[420,50],[620,90]]){ ctx.beginPath(); ctx.arc(c[0],c[1],18,0,7); ctx.arc(c[0]+22,c[1]+5,22,0,7); ctx.arc(c[0]+46,c[1],17,0,7); ctx.fill(); }
+    // hills
+    ctx.fillStyle="#bfe09a"; ctx.beginPath(); ctx.moveTo(0,GROUND); ctx.quadraticCurveTo(220,GROUND-90,460,GROUND); ctx.fill();
+    ctx.fillStyle="#a9d685"; ctx.beginPath(); ctx.moveTo(360,GROUND); ctx.quadraticCurveTo(620,GROUND-110,W,GROUND); ctx.fill();
+    // ground
+    ctx.fillStyle="#8fc05a"; ctx.fillRect(0,GROUND,W,H-GROUND);
+    ctx.fillStyle="#79a847"; for(let x=0;x<W;x+=22) ctx.fillRect(x,GROUND,11,5);
+  }
+  function drawArcher(){
+    const fx=ANCHOR.x, gy=GROUND, sx=fx-16, sy=ANCHOR.y;     // sx,sy = shoulder anchor
+    const SKIN="#c8814a", SKIN2="#a8662f", HAIR="#241a12", GOLD="#ffcf40", DHOTI="#2e9e72";
+    const bp=power*16;
+    const shx=ANCHOR.x-Math.cos(angle)*bp, shy=ANCHOR.y-Math.sin(angle)*bp;  // string nock (draw-hand)
+    ctx.lineCap="round"; ctx.lineJoin="round";
+
+    // quiver on the back
+    ctx.save(); ctx.translate(sx-9,sy+4); ctx.rotate(0.35);
+    ctx.strokeStyle="#8a4f1e"; ctx.lineWidth=8; ctx.beginPath(); ctx.moveTo(0,-8); ctx.lineTo(0,24); ctx.stroke();
+    ctx.lineWidth=2; ctx.strokeStyle="#b5651d";
+    for(let i=-1;i<=1;i++){ ctx.beginPath(); ctx.moveTo(i*3,-8); ctx.lineTo(i*3,-20); ctx.stroke();
+      ctx.fillStyle="#e23b2e"; ctx.beginPath(); ctx.moveTo(i*3,-20); ctx.lineTo(i*3-2,-15); ctx.lineTo(i*3+2,-15); ctx.fill(); }
+    ctx.restore();
+
+    // drawing (back) arm — connects to the string nock
+    ctx.strokeStyle=SKIN2; ctx.lineWidth=7; ctx.beginPath(); ctx.moveTo(sx-4,sy+2); ctx.lineTo(shx,shy); ctx.stroke();
+
+    // legs (warrior stance)
+    ctx.strokeStyle=SKIN; ctx.lineWidth=9;
+    ctx.beginPath(); ctx.moveTo(sx+1,gy-28); ctx.lineTo(sx-9,gy); ctx.stroke();    // back leg
+    ctx.beginPath(); ctx.moveTo(sx+7,gy-28); ctx.lineTo(sx+17,gy); ctx.stroke();   // front leg
+    // dhoti
+    ctx.fillStyle=DHOTI; ctx.fillRect(sx-7,gy-34,26,16);
+    ctx.fillStyle=GOLD; ctx.fillRect(sx-7,gy-22,26,4);
+
+    // muscular torso (broad shoulders -> waist)
+    ctx.fillStyle=SKIN; ctx.beginPath();
+    ctx.moveTo(sx-11,sy+2); ctx.lineTo(sx+15,sy+2); ctx.lineTo(sx+11,gy-32); ctx.lineTo(sx-5,gy-32); ctx.closePath(); ctx.fill();
+    // pecs + abs shading
+    ctx.strokeStyle=SKIN2; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.arc(sx-2,sy+9,5,0.1,Math.PI-0.1); ctx.arc(sx+9,sy+9,5,0.1,Math.PI-0.1); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(sx+3,sy+14); ctx.lineTo(sx+3,gy-34); ctx.stroke();
+    // janeu (sacred thread)
+    ctx.strokeStyle="rgba(255,255,255,.8)"; ctx.lineWidth=1.5; ctx.beginPath(); ctx.moveTo(sx+13,sy+2); ctx.lineTo(sx-4,gy-32); ctx.stroke();
+
+    // neck + head
+    ctx.fillStyle=SKIN; ctx.fillRect(sx,sy-8,7,10);
+    const hx=sx+4, hy=sy-16;
+    ctx.beginPath(); ctx.arc(hx,hy,10,0,7); ctx.fill();
+    ctx.fillStyle=HAIR; ctx.beginPath(); ctx.arc(hx,hy-1,10,Math.PI*0.92,Math.PI*2.08); ctx.fill();
+    ctx.beginPath(); ctx.arc(hx-9,hy+1,4,0,7); ctx.fill();                          // side bun
+    ctx.fillStyle="#2a1500"; ctx.beginPath(); ctx.arc(hx+5,hy,1.6,0,7); ctx.fill(); // eye (facing target)
+    ctx.fillStyle=SKIN2; ctx.fillRect(hx+8,hy+1,3,2);                               // nose hint
+    // crown (mukut)
+    ctx.fillStyle=GOLD; ctx.fillRect(hx-9,hy-9,19,4);
+    ctx.beginPath(); ctx.moveTo(hx,hy-9); ctx.lineTo(hx-4,hy-16); ctx.lineTo(hx+4,hy-16); ctx.closePath(); ctx.fill();
+    ctx.fillStyle="#e23b2e"; ctx.beginPath(); ctx.arc(hx,hy-16,2,0,7); ctx.fill();
+    // peacock feather
+    ctx.fillStyle="#1f9e6a"; ctx.beginPath(); ctx.ellipse(hx-8,hy-15,2,7,-0.5,0,7); ctx.fill();
+    ctx.fillStyle="#2a6cf0"; ctx.beginPath(); ctx.arc(hx-11,hy-19,2.4,0,7); ctx.fill();
+
+    // front (bow) arm — straight from shoulder to the grip, with a bicep bulge
+    ctx.strokeStyle=SKIN; ctx.lineWidth=9; ctx.beginPath(); ctx.moveTo(sx+12,sy+2); ctx.lineTo(ANCHOR.x,ANCHOR.y); ctx.stroke();
+    ctx.fillStyle=SKIN2; ctx.beginPath(); ctx.arc(sx+15,sy+1,4,0,7); ctx.fill();
+
+    // bow + string (rotated to aim), held in the front hand
+    ctx.save(); ctx.translate(ANCHOR.x,ANCHOR.y); ctx.rotate(angle);
+    ctx.strokeStyle="#7a4a18"; ctx.lineWidth=5; ctx.beginPath(); ctx.arc(0,0,28,-1.3,1.3); ctx.stroke();
+    ctx.strokeStyle="#caa23a"; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(0,0,28,-1.3,1.3); ctx.stroke();
+    ctx.strokeStyle="#eee"; ctx.lineWidth=1.5; ctx.beginPath(); ctx.moveTo(0,-27); ctx.lineTo(-bp,0); ctx.lineTo(0,27); ctx.stroke();
+    if(!arrow){ ctx.strokeStyle="#b5651d"; ctx.lineWidth=2.5; ctx.beginPath(); ctx.moveTo(-bp,0); ctx.lineTo(22,0); ctx.stroke();
+      ctx.fillStyle="#aaa"; ctx.beginPath(); ctx.moveTo(22,0); ctx.lineTo(15,-4); ctx.lineTo(15,4); ctx.fill(); }
+    ctx.restore();
+  }
+  function drawTarget(){
+    const c=targetCenter(), R=ringR();
+    if(lvl.fish){
+      // Matsya Yantra — the EYE sits exactly at the target/scoring centre (c)
+      ctx.save(); ctx.translate(c.x,c.y); ctx.rotate(Math.sin(tick*0.05)*0.3);
+      // body extends to the right of the eye
+      ctx.fillStyle="#e8b54a"; ctx.beginPath(); ctx.ellipse(R.r4*0.6,0,R.r4,R.r4*0.6,0,0,7); ctx.fill();
+      ctx.fillStyle="#d49a2e"; ctx.beginPath(); ctx.moveTo(R.r4*1.4,0); ctx.lineTo(R.r4*1.95,-R.r4*0.5); ctx.lineTo(R.r4*1.95,R.r4*0.5); ctx.fill(); // tail
+      ctx.fillStyle="#caa53a"; ctx.beginPath(); ctx.ellipse(R.r4*0.6,-R.r4*0.5,R.r3*0.6,R.r4*0.25,0,0,7); ctx.fill(); // fin
+      // eye = bullseye at origin
+      ctx.fillStyle="#fff"; ctx.beginPath(); ctx.arc(0,0,R.r2,0,7); ctx.fill();
+      ctx.fillStyle="#333"; ctx.beginPath(); ctx.arc(0,0,R.r1*1.25,0,7); ctx.fill();
+      ctx.fillStyle="#c0392b"; ctx.beginPath(); ctx.arc(0,0,R.r1*0.55,0,7); ctx.fill();
+      ctx.restore();
+    } else {
+      ctx.lineWidth=0;
+      const cols=["#ffffff","#2a6cf0","#e23b2e","#ffd23f"], rs=[R.r4,R.r3,R.r2,R.r1];
+      for(let i=0;i<4;i++){ ctx.fillStyle=cols[i]; ctx.beginPath(); ctx.arc(c.x,c.y,rs[i],0,7); ctx.fill();
+        ctx.strokeStyle="rgba(0,0,0,.25)"; ctx.lineWidth=1; ctx.stroke(); }
+      ctx.fillStyle="#7a1c14"; ctx.beginPath(); ctx.arc(c.x,c.y,R.r1*0.4,0,7); ctx.fill();
+      // stand
+      ctx.strokeStyle="#7a4a18"; ctx.lineWidth=5; ctx.beginPath();
+      ctx.moveTo(c.x-10,c.y+R.r4); ctx.lineTo(c.x-16,GROUND); ctx.moveTo(c.x+10,c.y+R.r4); ctx.lineTo(c.x+16,GROUND); ctx.stroke();
+    }
+  }
+  function drawArrow(){
+    if(!arrow) return;
+    ctx.strokeStyle="rgba(180,120,40,.4)"; ctx.lineWidth=2;
+    ctx.beginPath(); arrow.trail.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y)); ctx.stroke();
+    const ang=Math.atan2(arrow.vy,arrow.vx);
+    ctx.save(); ctx.translate(arrow.x,arrow.y); ctx.rotate(ang);
+    ctx.strokeStyle="#7a4a1f"; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(-22,0); ctx.lineTo(6,0); ctx.stroke();
+    ctx.fillStyle="#aaa"; ctx.beginPath(); ctx.moveTo(12,0); ctx.lineTo(2,-5); ctx.lineTo(2,5); ctx.fill();
+    ctx.fillStyle="#e23b2e"; ctx.beginPath(); ctx.moveTo(-22,0); ctx.lineTo(-28,-4); ctx.lineTo(-24,0); ctx.lineTo(-28,4); ctx.fill();
+    ctx.restore();
+  }
+  function drawTrajectory(){
+    if(arrow||state!=="playing") return;
+    const f=weight==="light"?1.12:0.9, spd=power*MAXSPD*f;
+    const wf=weight==="light"?1.4:0.55, gf=weight==="light"?0.92:1.12;
+    let x=ANCHOR.x,y=ANCHOR.y,vx=Math.cos(angle)*spd,vy=Math.sin(angle)*spd;
+    ctx.fillStyle="rgba(255,255,255,.7)";
+    for(let i=0;i<46;i++){ vy+=G*gf; vx+=wind*0.004*wf; x+=vx; y+=vy;
+      if(y>GROUND||x>W) break; if(i%2===0){ ctx.beginPath(); ctx.arc(x,y,2,0,7); ctx.fill(); } }
+  }
+  function windHUD(){
+    ctx.textAlign="center";
+    const cx=W/2, cy=30, mag=Math.abs(wind), dir=wind>=0?1:-1;
+    ctx.fillStyle="rgba(0,0,0,.3)"; ctx.fillRect(cx-78,16,156,30);
+    ctx.fillStyle="#fff"; ctx.font="bold 13px 'Baloo 2',sans-serif"; ctx.fillText("WIND",cx,30);
+    // arrow
+    ctx.strokeStyle=mag>3?"#ff5d6c":"#ffd23f"; ctx.lineWidth=4; ctx.lineCap="round";
+    const len=10+mag*7;
+    ctx.beginPath(); ctx.moveTo(cx-dir*len/2,40); ctx.lineTo(cx+dir*len/2,40); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx+dir*len/2,40); ctx.lineTo(cx+dir*(len/2-7),36); ctx.moveTo(cx+dir*len/2,40); ctx.lineTo(cx+dir*(len/2-7),44); ctx.stroke();
+  }
+  function hud(){
+    windHUD();
+    ctx.textAlign="left"; ctx.fillStyle="#2a3a12"; ctx.font="bold 15px 'Baloo 2',sans-serif";
+    ctx.fillText("🏹 Arrows: "+arrowsLeft,14,30);
+    ctx.fillText("Angle: "+Math.round(-angle*57)+"°",14,50);
+    ctx.fillText("Power: "+Math.round(power*100)+"%",14,70);
+    ctx.fillText(weight==="light"?"🪶 Light":"🪨 Heavy",14,90);
+    ctx.textAlign="right"; ctx.fillStyle="#2a3a12";
+    ctx.fillText("Score "+levelScore+" / "+goal,W-14,30);
+    ctx.fillText("Total "+total+"   🏆 "+hi,W-14,50);
+    // power meter bar near archer
+    ctx.fillStyle="rgba(0,0,0,.25)"; ctx.fillRect(ANCHOR.x-30,GROUND+8,60,8);
+    ctx.fillStyle=power>0.85?"#ff5d6c":"#ffd23f"; ctx.fillRect(ANCHOR.x-30,GROUND+8,60*power,8);
+    if(lastHit&&lastHit.t>0){ ctx.globalAlpha=Math.min(1,lastHit.t/30); ctx.textAlign="center";
+      ctx.fillStyle="#c0392b"; ctx.font="bold 20px 'Baloo 2',sans-serif"; ctx.fillText(lastHit.label,W/2,H/2-20); ctx.globalAlpha=1; }
+    if(bannerT>0){ const a=Math.min(1,bannerT/30); ctx.globalAlpha=a; ctx.textAlign="center";
+      ctx.fillStyle="rgba(0,0,0,.4)"; ctx.fillRect(W/2-150,58,300,38);
+      ctx.fillStyle="#ffcf40"; ctx.font="bold 20px 'Baloo 2',sans-serif"; ctx.fillText(banner,W/2,84); ctx.globalAlpha=1; }
+  }
+  function center(title,sub,col){
+    ctx.fillStyle="rgba(20,12,4,.6)"; ctx.fillRect(0,0,W,H); ctx.textAlign="center";
+    ctx.fillStyle=col; ctx.font="bold 36px 'Baloo 2',sans-serif"; ctx.fillText(title,W/2,H/2-8);
+    ctx.fillStyle="#fff"; ctx.font="bold 18px 'Baloo 2',sans-serif"; ctx.fillText(sub,W/2,H/2+24);
+    ctx.fillStyle="#ffd9a8"; ctx.font="14px 'Baloo 2',sans-serif"; ctx.fillText("Best Total: "+hi,W/2,H/2+50);
+  }
+  function intro(){
+    ctx.fillStyle="rgba(20,12,4,.66)"; ctx.fillRect(0,0,W,H); ctx.textAlign="center";
+    ctx.fillStyle="#ffcf40"; ctx.font="bold 30px 'Baloo 2',sans-serif"; ctx.fillText("🏹 Arjuna's Aim",W/2,46);
+    ctx.fillStyle="#ffd9a8"; ctx.font="italic 14px 'Baloo 2',sans-serif"; ctx.fillText("— The Greatest Archer —",W/2,66);
+    ctx.fillStyle="#fff"; ctx.font="14px 'Baloo 2',sans-serif";
+    const story=[
+      "Arjuna, the peerless archer of the Mahabharata, trained by Guru Drona.",
+      "Master the bow: set the ANGLE, pull for POWER, and read the WIND.",
+      "🪶 Light arrows fly far but drift · 🪨 Heavy arrows resist wind but drop.",
+      "Clear each range — then strike the EYE of the rotating fish (Matsya Yantra),",
+      "the legendary test Arjuna won at Draupadi's swayamvar!",
+    ];
+    let y=96; story.forEach(t=>{ ctx.fillText(t,W/2,y); y+=20; });
+    ctx.font="18px 'Baloo 2',sans-serif"; ctx.fillStyle="#ffe0a8"; ctx.fillText("🎯 ➜ 🌬️ ➜ 🐟",W/2,y+8);
+    ctx.font="bold 14px 'Baloo 2',sans-serif"; ctx.fillStyle="#ffcf40";
+    ctx.fillText("Drag back & release · or ↑↓ angle, ←→ power, Space fire",W/2,y+34);
+    const a=0.55+0.45*Math.sin(tick*0.12);
+    ctx.globalAlpha=a; ctx.fillStyle="#fff"; ctx.font="bold 18px 'Baloo 2',sans-serif";
+    ctx.fillText("▶ Press SPACE / Tap to begin",W/2,y+62); ctx.globalAlpha=1;
+  }
+
+  // ---------- loop ----------
+  let last=performance.now();
+  function frame(now){
+    const dt=Math.min(2.5,(now-last)/16.67); last=now; tick+=dt;
+    if(state==="playing") update(dt);
+    sky();
+    if(lvl) drawTarget();
+    drawArcher();
+    if(state==="playing"){ drawTrajectory(); drawArrow(); hud(); }
+    else if(state==="clear"){ drawArrow(); hud(); center("Range Cleared! 🎯","Score "+levelScore+" / "+goal,"#ffcf40"); }
+    if(state==="idle") intro();
+    if(state==="fail") center("Not enough points 😅","Press SPACE / Tap to try again","#ff9a6b");
+    if(state==="win") center("🎉 Vijaya, Arjuna!","You struck the fish's eye! Tap to play again","#ffcf40");
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

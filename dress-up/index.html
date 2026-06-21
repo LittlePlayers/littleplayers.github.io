@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+<meta name="description" content="Dress Up — mix and match characters, hats, glasses and more to create your own friend, then save it! A creative game for kids." />
+  <link rel="canonical" href="https://littleplayers.github.io/dress-up/" />
+  <meta name="keywords" content="kids games, creativity game, Dress Up, free online game for kids, Little Players, Indian mythology games" />
+  <meta name="author" content="gauravs19" />
+  <meta name="theme-color" content="#ff5d9e" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Little Players" />
+  <meta property="og:title" content="Dress Up — Little Players" />
+  <meta property="og:description" content="Dress Up — mix and match characters, hats, glasses and more to create your own friend, then save it! A creative game for kids." />
+  <meta property="og:url" content="https://littleplayers.github.io/dress-up/" />
+  <meta property="og:image" content="https://littleplayers.github.io/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Dress Up — Little Players" />
+  <meta name="twitter:description" content="Dress Up — mix and match characters, hats, glasses and more to create your own friend, then save it! A creative game for kids." />
+  <meta name="twitter:image" content="https://littleplayers.github.io/og-image.png" />
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "VideoGame", "name": "Dress Up", "url": "https://littleplayers.github.io/dress-up/", "image": "https://littleplayers.github.io/og-image.png", "description": "Dress Up — mix and match characters, hats, glasses and more to create your own friend, then save it! A creative game for kids.", "applicationCategory": "Game", "operatingSystem": "Web Browser", "genre": "creativity", "author": {"@type": "Organization", "name": "Little Players"}, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "audience": {"@type": "PeopleAudience", "suggestedMinAge": 5}, "isPartOf": {"@type": "WebSite", "name": "Little Players", "url": "https://littleplayers.github.io/"}}</script>
+<title>👗 Dress Up — Little Players</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👗</text></svg>" />
+<style>
+  :root{
+    --bg:#fff0f6; --card:#fff; --ink:#4a2340; --muted:#9a7088;
+    --accent:#ff5d9e; --accent2:#c93f86; --shadow:0 10px 28px rgba(190,60,130,.16); --radius:16px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; min-height:100vh; color:var(--ink);
+    font-family:"Baloo 2","Comic Sans MS","Trebuchet MS",system-ui,sans-serif;
+    background:
+      radial-gradient(circle at 12% 10%,#ffd9e9 0,transparent 42%),
+      radial-gradient(circle at 88% 8%,#ffe1ef 0,transparent 44%),
+      var(--bg);
+    display:flex; flex-direction:column; align-items:center; padding:16px;
+  }
+  header{text-align:center; margin:8px 0 4px}
+  h1{margin:0; font-size:clamp(1.7rem,6vw,2.6rem)}
+  .sub{margin:5px 0 0; color:var(--muted); font-weight:700}
+
+  .stage{background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); padding:10px; margin-top:12px}
+  canvas{display:block; border-radius:10px}
+
+  .panel{background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow);
+    padding:12px 14px; margin-top:14px; width:min(420px,94vw)}
+  .ctl{display:flex; align-items:center; justify-content:space-between; gap:10px; margin:8px 0}
+  .ctl .label{font-weight:800; color:var(--muted); width:84px}
+  .ctl .pick{flex:1; text-align:center; font-size:1.6rem; background:#fff0f6; border-radius:12px; padding:4px 0}
+  .ctl button{border:none; cursor:pointer; font-weight:900; font-size:1.1rem; width:38px; height:38px;
+    border-radius:12px; background:var(--accent); color:#fff; box-shadow:var(--shadow)}
+  .ctl button:active{transform:scale(.92)}
+
+  .actions{display:flex; gap:10px; margin-top:14px; flex-wrap:wrap; justify-content:center}
+  .actions button{border:none; cursor:pointer; font:inherit; font-weight:800; padding:11px 18px;
+    border-radius:999px; color:#fff; box-shadow:var(--shadow); transition:transform .1s}
+  .actions button:hover{transform:translateY(-2px)}
+  .b-rnd{background:#a14be8}.b-save{background:#22b07d}
+
+  .back{margin-top:14px}
+  .back a{color:var(--accent2); font-weight:800; text-decoration:none}
+  /* --- mobile/tablet responsiveness guard --- */
+  html,body{overflow-x:hidden}
+  body>*{max-width:100%}
+  @media (max-width:600px){ .sub,.help{font-size:.84rem} }
+</style>
+</head>
+<body>
+  <header>
+    <h1>👗 Dress Up</h1>
+    <p class="sub">Mix and match to make your own character!</p>
+  </header>
+
+  <div class="stage"><canvas id="cv" width="340" height="400"></canvas></div>
+
+  <div class="panel" id="panel"></div>
+
+  <div class="actions">
+    <button class="b-rnd" id="rnd">🎲 Surprise Me</button>
+    <button class="b-save" id="save">💾 Save</button>
+  </div>
+
+  <p class="back"><a href="https://littleplayers.github.io/">← Back to Little Players</a></p>
+
+<script>
+  const $=id=>document.getElementById(id);
+  const cv=$("cv"), ctx=cv.getContext("2d");
+  const W=cv.width, H=cv.height;
+
+  // each layer: name, options, draw position+size. "" = nothing.
+  const LAYERS=[
+    {key:"scene", label:"Scene", opts:["🌈","⭐","🏞️","🌃","🌊","🌸"], idx:0},
+    {key:"base",  label:"Friend",opts:["🧒","👦","👧","🧑","🐻","🐱","🐰","🦄"], idx:0},
+    {key:"hat",   label:"Hat",   opts:["","🎩","🧢","👑","🎀","⛑️","🎓","🪖"], idx:3},
+    {key:"face",  label:"Glasses",opts:["","🕶️","👓","🥽","🤿"], idx:1},
+    {key:"item",  label:"Holding",opts:["","🎈","🍦","⚽","🪄","🎸","🌻","🧸"], idx:1},
+    {key:"pet",   label:"Pet",   opts:["","🐶","🐥","🐠","🐢","🦋","🐝"], idx:1},
+  ];
+
+  function fit(){ const m=Math.min(340,window.innerWidth-52); cv.style.width=m+"px"; cv.style.height=(m*H/W)+"px"; }
+
+  function val(k){ const l=LAYERS.find(x=>x.key===k); return l.opts[l.idx]; }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    // scene background: tile the emoji softly
+    ctx.save();
+    ctx.globalAlpha=0.18; ctx.font="54px serif"; ctx.textAlign="center"; ctx.textBaseline="middle";
+    const sc=val("scene");
+    for(let y=40;y<H;y+=80) for(let x=40;x<W;x+=80) ctx.fillText(sc,x,y);
+    ctx.restore();
+
+    ctx.textAlign="center"; ctx.textBaseline="middle";
+    // base
+    ctx.font="180px serif"; ctx.fillText(val("base"), W/2, 230);
+    // hat
+    if(val("hat")){ ctx.font="84px serif"; ctx.fillText(val("hat"), W/2, 118); }
+    // glasses
+    if(val("face")){ ctx.font="62px serif"; ctx.fillText(val("face"), W/2, 196); }
+    // item held (lower right)
+    if(val("item")){ ctx.font="74px serif"; ctx.fillText(val("item"), W-66, 300); }
+    // pet (lower left)
+    if(val("pet")){ ctx.font="64px serif"; ctx.fillText(val("pet"), 64, 330); }
+  }
+
+  function buildPanel(){
+    $("panel").innerHTML="";
+    LAYERS.forEach(l=>{
+      const row=document.createElement("div"); row.className="ctl";
+      row.innerHTML=`<span class="label">${l.label}</span>
+        <button data-k="${l.key}" data-s="-1">◀</button>
+        <span class="pick" id="pick-${l.key}">${l.opts[l.idx]||"—"}</span>
+        <button data-k="${l.key}" data-s="1">▶</button>`;
+      $("panel").appendChild(row);
+    });
+    $("panel").querySelectorAll("button").forEach(b=>{
+      b.onclick=()=>{ const l=LAYERS.find(x=>x.key===b.dataset.k); const n=l.opts.length;
+        l.idx=(l.idx + (+b.dataset.s) + n)%n;
+        $("pick-"+l.key).textContent=l.opts[l.idx]||"—"; draw(); };
+    });
+  }
+
+  $("rnd").onclick=()=>{
+    LAYERS.forEach(l=>{ l.idx=Math.floor(Math.random()*l.opts.length); $("pick-"+l.key).textContent=l.opts[l.idx]||"—"; });
+    draw();
+  };
+  $("save").onclick=()=>{
+    const out=document.createElement("canvas"); out.width=W; out.height=H;
+    const o=out.getContext("2d"); o.fillStyle="#fff"; o.fillRect(0,0,W,H); o.drawImage(cv,0,0);
+    const a=document.createElement("a"); a.download="my-character.png"; a.href=out.toDataURL("image/png"); a.click();
+  };
+
+  fit(); buildPanel(); draw();
+  window.addEventListener("resize",fit);
+</script>
+</body>
+</html>

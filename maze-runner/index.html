@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+<meta name="description" content="Maze Runner — find your way through the maze to the flag before time runs out! Levels, lives and a timer." />
+  <link rel="canonical" href="https://littleplayers.github.io/maze-runner/" />
+  <meta name="keywords" content="kids games, puzzle game, Maze Runner, free online game for kids, Little Players, Indian mythology games" />
+  <meta name="author" content="gauravs19" />
+  <meta name="theme-color" content="#16b5a3" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Little Players" />
+  <meta property="og:title" content="Maze Runner — Little Players" />
+  <meta property="og:description" content="Maze Runner — find your way through the maze to the flag before time runs out! Levels, lives and a timer." />
+  <meta property="og:url" content="https://littleplayers.github.io/maze-runner/" />
+  <meta property="og:image" content="https://littleplayers.github.io/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Maze Runner — Little Players" />
+  <meta name="twitter:description" content="Maze Runner — find your way through the maze to the flag before time runs out! Levels, lives and a timer." />
+  <meta name="twitter:image" content="https://littleplayers.github.io/og-image.png" />
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "VideoGame", "name": "Maze Runner", "url": "https://littleplayers.github.io/maze-runner/", "image": "https://littleplayers.github.io/og-image.png", "description": "Maze Runner — find your way through the maze to the flag before time runs out! Levels, lives and a timer.", "applicationCategory": "Game", "operatingSystem": "Web Browser", "genre": "puzzle", "author": {"@type": "Organization", "name": "Little Players"}, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "audience": {"@type": "PeopleAudience", "suggestedMinAge": 5}, "isPartOf": {"@type": "WebSite", "name": "Little Players", "url": "https://littleplayers.github.io/"}}</script>
+<title>🌀 Maze Runner — Little Players</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌀</text></svg>" />
+<style>
+  :root{
+    --bg:#eafff6; --card:#fff; --ink:#1f3d34; --muted:#6f9488;
+    --accent:#16b5a3; --accent2:#11998e; --good:#22b07d; --bad:#ff5d6c;
+    --wall:#1f3d34; --shadow:0 10px 28px rgba(30,120,100,.16); --radius:18px;
+  }
+  *{box-sizing:border-box}
+  html,body{overscroll-behavior:none}
+  body{
+    margin:0; min-height:100vh; color:var(--ink);
+    font-family:"Baloo 2","Comic Sans MS","Trebuchet MS",system-ui,sans-serif;
+    background:
+      radial-gradient(circle at 12% 10%,#c5fff0 0,transparent 42%),
+      radial-gradient(circle at 88% 8%,#d6ffe8 0,transparent 44%),
+      var(--bg);
+    display:flex; flex-direction:column; align-items:center; padding:16px;
+  }
+  header{text-align:center; margin:10px 0 4px}
+  h1{margin:0; font-size:clamp(1.7rem,6vw,2.6rem)}
+  .sub{margin:5px 0 0; color:var(--muted); font-weight:700}
+
+  .diff{display:flex; gap:10px; justify-content:center; margin:10px 0 0; flex-wrap:wrap}
+  .diff button{border:none;cursor:pointer;font:inherit;font-weight:800;padding:8px 15px;
+    border-radius:999px;background:#fff;color:var(--ink);box-shadow:var(--shadow)}
+  .diff button.on{background:var(--accent);color:#fff}
+
+  .scoreboard{display:flex; gap:9px; margin:14px 0 6px; flex-wrap:wrap; justify-content:center}
+  .pill{background:var(--card); border-radius:999px; padding:7px 14px; font-weight:800;
+    box-shadow:var(--shadow); font-size:.9rem; display:flex; align-items:center; gap:5px}
+
+  .timerwrap{width:min(460px,92vw); margin:6px 0 2px}
+  .timerbar{height:11px; border-radius:999px; background:#cdeee6; overflow:hidden}
+  .timerfill{height:100%; width:100%; border-radius:999px;
+    background:linear-gradient(90deg,#22b07d,#7bd88f); transition:width .25s linear}
+  .timerfill.warn{background:linear-gradient(90deg,#ffb24a,#ffd27a)}
+  .timerfill.danger{background:linear-gradient(90deg,#ff5d6c,#ff8aa0)}
+
+  .stage{background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow);
+    padding:14px; margin-top:10px; touch-action:none}
+  canvas{display:block; border-radius:10px; background:#f4fffb; touch-action:none}
+
+  .feedback{text-align:center; min-height:1.5em; font-weight:800; font-size:1.1rem; margin:10px 0 0}
+  .feedback.good{color:var(--good)} .feedback.bad{color:var(--bad)}
+  .hearts{font-size:1.05rem; letter-spacing:2px}
+
+  /* D-pad */
+  .dpad{display:grid; grid-template-columns:repeat(3,64px); grid-template-rows:repeat(2,64px);
+    gap:8px; margin:16px 0 4px; justify-content:center}
+  .dpad button{border:none; cursor:pointer; font-size:1.8rem; font-weight:800; color:#fff;
+    border-radius:16px; background:linear-gradient(180deg,var(--accent),var(--accent2));
+    box-shadow:0 5px 0 #0e7d72; transition:transform .07s,box-shadow .07s}
+  .dpad button:active{transform:translateY(4px); box-shadow:0 1px 0 #0e7d72}
+  .du{grid-column:2; grid-row:1}.dl{grid-column:1; grid-row:2}
+  .dd{grid-column:2; grid-row:2}.dr{grid-column:3; grid-row:2}
+
+  .overlay{position:fixed; inset:0; background:rgba(15,60,50,.55); display:none;
+    align-items:center; justify-content:center; padding:20px; z-index:9}
+  .overlay.show{display:flex}
+  .panel{background:var(--card); border-radius:22px; padding:30px 26px; text-align:center;
+    box-shadow:var(--shadow); width:min(420px,92vw)}
+  .panel h2{margin:0 0 6px; font-size:1.8rem}
+  .panel p{margin:6px 0; color:var(--muted); font-weight:700}
+  .panel .big{font-size:2.4rem; font-weight:800; color:var(--accent); margin:8px 0}
+  .panel button{margin-top:14px; border:none; cursor:pointer; font:inherit; font-weight:800;
+    padding:13px 26px; border-radius:999px; background:var(--accent); color:#fff; font-size:1.1rem}
+
+  .note{margin-top:8px; font-size:.82rem; color:var(--muted); text-align:center}
+  .back{margin-top:14px}
+  .back a{color:var(--accent2); font-weight:800; text-decoration:none}
+  /* --- mobile/tablet responsiveness guard --- */
+  html,body{overflow-x:hidden}
+  body>*{max-width:100%}
+  @media (max-width:600px){ .sub,.help{font-size:.84rem} }
+</style>
+</head>
+<body>
+  <header>
+    <h1>🌀 Maze Runner</h1>
+    <p class="sub">Guide 🐭 to the 🏁 flag before time runs out!</p>
+  </header>
+
+  <div class="diff" id="diff">
+    <button data-d="easy" class="on">😀 Easy</button>
+    <button data-d="medium">😎 Medium</button>
+    <button data-d="hard">🤓 Hard</button>
+  </div>
+
+  <div class="scoreboard">
+    <div class="pill">⭐ <span id="score">0</span></div>
+    <div class="pill">🏆 Best: <span id="best">0</span></div>
+    <div class="pill">📈 Lvl <span id="level">1</span></div>
+    <div class="pill">👣 <span id="moves">0</span></div>
+    <div class="pill hearts" id="hearts">❤️❤️❤️</div>
+  </div>
+
+  <div class="timerwrap"><div class="timerbar"><div class="timerfill" id="timerfill"></div></div></div>
+
+  <div class="stage">
+    <canvas id="maze" width="420" height="420"></canvas>
+  </div>
+  <p class="feedback" id="feedback"></p>
+
+  <div class="dpad">
+    <button class="du" data-dir="N">▲</button>
+    <button class="dl" data-dir="W">◀</button>
+    <button class="dd" data-dir="S">▼</button>
+    <button class="dr" data-dir="E">▶</button>
+  </div>
+  <p class="note">Use arrow keys, the buttons, or swipe on the maze.</p>
+
+  <p class="back"><a href="https://littleplayers.github.io/">← Back to Little Players</a></p>
+
+  <div class="overlay" id="overlay">
+    <div class="panel">
+      <h2 id="ovTitle">Game Over</h2>
+      <p id="ovMsg"></p>
+      <div class="big" id="ovScore">0</div>
+      <p id="ovBest"></p>
+      <button id="ovBtn">▶ Play Again</button>
+    </div>
+  </div>
+
+<script>
+  const DIFF = {
+    easy:   {size:7,  time:35, label:"Easy"},
+    medium: {size:10, time:45, label:"Medium"},
+    hard:   {size:13, time:55, label:"Hard"},
+  };
+  const SK="mz_best";
+  const $=id=>document.getElementById(id);
+  const cv=$("maze"), ctx=cv.getContext("2d"), fb=$("feedback"), fill=$("timerfill");
+
+  let diff="easy", score=0, level=1, lives=3, moves=0, won=0;
+  let best=load(SK,0);
+  let N, cells, px, py, cell, pad=8;
+  let timeLeft, timeMax, timer=null, running=false;
+
+  function load(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}}
+  function save(k,v){localStorage.setItem(k,JSON.stringify(v))}
+  const ri=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+
+  // ---- maze generation (recursive backtracker) ----
+  function genMaze(n){
+    // each cell: walls [N,E,S,W] true=wall
+    const g=[];
+    for(let y=0;y<n;y++){const row=[];for(let x=0;x<n;x++)row.push({walls:[true,true,true,true],seen:false});g.push(row);}
+    const stack=[[0,0]]; g[0][0].seen=true;
+    const DIRS=[[0,-1,0,2],[1,0,1,3],[0,1,2,0],[-1,0,3,1]]; // dx,dy,wallThis,wallOther
+    while(stack.length){
+      const [cx,cy]=stack[stack.length-1];
+      const opts=[];
+      for(const[dx,dy,wt,wo] of DIRS){
+        const nx=cx+dx, ny=cy+dy;
+        if(nx>=0&&ny>=0&&nx<n&&ny<n&&!g[ny][nx].seen) opts.push([nx,ny,wt,wo]);
+      }
+      if(opts.length){
+        const [nx,ny,wt,wo]=opts[ri(0,opts.length-1)];
+        g[cy][cx].walls[wt]=false; g[ny][nx].walls[wo]=false;
+        g[ny][nx].seen=true; stack.push([nx,ny]);
+      } else stack.pop();
+    }
+    return g;
+  }
+
+  function fitCanvas(){
+    const max=Math.min(460, window.innerWidth-56);
+    cell=Math.floor((max-pad*2)/N);
+    const dim=cell*N+pad*2;
+    cv.width=dim; cv.height=dim;
+  }
+
+  function newLevel(){
+    N=DIFF[diff].size + (level-1);           // maze grows each level
+    cells=genMaze(N);
+    px=0; py=0; moves=0;
+    fitCanvas();
+    timeMax=DIFF[diff].time + (level-1)*4;    // a little more time for bigger mazes
+    timeLeft=timeMax;
+    fb.textContent=""; fb.className="feedback";
+    paint(); draw(); startTimer();
+  }
+
+  function startTimer(){
+    stopTimer(); running=true; updateBar();
+    timer=setInterval(()=>{ timeLeft-=0.1;
+      if(timeLeft<=0){timeLeft=0; updateBar(); timeUp();} else updateBar(); },100);
+  }
+  function stopTimer(){ if(timer){clearInterval(timer);timer=null} running=false; }
+  function updateBar(){
+    const pct=Math.max(0,(timeLeft/timeMax)*100);
+    fill.style.width=pct+"%";
+    fill.className="timerfill"+(pct<25?" danger":pct<50?" warn":"");
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    // goal cell highlight
+    ctx.fillStyle="#d6fff1";
+    ctx.fillRect(pad+(N-1)*cell, pad+(N-1)*cell, cell, cell);
+    // walls
+    ctx.strokeStyle=getComputedStyle(document.documentElement).getPropertyValue('--wall')||"#1f3d34";
+    ctx.lineWidth=Math.max(2,cell*0.10); ctx.lineCap="round";
+    for(let y=0;y<N;y++)for(let x=0;x<N;x++){
+      const c=cells[y][x], X=pad+x*cell, Y=pad+y*cell;
+      ctx.beginPath();
+      if(c.walls[0]){ctx.moveTo(X,Y);ctx.lineTo(X+cell,Y);}
+      if(c.walls[1]){ctx.moveTo(X+cell,Y);ctx.lineTo(X+cell,Y+cell);}
+      if(c.walls[2]){ctx.moveTo(X+cell,Y+cell);ctx.lineTo(X,Y+cell);}
+      if(c.walls[3]){ctx.moveTo(X,Y+cell);ctx.lineTo(X,Y);}
+      ctx.stroke();
+    }
+    // flag + player
+    const fs=cell*0.7;
+    ctx.font=`${fs}px serif`; ctx.textAlign="center"; ctx.textBaseline="middle";
+    ctx.fillText("🏁", pad+(N-0.5)*cell, pad+(N-0.5)*cell);
+    ctx.fillText("🐭", pad+(px+0.5)*cell, pad+(py+0.5)*cell);
+  }
+
+  function move(dir){
+    if(!running) return;
+    const c=cells[py][px];
+    let moved=false;
+    if(dir==="N"&&!c.walls[0]){py--;moved=true;}
+    else if(dir==="E"&&!c.walls[1]){px++;moved=true;}
+    else if(dir==="S"&&!c.walls[2]){py++;moved=true;}
+    else if(dir==="W"&&!c.walls[3]){px--;moved=true;}
+    if(moved){ moves++; $("moves").textContent=moves; draw();
+      if(px===N-1&&py===N-1) winLevel();
+    }
+  }
+
+  function winLevel(){
+    stopTimer();
+    const timeBonus=Math.round(timeLeft*3);
+    const pts=20+timeBonus+level*5;
+    won++; level++; score+=pts;
+    if(best<score){best=score; save(SK,best);}
+    paint();
+    fb.textContent=`🎉 You made it! +${pts} (⏱ +${timeBonus})`; fb.className="feedback good";
+    setTimeout(newLevel,1100);
+  }
+
+  function timeUp(){
+    stopTimer(); lives--; paint();
+    fb.textContent="⏰ Out of time!"; fb.className="feedback bad";
+    if(lives<=0) setTimeout(gameOver,1200);
+    else setTimeout(()=>{ // retry a fresh maze at same level
+      cells=genMaze(N); px=0; py=0; moves=0;
+      timeLeft=timeMax; fb.textContent=""; fb.className="feedback"; draw(); startTimer();
+    },1300);
+  }
+
+  function gameOver(){
+    stopTimer();
+    $("ovTitle").textContent=(score>=best&&score>0)?"🏆 New Best!":"Game Over";
+    $("ovMsg").textContent=`You finished ${won} maze${won===1?"":"s"} on ${DIFF[diff].label}.`;
+    $("ovScore").textContent=score+" pts";
+    $("ovBest").textContent="Best score: "+best;
+    $("overlay").classList.add("show");
+  }
+
+  function startGame(){
+    score=0; level=1; lives=3; won=0;
+    $("overlay").classList.remove("show");
+    paint(); newLevel();
+  }
+
+  function paint(){
+    $("score").textContent=score; $("best").textContent=best;
+    $("level").textContent=level; $("moves").textContent=moves;
+    $("hearts").textContent="❤️".repeat(Math.max(0,lives))+"🤍".repeat(Math.max(0,3-lives));
+  }
+
+  // ---- controls ----
+  document.querySelectorAll("#diff button").forEach(b=>{
+    b.onclick=()=>{ diff=b.dataset.d;
+      document.querySelectorAll("#diff button").forEach(x=>x.classList.toggle("on",x===b));
+      startGame(); };
+  });
+  document.querySelectorAll(".dpad button").forEach(b=>{
+    b.onclick=()=>move(b.dataset.dir);
+  });
+  document.addEventListener("keydown",e=>{
+    const map={ArrowUp:"N",ArrowRight:"E",ArrowDown:"S",ArrowLeft:"W",w:"N",d:"E",s:"S",a:"W",W:"N",D:"E",S:"S",A:"W"};
+    if(map[e.key]){ e.preventDefault(); move(map[e.key]); }
+  });
+
+  // swipe on canvas
+  let sx=0,sy=0,st=false;
+  cv.addEventListener("touchstart",e=>{const t=e.touches[0];sx=t.clientX;sy=t.clientY;st=true;},{passive:true});
+  cv.addEventListener("touchend",e=>{
+    if(!st)return; st=false;
+    const t=e.changedTouches[0], dx=t.clientX-sx, dy=t.clientY-sy;
+    if(Math.abs(dx)<20&&Math.abs(dy)<20) return;
+    if(Math.abs(dx)>Math.abs(dy)) move(dx>0?"E":"W"); else move(dy>0?"S":"N");
+  },{passive:true});
+
+  $("ovBtn").onclick=startGame;
+  window.addEventListener("resize",()=>{ if(N){ fitCanvas(); draw(); } });
+
+  startGame();
+</script>
+</body>
+</html>

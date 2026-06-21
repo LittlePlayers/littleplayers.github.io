@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+<meta name="description" content="Kaleidoscope Draw — every line you draw is mirrored into a beautiful kaleidoscope pattern. Save your art!" />
+  <link rel="canonical" href="https://littleplayers.github.io/kaleidoscope-draw/" />
+  <meta name="keywords" content="kids games, creativity game, Kaleidoscope Draw, free online game for kids, Little Players, Indian mythology games" />
+  <meta name="author" content="gauravs19" />
+  <meta name="theme-color" content="#ff6bcb" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Little Players" />
+  <meta property="og:title" content="Kaleidoscope Draw — Little Players" />
+  <meta property="og:description" content="Kaleidoscope Draw — every line you draw is mirrored into a beautiful kaleidoscope pattern. Save your art!" />
+  <meta property="og:url" content="https://littleplayers.github.io/kaleidoscope-draw/" />
+  <meta property="og:image" content="https://littleplayers.github.io/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Kaleidoscope Draw — Little Players" />
+  <meta name="twitter:description" content="Kaleidoscope Draw — every line you draw is mirrored into a beautiful kaleidoscope pattern. Save your art!" />
+  <meta name="twitter:image" content="https://littleplayers.github.io/og-image.png" />
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "VideoGame", "name": "Kaleidoscope Draw", "url": "https://littleplayers.github.io/kaleidoscope-draw/", "image": "https://littleplayers.github.io/og-image.png", "description": "Kaleidoscope Draw — every line you draw is mirrored into a beautiful kaleidoscope pattern. Save your art!", "applicationCategory": "Game", "operatingSystem": "Web Browser", "genre": "creativity", "author": {"@type": "Organization", "name": "Little Players"}, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "audience": {"@type": "PeopleAudience", "suggestedMinAge": 5}, "isPartOf": {"@type": "WebSite", "name": "Little Players", "url": "https://littleplayers.github.io/"}}</script>
+<title>🔮 Kaleidoscope Draw — Little Players</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔮</text></svg>" />
+<style>
+  :root{
+    --bg:#0c0a1f; --card:#1a1736; --ink:#f0eeff; --muted:#a59ed8;
+    --accent:#ff6bcb; --accent2:#7c5cff; --shadow:0 10px 30px rgba(0,0,0,.45); --radius:16px;
+  }
+  *{box-sizing:border-box}
+  html,body{overscroll-behavior:none}
+  body{
+    margin:0; min-height:100vh; color:var(--ink);
+    font-family:"Baloo 2","Comic Sans MS","Trebuchet MS",system-ui,sans-serif;
+    background:radial-gradient(circle at 50% 0,#2a1d4d 0,#0c0a1f 60%);
+    display:flex; flex-direction:column; align-items:center; padding:16px;
+  }
+  header{text-align:center; margin:8px 0 4px}
+  h1{margin:0; font-size:clamp(1.7rem,6vw,2.6rem)}
+  .sub{margin:5px 0 0; color:var(--muted); font-weight:700}
+
+  .stage{background:#000; border-radius:50%; box-shadow:var(--shadow),0 0 60px rgba(124,92,255,.3);
+    padding:8px; margin-top:12px}
+  canvas{display:block; border-radius:50%; background:#06040f; cursor:crosshair; touch-action:none}
+
+  .panel{background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow);
+    padding:14px 16px; margin-top:14px; width:min(440px,94vw)}
+  .colors{display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin:2px 0 10px}
+  .swatch{width:28px; height:28px; border-radius:50%; cursor:pointer; border:3px solid transparent}
+  .swatch.on{border-color:#fff}
+  .row{display:flex; align-items:center; gap:12px; margin:8px 0}
+  .row label{width:88px; font-weight:800; font-size:.9rem; color:var(--muted)}
+  input[type=range]{flex:1; accent-color:var(--accent)}
+  .val{width:28px; text-align:right; font-weight:800}
+
+  .actions{display:flex; gap:10px; margin-top:12px; flex-wrap:wrap; justify-content:center}
+  .actions button{border:none; cursor:pointer; font:inherit; font-weight:800; padding:11px 18px;
+    border-radius:999px; color:#fff; box-shadow:var(--shadow); transition:transform .1s}
+  .actions button:hover{transform:translateY(-2px)}
+  .b-clear{background:#ff6f8a}.b-save{background:#22b07d}.b-rainbow{background:linear-gradient(90deg,#ff6bcb,#7c5cff)}
+  .b-rainbow.on{outline:3px solid #fff}
+
+  .back{margin-top:14px}
+  .back a{color:var(--accent); font-weight:800; text-decoration:none}
+  /* --- mobile/tablet responsiveness guard --- */
+  html,body{overflow-x:hidden}
+  body>*{max-width:100%}
+  @media (max-width:600px){ .sub,.help{font-size:.84rem} }
+</style>
+</head>
+<body>
+  <header>
+    <h1>🔮 Kaleidoscope Draw</h1>
+    <p class="sub">Draw anything — it turns into magic!</p>
+  </header>
+
+  <div class="stage"><canvas id="cv" width="440" height="440"></canvas></div>
+
+  <div class="panel">
+    <div class="colors" id="colors"></div>
+    <div class="row"><label>Mirrors</label><input type="range" id="seg" min="4" max="16" step="2" value="8"><span class="val" id="segv">8</span></div>
+    <div class="row"><label>Brush</label><input type="range" id="bw" min="1" max="14" value="4"><span class="val" id="bwv">4</span></div>
+    <div class="actions">
+      <button class="b-rainbow" id="rainbow">🌈 Rainbow</button>
+      <button class="b-clear" id="clear">🗑️ Clear</button>
+      <button class="b-save" id="save">💾 Save</button>
+    </div>
+  </div>
+
+  <p class="back"><a href="https://littleplayers.github.io/">← Back to Little Players</a></p>
+
+<script>
+  const COLORS=["#ff6bcb","#7c5cff","#5cc8ff","#3ec46d","#ffd23f","#ff8c42","#ffffff"];
+  const $=id=>document.getElementById(id);
+  const cv=$("cv"), ctx=cv.getContext("2d");
+  const cx=cv.width/2, cy=cv.height/2;
+  let color="#ff6bcb", seg=8, bw=4, rainbow=false, hue=0;
+  let drawing=false, lx=0, ly=0;
+
+  function fit(){ const m=Math.min(440,window.innerWidth-56); cv.style.width=m+"px"; cv.style.height=m+"px"; }
+
+  COLORS.forEach((c,i)=>{
+    const s=document.createElement("div"); s.className="swatch"+(i===0?" on":""); s.style.background=c; s.dataset.c=c;
+    s.onclick=()=>{ color=c; rainbow=false; $("rainbow").classList.remove("on");
+      document.querySelectorAll(".swatch").forEach(n=>n.classList.toggle("on",n===s)); };
+    $("colors").appendChild(s);
+  });
+  $("seg").addEventListener("input",e=>{ seg=+e.target.value; $("segv").textContent=seg; });
+  $("bw").addEventListener("input",e=>{ bw=+e.target.value; $("bwv").textContent=bw; });
+  $("rainbow").onclick=()=>{ rainbow=!rainbow; $("rainbow").classList.toggle("on",rainbow); };
+
+  function pos(e){
+    const r=cv.getBoundingClientRect();
+    const px=(e.touches?e.touches[0].clientX:e.clientX)-r.left;
+    const py=(e.touches?e.touches[0].clientY:e.clientY)-r.top;
+    return { x:px*(cv.width/r.width), y:py*(cv.height/r.height) };
+  }
+
+  function strokeSym(x1,y1,x2,y2){
+    const stroke = rainbow ? `hsl(${hue%360},90%,65%)` : color;
+    if(rainbow) hue+=6;
+    ctx.strokeStyle=stroke; ctx.lineWidth=bw; ctx.lineCap="round";
+    const a1=x1-cx, b1=y1-cy, a2=x2-cx, b2=y2-cy;
+    for(let i=0;i<seg;i++){
+      const ang=i*2*Math.PI/seg, c=Math.cos(ang), s=Math.sin(ang);
+      // rotated
+      line(a1*c-b1*s, a1*s+b1*c, a2*c-b2*s, a2*s+b2*c);
+      // reflected (mirror y) then rotated -> full kaleidoscope
+      line(a1*c+b1*s, a1*s-b1*c, a2*c+b2*s, a2*s-b2*c);
+    }
+  }
+  function line(ax,ay,bx,by){ ctx.beginPath(); ctx.moveTo(cx+ax,cy+ay); ctx.lineTo(cx+bx,cy+by); ctx.stroke(); }
+
+  function start(e){ e.preventDefault(); drawing=true; const p=pos(e); lx=p.x; ly=p.y; }
+  function move(e){ if(!drawing)return; e.preventDefault(); const p=pos(e); strokeSym(lx,ly,p.x,p.y); lx=p.x; ly=p.y; }
+  function end(){ drawing=false; }
+
+  cv.addEventListener("mousedown",start); cv.addEventListener("mousemove",move); window.addEventListener("mouseup",end);
+  cv.addEventListener("touchstart",start,{passive:false}); cv.addEventListener("touchmove",move,{passive:false}); cv.addEventListener("touchend",end);
+
+  $("clear").onclick=()=>ctx.clearRect(0,0,cv.width,cv.height);
+  $("save").onclick=()=>{
+    const out=document.createElement("canvas"); out.width=cv.width; out.height=cv.height;
+    const o=out.getContext("2d"); o.fillStyle="#06040f"; o.fillRect(0,0,out.width,out.height); o.drawImage(cv,0,0);
+    const a=document.createElement("a"); a.download="my-kaleidoscope.png"; a.href=out.toDataURL("image/png"); a.click();
+  };
+
+  fit(); window.addEventListener("resize",fit);
+</script>
+</body>
+</html>

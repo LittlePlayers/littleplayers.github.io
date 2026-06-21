@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Math Blast — solve quick math problems before the timer runs out! An advanced math game for kids with levels, lives and combos." />
+  <link rel="canonical" href="https://littleplayers.github.io/math-blast/" />
+  <meta name="keywords" content="kids games, math game, Math Blast, free online game for kids, Little Players, Indian mythology games" />
+  <meta name="author" content="gauravs19" />
+  <meta name="theme-color" content="#22a0ff" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Little Players" />
+  <meta property="og:title" content="Math Blast — Little Players" />
+  <meta property="og:description" content="Math Blast — solve quick math problems before the timer runs out! An advanced math game for kids with levels, lives and combos." />
+  <meta property="og:url" content="https://littleplayers.github.io/math-blast/" />
+  <meta property="og:image" content="https://littleplayers.github.io/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Math Blast — Little Players" />
+  <meta name="twitter:description" content="Math Blast — solve quick math problems before the timer runs out! An advanced math game for kids with levels, lives and combos." />
+  <meta name="twitter:image" content="https://littleplayers.github.io/og-image.png" />
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "VideoGame", "name": "Math Blast", "url": "https://littleplayers.github.io/math-blast/", "image": "https://littleplayers.github.io/og-image.png", "description": "Math Blast — solve quick math problems before the timer runs out! An advanced math game for kids with levels, lives and combos.", "applicationCategory": "Game", "operatingSystem": "Web Browser", "genre": "math", "author": {"@type": "Organization", "name": "Little Players"}, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "audience": {"@type": "PeopleAudience", "suggestedMinAge": 5}, "isPartOf": {"@type": "WebSite", "name": "Little Players", "url": "https://littleplayers.github.io/"}}</script>
+<title>➗ Math Blast — Little Players</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>➗</text></svg>" />
+<style>
+  :root{
+    --bg:#eef6ff; --card:#fff; --ink:#22304d; --muted:#7d8aa8;
+    --accent:#22a0ff; --accent2:#22b07d; --good:#22b07d; --bad:#ff5d6c;
+    --shadow:0 10px 28px rgba(60,110,180,.16); --radius:18px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; min-height:100vh; color:var(--ink);
+    font-family:"Baloo 2","Comic Sans MS","Trebuchet MS",system-ui,sans-serif;
+    background:
+      radial-gradient(circle at 12% 10%,#cfe8ff 0,transparent 42%),
+      radial-gradient(circle at 88% 8%,#d2f5e6 0,transparent 44%),
+      var(--bg);
+    display:flex; flex-direction:column; align-items:center; padding:20px;
+  }
+  header{text-align:center; margin:14px 0 6px}
+  h1{margin:0; font-size:clamp(1.8rem,6vw,2.8rem)}
+  .sub{margin:6px 0 0; color:var(--muted); font-weight:700}
+
+  .diff{display:flex; gap:10px; justify-content:center; margin:10px 0 0; flex-wrap:wrap}
+  .diff button{border:none;cursor:pointer;font:inherit;font-weight:800;padding:9px 16px;
+    border-radius:999px;background:#fff;color:var(--ink);box-shadow:var(--shadow)}
+  .diff button.on{background:var(--accent);color:#fff}
+
+  .scoreboard{display:flex; gap:10px; margin:16px 0 6px; flex-wrap:wrap; justify-content:center}
+  .pill{background:var(--card); border-radius:999px; padding:8px 15px; font-weight:800;
+    box-shadow:var(--shadow); font-size:.92rem; display:flex; align-items:center; gap:6px}
+
+  .timerwrap{width:min(520px,94vw); margin:8px 0 2px}
+  .timerbar{height:12px; border-radius:999px; background:#dceaf7; overflow:hidden}
+  .timerfill{height:100%; width:100%; border-radius:999px;
+    background:linear-gradient(90deg,#22b07d,#7bd88f); transition:width .25s linear}
+  .timerfill.warn{background:linear-gradient(90deg,#ffb24a,#ffd27a)}
+  .timerfill.danger{background:linear-gradient(90deg,#ff5d6c,#ff8aa0)}
+
+  .game{background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow);
+    padding:26px 22px; width:min(520px,94vw); margin-top:10px; text-align:center}
+  .question{font-size:clamp(2.4rem,10vw,3.6rem); font-weight:800; margin:6px 0 22px; letter-spacing:1px}
+  .answers{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+  .answer{border:none; cursor:pointer; font:inherit; font-weight:800; font-size:1.8rem;
+    padding:20px 0; border-radius:16px; color:#fff;
+    background:linear-gradient(180deg,var(--accent),#1488e0);
+    box-shadow:0 5px 0 #1276c4; transition:transform .08s,box-shadow .08s,opacity .2s}
+  .answer:active{transform:translateY(4px); box-shadow:0 1px 0 #1276c4}
+  .answer.correct{background:linear-gradient(180deg,#2bc98c,#1fa874)!important; box-shadow:0 5px 0 #178a5f!important}
+  .answer.wrong{background:linear-gradient(180deg,#ff6f7c,#e8505f)!important; box-shadow:0 5px 0 #c43d4a!important}
+  .answer:disabled{cursor:default}
+
+  .feedback{min-height:1.6em; font-weight:800; font-size:1.2rem; margin:16px 0 0}
+  .feedback.good{color:var(--good)} .feedback.bad{color:var(--bad)}
+  .hearts{font-size:1.1rem; letter-spacing:2px}
+
+  .overlay{position:fixed; inset:0; background:rgba(20,40,70,.55); display:none;
+    align-items:center; justify-content:center; padding:20px; z-index:9}
+  .overlay.show{display:flex}
+  .panel{background:var(--card); border-radius:22px; padding:30px 26px; text-align:center;
+    box-shadow:var(--shadow); width:min(420px,92vw)}
+  .panel h2{margin:0 0 6px; font-size:1.8rem}
+  .panel p{margin:6px 0; color:var(--muted); font-weight:700}
+  .panel .big{font-size:2.4rem; font-weight:800; color:var(--accent); margin:8px 0}
+  .panel button{margin-top:14px; border:none; cursor:pointer; font:inherit; font-weight:800;
+    padding:13px 26px; border-radius:999px; background:var(--accent); color:#fff; font-size:1.1rem}
+
+  .back{margin-top:18px}
+  .back a{color:var(--accent); font-weight:800; text-decoration:none}
+  @keyframes pop{0%{transform:scale(.9)}60%{transform:scale(1.06)}100%{transform:scale(1)}}
+  .pop{animation:pop .25s ease}
+  /* --- mobile/tablet responsiveness guard --- */
+  html,body{overflow-x:hidden}
+  body>*{max-width:100%}
+  @media (max-width:600px){ .sub,.help{font-size:.84rem} }
+</style>
+</head>
+<body>
+  <header>
+    <h1>➗ Math Blast</h1>
+    <p class="sub">Pick the right answer before time runs out!</p>
+  </header>
+
+  <div class="diff" id="diff">
+    <button data-d="easy" class="on">😀 Easy</button>
+    <button data-d="medium">😎 Medium</button>
+    <button data-d="hard">🤓 Hard</button>
+  </div>
+
+  <div class="scoreboard">
+    <div class="pill">⭐ <span id="score">0</span></div>
+    <div class="pill">🏆 Best: <span id="best">0</span></div>
+    <div class="pill">📈 Lvl <span id="level">1</span></div>
+    <div class="pill">🔥 Combo <span id="streak">0</span></div>
+    <div class="pill hearts" id="hearts">❤️❤️❤️</div>
+  </div>
+
+  <div class="timerwrap"><div class="timerbar"><div class="timerfill" id="timerfill"></div></div></div>
+
+  <main class="game">
+    <div class="question" id="question">2 + 2</div>
+    <div class="answers" id="answers"></div>
+    <p class="feedback" id="feedback"></p>
+  </main>
+
+  <p class="back"><a href="https://littleplayers.github.io/">← Back to Little Players</a></p>
+
+  <div class="overlay" id="overlay">
+    <div class="panel">
+      <h2 id="ovTitle">Game Over</h2>
+      <p id="ovMsg"></p>
+      <div class="big" id="ovScore">0</div>
+      <p id="ovBest"></p>
+      <button id="ovBtn">▶ Play Again</button>
+    </div>
+  </div>
+
+<script>
+  // Difficulty config: which operators, number range, base time.
+  const DIFF = {
+    easy:   {ops:["+","-"],            max:10,  time:12, label:"Easy"},
+    medium: {ops:["+","-","×"],        max:20,  time:10, label:"Medium"},
+    hard:   {ops:["+","-","×","÷"],    max:30,  time:9,  label:"Hard"},
+  };
+  const SK="mb_best";
+  const $=id=>document.getElementById(id);
+  const fill=$("timerfill"), ansEl=$("answers"), fb=$("feedback");
+
+  let diff="easy", score=0, level=1, streak=0, lives=3, solved=0;
+  let best=load(SK,0);
+  let answer=0, locked=false;
+  let timeLeft, timeMax, timer=null, running=false;
+
+  function load(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}}
+  function save(k,v){localStorage.setItem(k,JSON.stringify(v))}
+  function ri(a,b){return a+Math.floor(Math.random()*(b-a+1))}
+  function shuffle(a){const x=[...a];for(let i=x.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[x[i],x[j]]=[x[j],x[i]]}return x}
+
+  function makeProblem(){
+    const cfg=DIFF[diff];
+    const max=cfg.max + (level-1)*3;           // numbers grow with level
+    const op=cfg.ops[Math.floor(Math.random()*cfg.ops.length)];
+    let a,b,ans,text;
+    if(op==="+"){ a=ri(1,max); b=ri(1,max); ans=a+b; text=`${a} + ${b}`; }
+    else if(op==="-"){ a=ri(1,max); b=ri(0,a); ans=a-b; text=`${a} − ${b}`; }
+    else if(op==="×"){ a=ri(2,Math.min(12,cfg.max)); b=ri(2,Math.min(12,cfg.max)); ans=a*b; text=`${a} × ${b}`; }
+    else { ans=ri(2,12); b=ri(2,12); a=ans*b; text=`${a} ÷ ${b}`; } // clean division
+    return {text,ans};
+  }
+
+  function options(correct){
+    const set=new Set([correct]);
+    while(set.size<4){
+      let d=correct + (Math.random()<.5?-1:1)*ri(1,Math.max(2,Math.round(correct*0.3)+2));
+      if(d<0) d=correct+ri(1,5);
+      if(d!==correct) set.add(d);
+    }
+    return shuffle([...set]);
+  }
+
+  function startGame(){
+    score=0; level=1; streak=0; lives=3; solved=0;
+    $("overlay").classList.remove("show");
+    paint(); nextQ();
+  }
+
+  function nextQ(){
+    const p=makeProblem(); answer=p.ans; locked=false;
+    $("question").textContent=p.text; $("question").classList.remove("pop");
+    void $("question").offsetWidth; $("question").classList.add("pop");
+    fb.textContent=""; fb.className="feedback";
+    ansEl.innerHTML="";
+    options(answer).forEach(v=>{
+      const b=document.createElement("button");
+      b.className="answer"; b.textContent=v;
+      b.onclick=()=>choose(v,b);
+      ansEl.appendChild(b);
+    });
+    timeMax=Math.max(4, DIFF[diff].time - (level-1)*0.5);
+    timeLeft=timeMax; startTimer();
+  }
+
+  function startTimer(){
+    stopTimer(); running=true; updateBar();
+    timer=setInterval(()=>{
+      timeLeft-=0.1;
+      if(timeLeft<=0){timeLeft=0; updateBar(); timeUp();} else updateBar();
+    },100);
+  }
+  function stopTimer(){ if(timer){clearInterval(timer);timer=null} running=false; }
+  function updateBar(){
+    const pct=Math.max(0,(timeLeft/timeMax)*100);
+    fill.style.width=pct+"%";
+    fill.className="timerfill"+(pct<25?" danger":pct<50?" warn":"");
+  }
+
+  function choose(val,btn){
+    if(locked) return; locked=true; stopTimer();
+    [...ansEl.children].forEach(b=>b.disabled=true);
+    if(val===answer){
+      btn.classList.add("correct");
+      const timeBonus=Math.round(timeLeft*2);
+      const pts=10+timeBonus+streak*3;
+      streak++; solved++; score+=pts;
+      if(best<score){best=score; save(SK,best);}
+      if(solved%5===0) level++;
+      paint();
+      fb.textContent=`🎉 +${pts} (⏱ +${timeBonus})`; fb.className="feedback good";
+      setTimeout(nextQ,800);
+    } else {
+      btn.classList.add("wrong");
+      [...ansEl.children].forEach(b=>{ if(+b.textContent===answer) b.classList.add("correct"); });
+      lives--; streak=0; paint();
+      fb.textContent=`❌ It was ${answer}`; fb.className="feedback bad";
+      if(lives<=0) setTimeout(gameOver,1100); else setTimeout(nextQ,1100);
+    }
+  }
+
+  function timeUp(){
+    if(locked) return; locked=true;
+    [...ansEl.children].forEach(b=>{ b.disabled=true; if(+b.textContent===answer) b.classList.add("correct"); });
+    lives--; streak=0; paint();
+    fb.textContent=`⏰ Time! It was ${answer}`; fb.className="feedback bad";
+    if(lives<=0) setTimeout(gameOver,1200); else setTimeout(nextQ,1200);
+  }
+
+  function gameOver(){
+    stopTimer();
+    $("ovTitle").textContent = (score>=best && score>0) ? "🏆 New Best!" : "Game Over";
+    $("ovMsg").textContent=`You answered ${solved} correct on ${DIFF[diff].label}.`;
+    $("ovScore").textContent=score+" pts";
+    $("ovBest").textContent="Best score: "+best;
+    $("overlay").classList.add("show");
+  }
+
+  function paint(){
+    $("score").textContent=score; $("best").textContent=best;
+    $("level").textContent=level; $("streak").textContent=streak;
+    $("hearts").textContent="❤️".repeat(Math.max(0,lives))+"🤍".repeat(Math.max(0,3-lives));
+  }
+
+  document.querySelectorAll("#diff button").forEach(b=>{
+    b.onclick=()=>{ diff=b.dataset.d;
+      document.querySelectorAll("#diff button").forEach(x=>x.classList.toggle("on",x===b));
+      startGame(); };
+  });
+
+  // keyboard 1-4 selects an answer
+  document.addEventListener("keydown",e=>{
+    if(!running||locked) return;
+    const n=parseInt(e.key,10);
+    if(n>=1&&n<=4){ const b=ansEl.children[n-1]; if(b) choose(+b.textContent,b); }
+  });
+
+  $("ovBtn").onclick=startGame;
+  startGame();
+</script>
+</body>
+</html>

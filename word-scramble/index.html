@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Word Scramble — unscramble the letters before time runs out! An advanced spelling game for kids with levels, lives and a timer." />
+  <link rel="canonical" href="https://littleplayers.github.io/word-scramble/" />
+  <meta name="keywords" content="kids games, word game, Word Scramble, free online game for kids, Little Players, Indian mythology games" />
+  <meta name="author" content="gauravs19" />
+  <meta name="theme-color" content="#ff8c42" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Little Players" />
+  <meta property="og:title" content="Word Scramble — Little Players" />
+  <meta property="og:description" content="Word Scramble — unscramble the letters before time runs out! An advanced spelling game for kids with levels, lives and a timer." />
+  <meta property="og:url" content="https://littleplayers.github.io/word-scramble/" />
+  <meta property="og:image" content="https://littleplayers.github.io/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Word Scramble — Little Players" />
+  <meta name="twitter:description" content="Word Scramble — unscramble the letters before time runs out! An advanced spelling game for kids with levels, lives and a timer." />
+  <meta name="twitter:image" content="https://littleplayers.github.io/og-image.png" />
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "VideoGame", "name": "Word Scramble", "url": "https://littleplayers.github.io/word-scramble/", "image": "https://littleplayers.github.io/og-image.png", "description": "Word Scramble — unscramble the letters before time runs out! An advanced spelling game for kids with levels, lives and a timer.", "applicationCategory": "Game", "operatingSystem": "Web Browser", "genre": "word", "author": {"@type": "Organization", "name": "Little Players"}, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "audience": {"@type": "PeopleAudience", "suggestedMinAge": 5}, "isPartOf": {"@type": "WebSite", "name": "Little Players", "url": "https://littleplayers.github.io/"}}</script>
+<title>🔠 Word Scramble — Little Players</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔠</text></svg>" />
+<style>
+  :root{
+    --bg:#fff7ef; --card:#fff; --ink:#33264d; --muted:#8a7fa8;
+    --accent:#ff8c42; --accent2:#7c5cff; --good:#22b07d; --bad:#ff5d6c;
+    --slot:#f1ebff; --shadow:0 10px 28px rgba(120,80,160,.16); --radius:18px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; min-height:100vh; color:var(--ink);
+    font-family:"Baloo 2","Comic Sans MS","Trebuchet MS",system-ui,sans-serif;
+    background:
+      radial-gradient(circle at 12% 10%,#ffe3c7 0,transparent 42%),
+      radial-gradient(circle at 88% 8%,#e9e0ff 0,transparent 44%),
+      var(--bg);
+    display:flex; flex-direction:column; align-items:center; padding:20px;
+  }
+  header{text-align:center; margin:14px 0 6px}
+  h1{margin:0; font-size:clamp(1.8rem,6vw,2.8rem)}
+  .sub{margin:6px 0 0; color:var(--muted); font-weight:700}
+
+  .scoreboard{display:flex; gap:10px; margin:18px 0 6px; flex-wrap:wrap; justify-content:center}
+  .pill{
+    background:var(--card); border-radius:999px; padding:8px 15px;
+    font-weight:800; box-shadow:var(--shadow); font-size:.92rem;
+    display:flex; align-items:center; gap:6px;
+  }
+
+  /* timer bar */
+  .timerwrap{width:min(560px,94vw); margin:8px 0 2px}
+  .timerbar{height:12px; border-radius:999px; background:#eadff7; overflow:hidden}
+  .timerfill{height:100%; width:100%; border-radius:999px;
+    background:linear-gradient(90deg,#22b07d,#7bd88f); transition:width .25s linear}
+  .timerfill.warn{background:linear-gradient(90deg,#ff8c42,#ffb24a)}
+  .timerfill.danger{background:linear-gradient(90deg,#ff5d6c,#ff8aa0)}
+
+  .game{
+    background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow);
+    padding:22px 22px; width:min(560px,94vw); margin-top:8px;
+  }
+  .catline{text-align:center; color:var(--muted); font-weight:800; margin:0 0 4px}
+  .hint{text-align:center; min-height:1.4em; margin:0 0 16px; font-weight:700; color:var(--accent2)}
+  .hint .label{color:var(--muted)}
+
+  .slots{display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-bottom:16px}
+  .slot{
+    width:44px; height:52px; border-radius:12px; background:var(--slot);
+    display:grid; place-items:center; font-size:1.5rem; font-weight:800;
+    color:var(--accent2); cursor:pointer; user-select:none;
+    border:3px solid transparent; transition:transform .1s ease,border-color .15s;
+  }
+  .slot.filled{background:#fff; border-color:#e3d9ff}
+  .slot:active{transform:translateY(2px)}
+
+  .bank{display:flex; gap:9px; justify-content:center; flex-wrap:wrap; margin-bottom:20px}
+  .tile{
+    width:48px; height:56px; border:none; border-radius:14px; cursor:pointer;
+    font:inherit; font-size:1.6rem; font-weight:800; color:#fff;
+    background:linear-gradient(180deg,var(--accent),#ff7a2e);
+    box-shadow:0 5px 0 #d96a22; transition:transform .08s,box-shadow .08s,opacity .15s;
+  }
+  .tile:active{transform:translateY(4px); box-shadow:0 1px 0 #d96a22}
+  .tile.used{opacity:0; pointer-events:none}
+
+  .controls{display:flex; gap:9px; justify-content:center; flex-wrap:wrap}
+  button.act{border:none; cursor:pointer; font:inherit; font-weight:800;
+    padding:10px 16px; border-radius:999px; color:#fff; box-shadow:var(--shadow);
+    transition:transform .1s, filter .15s; font-size:.92rem}
+  button.act:hover{transform:translateY(-2px)}
+  .b-hint{background:#ffb24a}.b-shuffle{background:#5cc8ff}
+  .b-clear{background:#b8acd6}.b-skip{background:#ff8aa0}
+
+  .feedback{text-align:center; min-height:1.6em; font-weight:800; font-size:1.15rem; margin:12px 0 0}
+  .feedback.good{color:var(--good)} .feedback.bad{color:var(--bad)}
+
+  /* difficulty + overlay */
+  .diff{display:flex; gap:10px; justify-content:center; margin:10px 0 0; flex-wrap:wrap}
+  .diff button{border:none;cursor:pointer;font:inherit;font-weight:800;padding:9px 16px;
+    border-radius:999px;background:#fff;color:var(--ink);box-shadow:var(--shadow)}
+  .diff button.on{background:var(--accent2);color:#fff}
+
+  .overlay{position:fixed; inset:0; background:rgba(40,25,70,.55); display:none;
+    align-items:center; justify-content:center; padding:20px; z-index:9}
+  .overlay.show{display:flex}
+  .panel{background:var(--card); border-radius:22px; padding:30px 26px; text-align:center;
+    box-shadow:var(--shadow); width:min(420px,92vw)}
+  .panel h2{margin:0 0 6px; font-size:1.8rem}
+  .panel p{margin:6px 0; color:var(--muted); font-weight:700}
+  .panel .big{font-size:2.4rem; font-weight:800; color:var(--accent2); margin:8px 0}
+  .panel button{margin-top:14px; border:none; cursor:pointer; font:inherit; font-weight:800;
+    padding:13px 26px; border-radius:999px; background:var(--accent2); color:#fff; font-size:1.1rem}
+
+  .hearts{font-size:1.1rem; letter-spacing:2px}
+  .back{margin-top:18px}
+  .back a{color:var(--accent2); font-weight:800; text-decoration:none}
+
+  @keyframes pop{0%{transform:scale(.6)}60%{transform:scale(1.15)}100%{transform:scale(1)}}
+  .pop{animation:pop .3s ease}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+  .shake{animation:shake .3s ease}
+  /* --- mobile/tablet responsiveness guard --- */
+  html,body{overflow-x:hidden}
+  body>*{max-width:100%}
+  @media (max-width:600px){ .sub,.help{font-size:.84rem} }
+</style>
+</head>
+<body>
+  <header>
+    <h1>🔠 Word Scramble</h1>
+    <p class="sub">Spell the word before the timer runs out!</p>
+  </header>
+
+  <div class="diff" id="diff">
+    <button data-d="easy" class="on">😀 Easy</button>
+    <button data-d="medium">😎 Medium</button>
+    <button data-d="hard">🤓 Hard</button>
+  </div>
+
+  <div class="scoreboard">
+    <div class="pill">⭐ <span id="score">0</span></div>
+    <div class="pill">🏆 Best: <span id="best">0</span></div>
+    <div class="pill">📈 Lvl <span id="level">1</span></div>
+    <div class="pill">🔥 <span id="streak">0</span></div>
+    <div class="pill hearts" id="hearts">❤️❤️❤️</div>
+  </div>
+
+  <div class="timerwrap"><div class="timerbar"><div class="timerfill" id="timerfill"></div></div></div>
+
+  <main class="game">
+    <p class="catline" id="category">Animals</p>
+    <p class="hint"><span class="label">Hint:</span> <span id="hint">—</span></p>
+    <div class="slots" id="slots"></div>
+    <div class="bank" id="bank"></div>
+    <div class="controls">
+      <button class="act b-hint" id="btnHint">💡 Hint</button>
+      <button class="act b-shuffle" id="btnShuffle">🔀 Shuffle</button>
+      <button class="act b-clear" id="btnClear">⟲ Clear</button>
+      <button class="act b-skip" id="btnSkip">⏭ Skip</button>
+    </div>
+    <p class="feedback" id="feedback"></p>
+  </main>
+
+  <p class="back"><a href="https://littleplayers.github.io/">← Back to Little Players</a></p>
+
+  <div class="overlay" id="overlay">
+    <div class="panel">
+      <h2 id="ovTitle">Game Over</h2>
+      <p id="ovMsg">Nice try!</p>
+      <div class="big" id="ovScore">0</div>
+      <p id="ovBest"></p>
+      <button id="ovBtn">▶ Play Again</button>
+    </div>
+  </div>
+
+<script>
+  const WORDS = [
+    // EASY (4-5)
+    {cat:"Animals",w:"FROG",h:"A green animal that hops and says ribbit."},
+    {cat:"Animals",w:"BEAR",h:"A big furry animal that loves honey."},
+    {cat:"Fruits",w:"PEAR",h:"A sweet fruit shaped like a teardrop."},
+    {cat:"Fruits",w:"APPLE",h:"A round fruit, often red or green."},
+    {cat:"Colors",w:"GREEN",h:"The color of grass and leaves."},
+    {cat:"Animals",w:"TIGER",h:"A big orange cat with black stripes."},
+    {cat:"Things",w:"TRAIN",h:"It runs on tracks and goes choo-choo."},
+    {cat:"Fruits",w:"MANGO",h:"A sweet tropical fruit with a big seed."},
+    {cat:"Nature",w:"CLOUD",h:"Fluffy white thing in the sky."},
+    {cat:"Things",w:"ROBOT",h:"A machine that can move and beep."},
+    // MEDIUM (6-7)
+    {cat:"Animals",w:"RABBIT",h:"A fluffy animal with long ears that hops."},
+    {cat:"Animals",w:"PENGUIN",h:"A black-and-white bird that loves ice."},
+    {cat:"Animals",w:"DOLPHIN",h:"A smart sea animal that jumps from the water."},
+    {cat:"Fruits",w:"ORANGE",h:"A round juicy fruit and also a color."},
+    {cat:"Fruits",w:"CHERRY",h:"A tiny red fruit that grows in pairs."},
+    {cat:"Colors",w:"PURPLE",h:"Mix red and blue to get this color."},
+    {cat:"Nature",w:"RAINBOW",h:"Colorful arc in the sky after rain."},
+    {cat:"Nature",w:"FLOWER",h:"A pretty plant that smells nice."},
+    {cat:"School",w:"PENCIL",h:"You write and draw with it."},
+    {cat:"Things",w:"ROCKET",h:"It blasts off into space."},
+    {cat:"Things",w:"GUITAR",h:"A musical instrument with strings."},
+    {cat:"Things",w:"CASTLE",h:"A big stone home for kings and queens."},
+    // HARD (8+)
+    {cat:"Animals",w:"ELEPHANT",h:"A big grey animal with a long trunk."},
+    {cat:"Animals",w:"BUTTERFLY",h:"A colorful insect that was once a caterpillar."},
+    {cat:"Animals",w:"CROCODILE",h:"A scaly reptile with big snapping jaws."},
+    {cat:"Animals",w:"KANGAROO",h:"An animal that hops and carries babies in a pouch."},
+    {cat:"Nature",w:"VOLCANO",h:"A mountain that can erupt with lava."},
+    {cat:"Nature",w:"WATERFALL",h:"Where a river falls down a cliff."},
+    {cat:"Things",w:"DINOSAUR",h:"A giant reptile from long, long ago."},
+    {cat:"Things",w:"AIRPLANE",h:"It has wings and flies in the sky."},
+    {cat:"School",w:"COMPUTER",h:"A machine you can type and play games on."},
+    {cat:"Nature",w:"MOUNTAIN",h:"A very tall, rocky part of the land."},
+  ];
+
+  const LEVELS = {
+    easy:   {time:30, range:[4,5],  label:"Easy"},
+    medium: {time:24, range:[6,7],  label:"Medium"},
+    hard:   {time:20, range:[8,99], label:"Hard"},
+  };
+
+  const SK="ws_best";
+  const $=id=>document.getElementById(id);
+  const slotsEl=$("slots"), bankEl=$("bank"), fb=$("feedback"), fill=$("timerfill");
+
+  let diff="easy", score=0, level=1, streak=0, lives=3, solved=0;
+  let best = load(SK,0);
+  let current, scrambled, filled, used;
+  let timeLeft, timeMax, timer=null, running=false;
+
+  function load(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}}
+  function save(k,v){localStorage.setItem(k,JSON.stringify(v))}
+  function shuffleArr(a){const x=[...a];for(let i=x.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[x[i],x[j]]=[x[j],x[i]]}return x}
+  function scramble(w){let s=w.split("");for(let t=0;t<8;t++){s=shuffleArr(s);if(s.join("")!==w)break}return s}
+
+  function pool(){
+    const [lo,hi]=LEVELS[diff].range;
+    return WORDS.filter(x=>x.w.length>=lo && x.w.length<=hi);
+  }
+  function pick(){const p=pool();return p[Math.floor(Math.random()*p.length)]}
+
+  function startGame(){
+    score=0; level=1; streak=0; lives=3; solved=0;
+    $("overlay").classList.remove("show");
+    paint(); newWord();
+  }
+
+  function newWord(){
+    current=pick();
+    scrambled=scramble(current.w);
+    filled=Array(current.w.length).fill(null);
+    used=Array(scrambled.length).fill(false);
+    $("category").textContent=current.cat;
+    $("hint").textContent=current.h;
+    fb.textContent=""; fb.className="feedback";
+    timeMax=Math.max(8, LEVELS[diff].time - (level-1)); // gets harder each level
+    timeLeft=timeMax;
+    render(); startTimer();
+  }
+
+  function startTimer(){
+    stopTimer(); running=true; updateBar();
+    timer=setInterval(()=>{
+      timeLeft-=0.1;
+      if(timeLeft<=0){ timeLeft=0; updateBar(); timeUp(); }
+      else updateBar();
+    },100);
+  }
+  function stopTimer(){ if(timer){clearInterval(timer);timer=null} running=false; }
+  function updateBar(){
+    const pct=Math.max(0,(timeLeft/timeMax)*100);
+    fill.style.width=pct+"%";
+    fill.className="timerfill"+(pct<25?" danger":pct<50?" warn":"");
+  }
+
+  function render(){
+    slotsEl.innerHTML="";
+    filled.forEach((f,i)=>{
+      const d=document.createElement("div");
+      d.className="slot"+(f?" filled":"");
+      d.textContent=f?f.char:"";
+      d.onclick=()=>removeAt(i);
+      slotsEl.appendChild(d);
+    });
+    bankEl.innerHTML="";
+    scrambled.forEach((ch,i)=>{
+      const b=document.createElement("button");
+      b.className="tile"+(used[i]?" used":"");
+      b.textContent=ch;
+      b.onclick=()=>placeLetter(ch,i);
+      bankEl.appendChild(b);
+    });
+  }
+
+  function placeLetter(ch,idx){
+    if(!running || used[idx]) return;
+    const s=filled.indexOf(null); if(s<0) return;
+    filled[s]={char:ch,tileIdx:idx}; used[idx]=true; render();
+    slotsEl.children[s].classList.add("pop");
+    if(filled.every(Boolean)) check();
+  }
+  function removeAt(i){
+    if(!running) return;
+    const f=filled[i]; if(!f) return;
+    used[f.tileIdx]=false; filled[i]=null;
+    fb.textContent=""; fb.className="feedback"; render();
+  }
+
+  function check(){
+    const guess=filled.map(f=>f.char).join("");
+    if(guess===current.w){
+      stopTimer();
+      const timeBonus=Math.round(timeLeft*2);
+      const pts=10 + timeBonus + streak*3;
+      streak++; solved++; score+=pts;
+      if(best<score){best=score; save(SK,best);}
+      if(solved%5===0) level++;            // level up every 5 words
+      paint();
+      fb.textContent=`🎉 Correct! +${pts} (⏱ +${timeBonus})`; fb.className="feedback good";
+      setTimeout(newWord,1100);
+    } else {
+      streak=0; paint();
+      fb.textContent="❌ Not quite!"; fb.className="feedback bad";
+      slotsEl.classList.add("shake"); setTimeout(()=>slotsEl.classList.remove("shake"),320);
+    }
+  }
+
+  function timeUp(){
+    stopTimer(); lives--; streak=0; paint();
+    fb.textContent=`⏰ Time! The word was ${current.w}`; fb.className="feedback bad";
+    if(lives<=0){ setTimeout(gameOver,1300); }
+    else setTimeout(newWord,1500);
+  }
+
+  function gameOver(){
+    stopTimer();
+    $("ovTitle").textContent= score>=best && score>0 ? "🏆 New Best!" : "Game Over";
+    $("ovMsg").textContent=`You solved ${solved} word${solved===1?"":"s"} on ${LEVELS[diff].label}.`;
+    $("ovScore").textContent=score+" pts";
+    $("ovBest").textContent="Best score: "+best;
+    $("overlay").classList.add("show");
+  }
+
+  function hintLetter(){
+    if(!running) return;
+    const i=filled.findIndex((f,idx)=>!f||f.char!==current.w[idx]);
+    if(i<0) return;
+    if(filled[i]) removeAt(i);
+    const want=current.w[i];
+    const t=scrambled.findIndex((c,k)=>c===want&&!used[k]);
+    if(t>=0){ placeLetter(want,t); timeLeft=Math.max(1,timeLeft-3); updateBar(); } // hint costs 3s
+  }
+  function clearAll(){ if(!running)return; filled.fill(null); used.fill(false); fb.textContent=""; fb.className="feedback"; render(); }
+  function reshuffle(){ if(!running)return; scrambled=scramble(current.w); used=Array(scrambled.length).fill(false); filled=Array(current.w.length).fill(null); render(); }
+  function skip(){ if(!running)return; stopTimer(); lives--; streak=0; paint(); if(lives<=0){gameOver();} else newWord(); }
+
+  function paint(){
+    $("score").textContent=score; $("best").textContent=best;
+    $("level").textContent=level; $("streak").textContent=streak;
+    $("hearts").textContent="❤️".repeat(Math.max(0,lives))+"🤍".repeat(Math.max(0,3-lives));
+  }
+
+  // difficulty buttons
+  document.querySelectorAll("#diff button").forEach(b=>{
+    b.onclick=()=>{
+      diff=b.dataset.d;
+      document.querySelectorAll("#diff button").forEach(x=>x.classList.toggle("on",x===b));
+      startGame();
+    };
+  });
+
+  document.addEventListener("keydown",e=>{
+    if(!running) return;
+    if(e.key==="Backspace"){const last=filled.map(f=>!!f).lastIndexOf(true); if(last>=0)removeAt(last); return;}
+    const ch=e.key.toUpperCase();
+    if(/^[A-Z]$/.test(ch)){const t=scrambled.findIndex((c,k)=>c===ch&&!used[k]); if(t>=0)placeLetter(ch,t);}
+  });
+
+  $("btnHint").onclick=hintLetter;
+  $("btnShuffle").onclick=reshuffle;
+  $("btnClear").onclick=clearAll;
+  $("btnSkip").onclick=skip;
+  $("ovBtn").onclick=startGame;
+
+  startGame();
+</script>
+</body>
+</html>

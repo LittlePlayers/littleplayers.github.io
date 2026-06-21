@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+<meta name="description" content="Doodle Pad — draw, paint and stamp emojis to make your own art, then save it! A creative game for kids." />
+  <link rel="canonical" href="https://littleplayers.github.io/doodle-pad/" />
+  <meta name="keywords" content="kids games, creativity game, Doodle Pad, free online game for kids, Little Players, Indian mythology games" />
+  <meta name="author" content="gauravs19" />
+  <meta name="theme-color" content="#e857c4" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Little Players" />
+  <meta property="og:title" content="Doodle Pad — Little Players" />
+  <meta property="og:description" content="Doodle Pad — draw, paint and stamp emojis to make your own art, then save it! A creative game for kids." />
+  <meta property="og:url" content="https://littleplayers.github.io/doodle-pad/" />
+  <meta property="og:image" content="https://littleplayers.github.io/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Doodle Pad — Little Players" />
+  <meta name="twitter:description" content="Doodle Pad — draw, paint and stamp emojis to make your own art, then save it! A creative game for kids." />
+  <meta name="twitter:image" content="https://littleplayers.github.io/og-image.png" />
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "VideoGame", "name": "Doodle Pad", "url": "https://littleplayers.github.io/doodle-pad/", "image": "https://littleplayers.github.io/og-image.png", "description": "Doodle Pad — draw, paint and stamp emojis to make your own art, then save it! A creative game for kids.", "applicationCategory": "Game", "operatingSystem": "Web Browser", "genre": "creativity", "author": {"@type": "Organization", "name": "Little Players"}, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "audience": {"@type": "PeopleAudience", "suggestedMinAge": 5}, "isPartOf": {"@type": "WebSite", "name": "Little Players", "url": "https://littleplayers.github.io/"}}</script>
+<title>🎨 Doodle Pad — Little Players</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎨</text></svg>" />
+<style>
+  :root{
+    --bg:#fdf2ff; --card:#fff; --ink:#3a2347; --muted:#8a76a0;
+    --accent:#e857c4; --accent2:#a14be8; --shadow:0 10px 28px rgba(150,60,170,.16); --radius:16px;
+  }
+  *{box-sizing:border-box}
+  html,body{overscroll-behavior:none}
+  body{
+    margin:0; min-height:100vh; color:var(--ink);
+    font-family:"Baloo 2","Comic Sans MS","Trebuchet MS",system-ui,sans-serif;
+    background:
+      radial-gradient(circle at 12% 10%,#ffe1fb 0,transparent 42%),
+      radial-gradient(circle at 88% 8%,#ecd9ff 0,transparent 44%),
+      var(--bg);
+    display:flex; flex-direction:column; align-items:center; padding:14px;
+  }
+  header{text-align:center; margin:8px 0 4px}
+  h1{margin:0; font-size:clamp(1.6rem,6vw,2.4rem)}
+  .sub{margin:4px 0 0; color:var(--muted); font-weight:700}
+
+  .toolbar{display:flex; flex-wrap:wrap; gap:8px; justify-content:center; align-items:center;
+    background:var(--card); padding:10px 12px; border-radius:999px; box-shadow:var(--shadow); margin:10px 0}
+  .swatch{width:30px; height:30px; border-radius:50%; border:3px solid #fff; cursor:pointer;
+    box-shadow:0 0 0 2px #e7d8f0; transition:transform .1s}
+  .swatch:hover{transform:scale(1.15)} .swatch.on{box-shadow:0 0 0 3px var(--ink)}
+  .sep{width:1px; height:28px; background:#ead9f3; margin:0 4px}
+
+  .sizes{display:flex; gap:6px; align-items:center}
+  .size{width:34px; height:34px; border-radius:50%; border:none; background:#f3e8fb; cursor:pointer;
+    display:grid; place-items:center}
+  .size.on{background:var(--accent2)} .size.on .dot{background:#fff}
+  .dot{background:var(--ink); border-radius:50%}
+
+  .tool{border:none; cursor:pointer; font:inherit; font-weight:800; font-size:1.1rem;
+    width:40px; height:40px; border-radius:12px; background:#f3e8fb; color:var(--ink)}
+  .tool.on{background:var(--accent2); color:#fff}
+
+  .stage{background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow);
+    padding:10px; touch-action:none}
+  canvas{display:block; border-radius:10px; background:#fff; cursor:crosshair; touch-action:none}
+
+  .stamps{display:flex; flex-wrap:wrap; gap:6px; justify-content:center; max-width:480px; margin:10px 0 0}
+  .stamp{border:none; cursor:pointer; font-size:1.4rem; background:#fff; border-radius:10px;
+    width:40px; height:40px; box-shadow:var(--shadow)}
+  .stamp.on{outline:3px solid var(--accent)}
+
+  .actions{display:flex; gap:10px; margin:12px 0 0; flex-wrap:wrap; justify-content:center}
+  .actions button{border:none; cursor:pointer; font:inherit; font-weight:800; padding:11px 18px;
+    border-radius:999px; color:#fff; box-shadow:var(--shadow); transition:transform .1s}
+  .actions button:hover{transform:translateY(-2px)}
+  .b-save{background:#22b07d}.b-clear{background:#ff6f8a}.b-undo{background:#5c9dff}
+
+  .back{margin-top:14px}
+  .back a{color:var(--accent2); font-weight:800; text-decoration:none}
+  .note{color:var(--muted); font-size:.82rem; margin-top:6px; text-align:center}
+  /* --- mobile/tablet responsiveness guard --- */
+  html,body{overflow-x:hidden}
+  body>*{max-width:100%}
+  @media (max-width:600px){ .sub,.help{font-size:.84rem} }
+</style>
+</head>
+<body>
+  <header>
+    <h1>🎨 Doodle Pad</h1>
+    <p class="sub">Draw, paint, stamp — then save your art!</p>
+  </header>
+
+  <div class="toolbar" id="palette">
+    <!-- color swatches injected -->
+    <span class="sep"></span>
+    <label class="swatch" style="background:conic-gradient(red,orange,yellow,green,blue,violet,red); position:relative;" title="Custom color">
+      <input type="color" id="custom" style="opacity:0; width:100%; height:100%; cursor:pointer;" />
+    </label>
+    <span class="sep"></span>
+    <div class="sizes" id="sizes"></div>
+    <span class="sep"></span>
+    <button class="tool" id="brush" title="Brush">🖌️</button>
+    <button class="tool" id="eraser" title="Eraser">🧽</button>
+  </div>
+
+  <div class="stage"><canvas id="pad" width="480" height="420"></canvas></div>
+
+  <div class="stamps" id="stamps"></div>
+
+  <div class="actions">
+    <button class="b-undo" id="undo">↩️ Undo</button>
+    <button class="b-clear" id="clear">🗑️ Clear</button>
+    <button class="b-save" id="save">💾 Save Art</button>
+  </div>
+  <p class="note">Tip: pick an emoji and tap the canvas to stamp it!</p>
+
+  <p class="back"><a href="https://littleplayers.github.io/">← Back to Little Players</a></p>
+
+<script>
+  const COLORS=["#1f1f1f","#ff4d4d","#ff8c42","#ffd23f","#3ec46d","#2aa8ff","#7c5cff","#e857c4","#7a4b2a","#ffffff"];
+  const STAMPS=["⭐","❤️","🌈","☀️","🌸","🐱","🐶","🦄","🐠","🌳","🍎","🎈","⚽","🚗","🦋","😀"];
+  const $=id=>document.getElementById(id);
+  const cv=$("pad"), ctx=cv.getContext("2d");
+
+  let color="#1f1f1f", size=8, mode="brush", stamp=null;
+  let drawing=false, lastX=0, lastY=0;
+  const undoStack=[];
+
+  function fit(){
+    const max=Math.min(480, window.innerWidth-48);
+    const ratio=420/480;
+    // keep internal resolution fixed for crisp saving; scale via CSS
+    cv.style.width=max+"px";
+    cv.style.height=(max*ratio)+"px";
+  }
+
+  function whiteBG(){ ctx.fillStyle="#fff"; ctx.fillRect(0,0,cv.width,cv.height); }
+  function pushUndo(){ try{ undoStack.push(ctx.getImageData(0,0,cv.width,cv.height)); if(undoStack.length>20)undoStack.shift(); }catch{} }
+
+  // palette
+  COLORS.forEach((c,i)=>{
+    const s=document.createElement("div");
+    s.className="swatch"+(i===0?" on":""); s.style.background=c; s.dataset.c=c;
+    s.onclick=()=>{ color=c; mode="brush"; stamp=null; setActive(); refreshUI(); };
+    $("palette").prepend(s); // prepend keeps custom/sep at end
+  });
+  // re-order: since prepend reverses, fix by appending instead
+  $("palette").querySelectorAll(".swatch[data-c]").forEach(n=>n.remove());
+  COLORS.forEach((c,i)=>{
+    const s=document.createElement("div");
+    s.className="swatch"+(i===0?" on":""); s.style.background=c; s.dataset.c=c;
+    s.onclick=()=>{ color=c; mode="brush"; stamp=null; setActive(); refreshUI(); };
+    $("palette").insertBefore(s, $("palette").firstChild);
+  });
+
+  function setActive(){
+    document.querySelectorAll(".swatch[data-c]").forEach(n=>n.classList.toggle("on", n.dataset.c===color));
+  }
+
+  // sizes
+  [4,8,16].forEach((sz,i)=>{
+    const b=document.createElement("button");
+    b.className="size"+(i===1?" on":"");
+    const d=document.createElement("span"); d.className="dot";
+    const px=Math.min(20,sz+4); d.style.width=px+"px"; d.style.height=px+"px";
+    b.appendChild(d); b.onclick=()=>{ size=sz; document.querySelectorAll(".size").forEach(x=>x.classList.toggle("on",x===b)); };
+    $("sizes").appendChild(b);
+  });
+
+  // stamps
+  STAMPS.forEach(e=>{
+    const b=document.createElement("button"); b.className="stamp"; b.textContent=e;
+    b.onclick=()=>{ stamp=e; mode="stamp"; document.querySelectorAll(".stamp").forEach(x=>x.classList.toggle("on",x===b)); refreshUI(); };
+    $("stamps").appendChild(b);
+  });
+
+  function refreshUI(){
+    $("brush").classList.toggle("on", mode==="brush");
+    $("eraser").classList.toggle("on", mode==="eraser");
+    if(mode!=="stamp") document.querySelectorAll(".stamp").forEach(x=>x.classList.remove("on"));
+  }
+
+  $("custom").addEventListener("input",e=>{ color=e.target.value; mode="brush"; stamp=null; setActive(); refreshUI(); });
+  $("brush").onclick=()=>{ mode="brush"; stamp=null; refreshUI(); };
+  $("eraser").onclick=()=>{ mode="eraser"; stamp=null; refreshUI(); };
+
+  function pos(e){
+    const r=cv.getBoundingClientRect();
+    const cx=(e.touches?e.touches[0].clientX:e.clientX)-r.left;
+    const cy=(e.touches?e.touches[0].clientY:e.clientY)-r.top;
+    return { x:cx*(cv.width/r.width), y:cy*(cv.height/r.height) };
+  }
+
+  function start(e){
+    e.preventDefault();
+    const p=pos(e);
+    if(mode==="stamp"&&stamp){ pushUndo(); placeStamp(p.x,p.y); return; }
+    pushUndo(); drawing=true; lastX=p.x; lastY=p.y; dot(p.x,p.y);
+  }
+  function moveD(e){
+    if(!drawing) return; e.preventDefault();
+    const p=pos(e);
+    ctx.strokeStyle = mode==="eraser" ? "#fff" : color;
+    ctx.lineWidth = mode==="eraser" ? size*2.2 : size;
+    ctx.lineCap="round"; ctx.lineJoin="round";
+    ctx.beginPath(); ctx.moveTo(lastX,lastY); ctx.lineTo(p.x,p.y); ctx.stroke();
+    lastX=p.x; lastY=p.y;
+  }
+  function dot(x,y){
+    ctx.fillStyle = mode==="eraser" ? "#fff" : color;
+    ctx.beginPath(); ctx.arc(x,y,(mode==="eraser"?size*1.1:size/2),0,Math.PI*2); ctx.fill();
+  }
+  function end(){ drawing=false; }
+  function placeStamp(x,y){
+    ctx.font=`${size*4}px serif`; ctx.textAlign="center"; ctx.textBaseline="middle";
+    ctx.fillText(stamp,x,y);
+  }
+
+  cv.addEventListener("mousedown",start);
+  cv.addEventListener("mousemove",moveD);
+  window.addEventListener("mouseup",end);
+  cv.addEventListener("touchstart",start,{passive:false});
+  cv.addEventListener("touchmove",moveD,{passive:false});
+  cv.addEventListener("touchend",end);
+
+  $("undo").onclick=()=>{ const img=undoStack.pop(); if(img) ctx.putImageData(img,0,0); };
+  $("clear").onclick=()=>{ pushUndo(); whiteBG(); };
+  $("save").onclick=()=>{
+    const a=document.createElement("a");
+    a.download="my-doodle.png"; a.href=cv.toDataURL("image/png"); a.click();
+  };
+
+  fit(); whiteBG(); refreshUI();
+  window.addEventListener("resize",fit);
+</script>
+</body>
+</html>

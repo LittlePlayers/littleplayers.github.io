@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Cross the Road Smart — a safe-crossing game for kids! Wait for the green walk signal, look both ways and use the zebra crossing to reach safety." />
+  <link rel="canonical" href="https://littleplayers.github.io/cross-the-road/" />
+  <meta name="keywords" content="kids games, road safety game, Cross the Road Smart, free online game for kids, Little Players, pedestrian safety, learn to cross the road" />
+  <meta name="author" content="gauravs19" />
+  <meta name="theme-color" content="#2563eb" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Little Players" />
+  <meta property="og:title" content="Cross the Road Smart — Little Players" />
+  <meta property="og:description" content="Cross the Road Smart — a safe-crossing game for kids! Wait for the green walk signal, look both ways and use the zebra crossing to reach safety." />
+  <meta property="og:url" content="https://littleplayers.github.io/cross-the-road/" />
+  <meta property="og:image" content="https://littleplayers.github.io/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Cross the Road Smart — Little Players" />
+  <meta name="twitter:description" content="Cross the Road Smart — a safe-crossing game for kids! Wait for the green walk signal, look both ways and use the zebra crossing to reach safety." />
+  <meta name="twitter:image" content="https://littleplayers.github.io/og-image.png" />
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "VideoGame", "name": "Cross the Road Smart", "url": "https://littleplayers.github.io/cross-the-road/", "image": "https://littleplayers.github.io/og-image.png", "description": "Cross the Road Smart — a safe-crossing game for kids! Wait for the green walk signal, look both ways and use the zebra crossing to reach safety.", "applicationCategory": "Game", "operatingSystem": "Web Browser", "genre": "education", "author": {"@type": "Organization", "name": "Little Players"}, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "audience": {"@type": "PeopleAudience", "suggestedMinAge": 5}, "isPartOf": {"@type": "WebSite", "name": "Little Players", "url": "https://littleplayers.github.io/"}}</script>
+<title>🚦 Cross the Road Smart — Little Players</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚦</text></svg>" />
+<style>
+  :root{
+    --bg:#eef6ff; --card:#fff; --ink:#22304d; --muted:#7d8aa8;
+    --accent:#2563eb; --accent2:#22b07d; --good:#22b07d; --bad:#ff5d6c;
+    --shadow:0 10px 28px rgba(60,110,180,.16); --radius:18px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; min-height:100vh; color:var(--ink);
+    font-family:"Baloo 2","Comic Sans MS","Trebuchet MS",system-ui,sans-serif;
+    background:
+      radial-gradient(circle at 12% 10%,#cfe8ff 0,transparent 42%),
+      radial-gradient(circle at 88% 8%,#d2f5e6 0,transparent 44%),
+      var(--bg);
+    display:flex; flex-direction:column; align-items:center; padding:20px;
+  }
+  header{text-align:center; margin:14px 0 6px}
+  h1{margin:0; font-size:clamp(1.8rem,6vw,2.8rem)}
+  .sub{margin:6px 0 0; color:var(--muted); font-weight:700}
+
+  .scoreboard{display:flex; gap:10px; margin:16px 0 6px; flex-wrap:wrap; justify-content:center}
+  .pill{background:var(--card); border-radius:999px; padding:8px 15px; font-weight:800;
+    box-shadow:var(--shadow); font-size:.92rem; display:flex; align-items:center; gap:6px}
+
+  /* Pedestrian signal banner */
+  .signal{display:flex; align-items:center; justify-content:center; gap:10px;
+    width:min(440px,94vw); margin:10px 0 2px; padding:9px 14px; border-radius:999px;
+    font-weight:800; box-shadow:var(--shadow); background:var(--card);
+    transition:background .2s,color .2s; font-size:1rem}
+  .signal.green{background:linear-gradient(90deg,#22b07d,#7bd88f); color:#fff}
+  .signal.red{background:linear-gradient(90deg,#ff5d6c,#ff8aa0); color:#fff}
+  .signal.look{background:linear-gradient(90deg,#ffb24a,#ffd27a); color:#3a2a00}
+
+  .stage{position:relative; width:min(440px,94vw); margin-top:10px}
+  canvas{display:block; width:100%; height:auto; border-radius:var(--radius);
+    box-shadow:var(--shadow); background:#7bbf6a; touch-action:none}
+
+  .feedback{min-height:1.5em; font-weight:800; font-size:1.1rem; margin:12px 0 2px; text-align:center}
+  .feedback.good{color:var(--good)} .feedback.bad{color:var(--bad)}
+
+  /* On-screen controls */
+  .pad{display:grid; grid-template-columns:repeat(3,1fr); gap:10px;
+    width:min(300px,82vw); margin:14px 0 2px}
+  .pad button{border:none; cursor:pointer; font:inherit; font-weight:800; font-size:1.6rem;
+    padding:14px 0; border-radius:16px; color:#fff;
+    background:linear-gradient(180deg,var(--accent),#1748b8);
+    box-shadow:0 5px 0 #133b96; transition:transform .08s,box-shadow .08s}
+  .pad button:active{transform:translateY(4px); box-shadow:0 1px 0 #133b96}
+  .pad .ghost{visibility:hidden}
+  .pad .look{background:linear-gradient(180deg,#ffb24a,#f59324); box-shadow:0 5px 0 #cf7615; color:#3a2a00}
+
+  .help{color:var(--muted); font-weight:700; font-size:.85rem; text-align:center;
+    margin:10px 0 0; width:min(440px,94vw)}
+
+  .overlay{position:fixed; inset:0; background:rgba(20,40,70,.55); display:none;
+    align-items:center; justify-content:center; padding:20px; z-index:9}
+  .overlay.show{display:flex}
+  .panel{background:var(--card); border-radius:22px; padding:30px 26px; text-align:center;
+    box-shadow:var(--shadow); width:min(420px,92vw)}
+  .panel h2{margin:0 0 6px; font-size:1.8rem}
+  .panel p{margin:6px 0; color:var(--muted); font-weight:700}
+  .panel .big{font-size:2.4rem; font-weight:800; color:var(--accent); margin:8px 0}
+  .panel button{margin-top:14px; border:none; cursor:pointer; font:inherit; font-weight:800;
+    padding:13px 26px; border-radius:999px; background:var(--accent); color:#fff; font-size:1.1rem}
+
+  .back{margin-top:18px}
+  .back a{color:var(--accent); font-weight:800; text-decoration:none}
+  @keyframes pop{0%{transform:scale(.9)}60%{transform:scale(1.06)}100%{transform:scale(1)}}
+  .pop{animation:pop .25s ease}
+  /* --- mobile/tablet responsiveness guard --- */
+  html,body{overflow-x:hidden}
+  body>*{max-width:100%}
+  @media (max-width:600px){ .sub,.help{font-size:.82rem} }
+</style>
+</head>
+<body>
+  <header>
+    <h1>🚦 Cross the Road Smart</h1>
+    <p class="sub">Wait for the green walk signal, look both ways, then cross!</p>
+  </header>
+
+  <div class="scoreboard">
+    <div class="pill">⭐ <span id="score">0</span></div>
+    <div class="pill">🏆 Best: <span id="best">0</span></div>
+    <div class="pill">📈 Lvl <span id="level">1</span></div>
+    <div class="pill hearts" id="hearts">❤️❤️❤️</div>
+  </div>
+
+  <div class="signal" id="signal">⛔ WAIT for the green walk signal</div>
+
+  <div class="stage">
+    <canvas id="cv" width="440" height="520" aria-label="Cross the road game"></canvas>
+  </div>
+
+  <p class="feedback" id="feedback"></p>
+
+  <div class="pad">
+    <button class="ghost">·</button>
+    <button id="bUp" aria-label="Move up">⬆️</button>
+    <button class="ghost">·</button>
+    <button id="bLeft" class="look" aria-label="Look left">👈</button>
+    <button id="bDown" aria-label="Move down">⬇️</button>
+    <button id="bRight" class="look" aria-label="Look right">👉</button>
+  </div>
+
+  <p class="help">Use ⬆️⬇️ to move and 👈👉 to look both ways. You can also use the Arrow keys or swipe!</p>
+
+  <p class="back"><a href="https://littleplayers.github.io/">← Back to Little Players</a></p>
+
+  <div class="overlay" id="overlay">
+    <div class="panel">
+      <h2 id="ovTitle">Game Over</h2>
+      <p id="ovMsg"></p>
+      <div class="big" id="ovScore">0</div>
+      <p id="ovBest"></p>
+      <button id="ovBtn">▶ Play Again</button>
+    </div>
+  </div>
+
+<script>
+  const SK="ctr_best";
+  const $=id=>document.getElementById(id);
+  const cv=$("cv"), ctx=cv.getContext("2d");
+  const W=cv.width, H=cv.height;
+
+  // ---- Layout: rows from bottom (start pavement) to top (goal pavement) ----
+  // We use a variable number of car lanes per level. Rows are sized to fit H.
+  let LANES = 3;           // number of traffic lanes (grows with level)
+  const ROW_GOAL = 0;      // conceptual top
+  let rows, rowH;          // computed each level
+  // Player row index: 0 = goal pavement (top), last index = start pavement (bottom)
+  // Lanes sit between. Total rows = LANES + 2 (start + goal pavements).
+
+  // Zebra crossing is a vertical column the player should stay within.
+  let zebraX, zebraW;
+
+  // ---- Game state ----
+  let score=0, level=1, lives=3;
+  let best=load(SK,0);
+  let player={row:0, lookedLeft:false, lookedRight:false};
+  let cars=[];             // {lane, x, dir, speed, w, emoji}
+  let light="red";         // "red" | "green"
+  let lightTimer=0, lightDur=0;
+  let phase="look";        // "look" (must look both ways) | "cross" | "won" | "hit" | "over"
+  let crossingStartTime=0; // for remaining-time bonus
+  let crossTimeLimit=0;
+  let lastT=0, running=false, rafId=null;
+  let winFx=0;             // success animation timer
+  let msg="", msgClass="";
+
+  const CAR_EMOJI=["🚗","🚙","🚕","🚌","🚚","🚛","🛻"];
+
+  function load(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}}
+  function save(k,v){localStorage.setItem(k,JSON.stringify(v))}
+  function ri(a,b){return a+Math.floor(Math.random()*(b-a+1))}
+  function rf(a,b){return a+Math.random()*(b-a)}
+
+  // ---- Level setup ----
+  function setupLevel(){
+    LANES = Math.min(3 + Math.floor((level-1)/1), 7); // 3 lanes, +1 per level, cap 7
+    rows = LANES + 2;          // pavements top & bottom
+    rowH = H / rows;
+    zebraW = Math.max(64, W*0.22);
+    zebraX = (W - zebraW)/2;
+
+    // Pedestrian green window shrinks with level; red stays generous-ish.
+    lightDur = Math.max(2.2, 4.4 - (level-1)*0.35);   // seconds of GREEN
+    crossTimeLimit = Math.max(6, 14 - (level-1)*0.8); // seconds for remaining-time bonus
+
+    buildCars();
+    resetPlayer();
+    // Start each crossing on RED so the kid must wait.
+    light="red"; lightTimer = Math.max(1.6, 2.6 - (level-1)*0.15);
+  }
+
+  function buildCars(){
+    cars=[];
+    const baseSpeed = 70 + (level-1)*22;   // px/sec
+    for(let lane=0; lane<LANES; lane++){
+      const dir = lane%2===0 ? 1 : -1;     // alternate direction
+      const speed = baseSpeed * rf(0.8,1.25);
+      const w = rowH*0.9;
+      // 1-2 cars per lane spaced out
+      const count = ri(1,2);
+      for(let c=0;c<count;c++){
+        cars.push({
+          lane, dir, speed, w,
+          x: rf(0,W) - c*(W/2),
+          emoji: CAR_EMOJI[ri(0,CAR_EMOJI.length-1)]
+        });
+      }
+    }
+  }
+
+  function resetPlayer(){
+    player.row = rows-1;           // bottom start pavement
+    player.lookedLeft=false; player.lookedRight=false;
+    phase="look";
+    setMsg("👀 Look both ways! Tap 👈 then 👉","");
+  }
+
+  // ---- Helpers for geometry ----
+  function rowY(row){ return row*rowH; }                 // top y of a row band
+  function laneIndexForRow(row){ return row-1; }         // row -> lane (0..LANES-1); pavements excluded
+  function isLaneRow(row){ return row>=1 && row<=LANES; }
+  function playerCx(){ return zebraX + zebraW/2; }       // player always in zebra column
+  function playerCy(){ return rowY(player.row) + rowH/2; }
+
+  // ---- Light cycle ----
+  function tickLight(dt){
+    lightTimer -= dt;
+    if(lightTimer<=0){
+      if(light==="green"){ light="red"; lightTimer = Math.max(2.4, 3.4 - (level-1)*0.1); }
+      else { light="green"; lightTimer = lightDur; }
+    }
+  }
+
+  // ---- Cars ----
+  function tickCars(dt){
+    const stopped = (light==="green"); // cars STOP when pedestrian light is GREEN
+    for(const car of cars){
+      if(!stopped) car.x += car.dir*car.speed*dt;
+      // wrap around
+      if(car.dir>0 && car.x > W + car.w){ car.x = -car.w - rf(20,W*0.6); }
+      if(car.dir<0 && car.x < -car.w){ car.x = W + car.w + rf(20,W*0.6); }
+    }
+  }
+
+  // ---- Collision: only matters while player is ON a lane row and light is RED (cars moving) ----
+  function checkCollision(){
+    if(!isLaneRow(player.row)) return false;
+    if(light==="green") return false;          // cars stopped -> safe
+    const lane = laneIndexForRow(player.row);
+    const pcx = playerCx();
+    const pHalf = rowH*0.28;                    // player hit radius-ish
+    for(const car of cars){
+      if(car.lane!==lane) continue;
+      const cLeft = car.x, cRight = car.x + car.w;
+      if(pcx + pHalf > cLeft && pcx - pHalf < cRight) return true;
+    }
+    return false;
+  }
+
+  // ---- Input ----
+  function look(side){
+    if(phase!=="look") return;
+    if(side==="left"){ player.lookedLeft=true; }
+    if(side==="right"){ player.lookedRight=true; }
+    if(player.lookedLeft && player.lookedRight){
+      phase="cross";
+      crossingStartTime = performance.now();
+      setMsg("✅ Great looking! Now cross when it's GREEN.","good");
+    } else if(player.lookedLeft && !player.lookedRight){
+      setMsg("👈 Looked left! Now look right 👉","");
+    } else if(player.lookedRight && !player.lookedLeft){
+      setMsg("👉 Looked right! Now look left 👈","");
+    }
+  }
+
+  function moveUp(){
+    if(phase==="look"){
+      // Stepping onto the road before looking both ways is unsafe.
+      setMsg("👀 Look both ways first! Tap 👈 and 👉","bad");
+      return;
+    }
+    if(phase!=="cross") return;
+
+    // Trying to step from a pavement/lane onto the NEXT lane row:
+    const nextRow = player.row-1;
+    if(nextRow<0) return;
+
+    const steppingOntoRoad = isLaneRow(nextRow);
+    if(steppingOntoRoad && light!=="green"){
+      // RED light rule: cannot step onto the road on red.
+      loseLife("⛔ Wait for the GREEN walk signal!");
+      return;
+    }
+    player.row = nextRow;
+
+    if(player.row===0){ winCrossing(); }
+  }
+
+  function moveDown(){
+    if(phase!=="cross") return;
+    const nextRow = player.row+1;
+    if(nextRow>rows-1) return;
+    player.row = nextRow; // stepping back toward pavement is always allowed
+  }
+
+  function loseLife(reminder){
+    if(phase!=="cross") return;
+    phase="hit";
+    lives--; paint();
+    setMsg(reminder,"bad");
+    setTimeout(()=>{
+      if(lives<=0){ gameOver(); }
+      else { resetPlayer(); }
+    }, 1100);
+  }
+
+  function winCrossing(){
+    phase="won"; winFx=1;
+    const elapsed=(performance.now()-crossingStartTime)/1000;
+    const timeBonus=Math.max(0, Math.round((crossTimeLimit-elapsed)*3));
+    const lookBonus=25; // earned by looking both ways (required to reach cross phase)
+    const base=50;
+    const pts=base+lookBonus+timeBonus;
+    score+=pts;
+    if(best<score){best=score; save(SK,best);}
+    setMsg(`🎉 Safe! +${pts}  (👀 +${lookBonus}, ⏱ +${timeBonus})`,"good");
+    paint();
+    setTimeout(()=>{
+      level++; paint();
+      setupLevel();
+    }, 1300);
+  }
+
+  function gameOver(){
+    phase="over"; running=false;
+    $("ovTitle").textContent = (score>=best && score>0) ? "🏆 New Best!" : "Game Over";
+    $("ovMsg").textContent = `You crossed safely and reached Level ${level}. Always wait for the green walk signal!`;
+    $("ovScore").textContent = score+" pts";
+    $("ovBest").textContent = "Best score: "+best;
+    $("overlay").classList.add("show");
+  }
+
+  function setMsg(t,c){ msg=t; msgClass=c; $("feedback").textContent=t; $("feedback").className="feedback"+(c?" "+c:""); }
+
+  // ---- Render ----
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+
+    // Pavement (top goal) and (bottom start)
+    drawPavement(0);                // top row band
+    drawPavement(rows-1);           // bottom row band
+
+    // Road lanes
+    for(let lane=0; lane<LANES; lane++){
+      const row=lane+1;
+      const y=rowY(row);
+      ctx.fillStyle = lane%2===0 ? "#4d525d" : "#474c57";
+      ctx.fillRect(0,y,W,rowH);
+      // lane divider dashes (skip over zebra)
+      ctx.strokeStyle="#f2d34a"; ctx.lineWidth=3; ctx.setLineDash([14,12]);
+      ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    // Zebra crossing stripes spanning all lane rows
+    const zTop=rowY(1), zBot=rowY(LANES+1);
+    ctx.fillStyle="#eef2f6";
+    const stripeH=rowH*0.34, gap=rowH*0.66;
+    for(let y=zTop; y<zBot-2; y+=rowH*0.5){
+      ctx.fillRect(zebraX, y+ (rowH*0.08), zebraW, rowH*0.30);
+    }
+
+    // Cars
+    const fontH=rowH*0.7;
+    ctx.font = fontH+"px serif";
+    ctx.textAlign="center"; ctx.textBaseline="middle";
+    for(const car of cars){
+      const cy=rowY(car.lane+1)+rowH/2;
+      // flip emoji based on direction by scaling x
+      ctx.save();
+      ctx.translate(car.x+car.w/2, cy);
+      ctx.scale(car.dir<0?-1:1,1);
+      ctx.fillText(car.emoji, 0, 0);
+      ctx.restore();
+    }
+
+    // Pedestrian traffic light post on the right of the zebra at top
+    drawSignalPost();
+
+    // Player
+    drawPlayer();
+
+    // Win sparkle
+    if(winFx>0){
+      ctx.font=(rowH*0.9)+"px serif"; ctx.globalAlpha=winFx;
+      ctx.fillText("🎉", playerCx()-26, playerCy()-rowH*0.2);
+      ctx.fillText("⭐", playerCx()+26, playerCy()-rowH*0.2);
+      ctx.globalAlpha=1;
+    }
+  }
+
+  function drawPavement(row){
+    const y=rowY(row);
+    ctx.fillStyle="#9fb2c4";
+    ctx.fillRect(0,y,W,rowH);
+    ctx.fillStyle="#8aa0b5";
+    for(let x=0;x<W;x+=26){ ctx.fillRect(x,y,2,rowH); }
+    if(row===0){
+      ctx.font=(rowH*0.5)+"px serif"; ctx.textAlign="center"; ctx.textBaseline="middle";
+      ctx.fillStyle="#22304d";
+      ctx.fillText("🏁 SAFE 🏁", W/2, y+rowH/2);
+    }
+  }
+
+  function drawSignalPost(){
+    const cx=zebraX+zebraW+ Math.min(34,(W-(zebraX+zebraW))*0.5);
+    const top=rowY(0)+rowH*0.55;
+    ctx.font=(rowH*0.8)+"px serif"; ctx.textAlign="center"; ctx.textBaseline="middle";
+    // Walk signal indicator near top pavement
+    ctx.fillText(light==="green" ? "🟢" : "🔴", cx>W-20?W-20:cx, top);
+  }
+
+  function drawPlayer(){
+    const cx=playerCx(), cy=playerCy();
+    ctx.font=(rowH*0.7)+"px serif"; ctx.textAlign="center"; ctx.textBaseline="middle";
+    let face="🚶";
+    if(phase==="look"){
+      if(player.lookedLeft && !player.lookedRight) face="👀";
+      else if(player.lookedRight) face="👀";
+      else face="🧍";
+    }
+    if(phase==="won") face="🙆";
+    if(phase==="hit") face="🙀";
+    ctx.fillText(face, cx, cy);
+
+    // Looking-eyes hint arrows during look phase
+    if(phase==="look"){
+      ctx.font=(rowH*0.42)+"px serif";
+      if(!player.lookedLeft) ctx.fillText("👈", cx-rowH*0.7, cy);
+      if(!player.lookedRight) ctx.fillText("👉", cx+rowH*0.7, cy);
+    }
+  }
+
+  // ---- Loop ----
+  function frame(t){
+    if(!running){ return; }
+    const dt=Math.min(0.05,(t-lastT)/1000)||0; lastT=t;
+
+    if(phase==="cross" || phase==="look" || phase==="hit" || phase==="won"){
+      tickLight(dt);
+      tickCars(dt);
+      if(phase==="cross" && checkCollision()){
+        loseLife("🚑 Oops! A car was coming. Wait for GREEN!");
+      }
+    }
+    if(winFx>0){ winFx=Math.max(0,winFx-dt*0.8); }
+
+    updateSignalBanner();
+    draw();
+    rafId=requestAnimationFrame(frame);
+  }
+
+  function updateSignalBanner(){
+    const el=$("signal");
+    if(phase==="look"){
+      el.className="signal look";
+      el.textContent="👀 Look both ways before you cross!";
+    } else if(light==="green"){
+      el.className="signal green";
+      el.textContent="✅ GREEN — Walk! (cars are stopped)";
+    } else {
+      el.className="signal red";
+      el.textContent="⛔ RED — Wait! Don't step on the road";
+    }
+  }
+
+  function paint(){
+    $("score").textContent=score; $("best").textContent=best;
+    $("level").textContent=level;
+    $("hearts").textContent="❤️".repeat(Math.max(0,lives))+"🤍".repeat(Math.max(0,3-lives));
+  }
+
+  // ---- Start / restart ----
+  function startGame(){
+    score=0; level=1; lives=3;
+    $("overlay").classList.remove("show");
+    setupLevel(); paint();
+    running=true; lastT=performance.now();
+    if(rafId) cancelAnimationFrame(rafId);
+    rafId=requestAnimationFrame(frame);
+  }
+
+  // ---- Controls wiring ----
+  $("bUp").onclick=()=>moveUp();
+  $("bDown").onclick=()=>moveDown();
+  $("bLeft").onclick=()=>look("left");
+  $("bRight").onclick=()=>look("right");
+  $("ovBtn").onclick=startGame;
+
+  document.addEventListener("keydown",e=>{
+    if(phase==="over") return;
+    switch(e.key){
+      case "ArrowUp": e.preventDefault(); moveUp(); break;
+      case "ArrowDown": e.preventDefault(); moveDown(); break;
+      case "ArrowLeft": e.preventDefault(); look("left"); break;
+      case "ArrowRight": e.preventDefault(); look("right"); break;
+    }
+  });
+
+  // Swipe on canvas
+  let touchX=0, touchY=0, touchActive=false;
+  cv.addEventListener("touchstart",e=>{
+    const t=e.changedTouches[0]; touchX=t.clientX; touchY=t.clientY; touchActive=true;
+  },{passive:true});
+  cv.addEventListener("touchend",e=>{
+    if(!touchActive) return; touchActive=false;
+    const t=e.changedTouches[0];
+    const dx=t.clientX-touchX, dy=t.clientY-touchY;
+    const adx=Math.abs(dx), ady=Math.abs(dy);
+    if(Math.max(adx,ady)<24) return; // tap, ignore
+    if(ady>adx){ dy<0?moveUp():moveDown(); }
+    else { dx<0?look("left"):look("right"); }
+  },{passive:true});
+  // Also allow mouse-drag swipe on desktop canvas
+  let mDown=false,mX=0,mY=0;
+  cv.addEventListener("mousedown",e=>{mDown=true;mX=e.clientX;mY=e.clientY;});
+  window.addEventListener("mouseup",e=>{
+    if(!mDown) return; mDown=false;
+    const dx=e.clientX-mX, dy=e.clientY-mY, adx=Math.abs(dx), ady=Math.abs(dy);
+    if(Math.max(adx,ady)<24) return;
+    if(ady>adx){ dy<0?moveUp():moveDown(); } else { dx<0?look("left"):look("right"); }
+  });
+
+  paint();
+  startGame();
+</script>
+</body>
+</html>

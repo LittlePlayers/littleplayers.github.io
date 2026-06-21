@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+<meta name="description" content="Animal Band — tap the animals to make funny sounds, record a song and play it back! A creative music game for kids." />
+  <link rel="canonical" href="https://littleplayers.github.io/animal-band/" />
+  <meta name="keywords" content="kids games, creativity game, Animal Band, free online game for kids, Little Players, Indian mythology games" />
+  <meta name="author" content="gauravs19" />
+  <meta name="theme-color" content="#2bbf6a" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Little Players" />
+  <meta property="og:title" content="Animal Band — Little Players" />
+  <meta property="og:description" content="Animal Band — tap the animals to make funny sounds, record a song and play it back! A creative music game for kids." />
+  <meta property="og:url" content="https://littleplayers.github.io/animal-band/" />
+  <meta property="og:image" content="https://littleplayers.github.io/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Animal Band — Little Players" />
+  <meta name="twitter:description" content="Animal Band — tap the animals to make funny sounds, record a song and play it back! A creative music game for kids." />
+  <meta name="twitter:image" content="https://littleplayers.github.io/og-image.png" />
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "VideoGame", "name": "Animal Band", "url": "https://littleplayers.github.io/animal-band/", "image": "https://littleplayers.github.io/og-image.png", "description": "Animal Band — tap the animals to make funny sounds, record a song and play it back! A creative music game for kids.", "applicationCategory": "Game", "operatingSystem": "Web Browser", "genre": "creativity", "author": {"@type": "Organization", "name": "Little Players"}, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "audience": {"@type": "PeopleAudience", "suggestedMinAge": 5}, "isPartOf": {"@type": "WebSite", "name": "Little Players", "url": "https://littleplayers.github.io/"}}</script>
+<title>🐸 Animal Band — Little Players</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐸</text></svg>" />
+<style>
+  :root{
+    --bg:#eafff0; --card:#fff; --ink:#1f3d2b; --muted:#6f947d;
+    --accent:#2bbf6a; --accent2:#1aa057; --shadow:0 10px 28px rgba(30,140,80,.16); --radius:18px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; min-height:100vh; color:var(--ink);
+    font-family:"Baloo 2","Comic Sans MS","Trebuchet MS",system-ui,sans-serif;
+    background:
+      radial-gradient(circle at 12% 10%,#caffe0 0,transparent 42%),
+      radial-gradient(circle at 88% 8%,#d9ffe8 0,transparent 44%),
+      var(--bg);
+    display:flex; flex-direction:column; align-items:center; padding:18px;
+  }
+  header{text-align:center; margin:8px 0 4px}
+  h1{margin:0; font-size:clamp(1.7rem,6vw,2.6rem)}
+  .sub{margin:5px 0 0; color:var(--muted); font-weight:700}
+
+  .grid{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin:18px 0; width:min(520px,94vw)}
+  @media(max-width:420px){.grid{grid-template-columns:repeat(2,1fr)}}
+  .animal{border:none; cursor:pointer; background:var(--card); border-radius:20px; padding:16px 8px 12px;
+    box-shadow:var(--shadow); transition:transform .08s; display:flex; flex-direction:column; align-items:center; gap:4px}
+  .animal:active,.animal.hit{transform:scale(.92); background:#e7fff1}
+  .animal .emoji{font-size:2.6rem; line-height:1}
+  .animal .name{font-weight:800; font-size:.82rem; color:var(--muted)}
+
+  .controls{display:flex; gap:10px; flex-wrap:wrap; justify-content:center}
+  .controls button{border:none; cursor:pointer; font:inherit; font-weight:800; padding:12px 20px;
+    border-radius:999px; color:#fff; box-shadow:var(--shadow); transition:transform .1s; font-size:1rem}
+  .controls button:hover{transform:translateY(-2px)}
+  .b-rec{background:#ff5d6c}.b-rec.on{background:#c4303f; animation:pulse 1s infinite}
+  .b-play{background:#2aa8ff}.b-clear{background:#b8acd6}
+  @keyframes pulse{50%{filter:brightness(1.3)}}
+
+  .status{margin-top:12px; min-height:1.4em; font-weight:800; color:var(--accent2)}
+  .back{margin-top:16px}
+  .back a{color:var(--accent2); font-weight:800; text-decoration:none}
+  /* --- mobile/tablet responsiveness guard --- */
+  html,body{overflow-x:hidden}
+  body>*{max-width:100%}
+  @media (max-width:600px){ .sub,.help{font-size:.84rem} }
+</style>
+</head>
+<body>
+  <header>
+    <h1>🐸 Animal Band</h1>
+    <p class="sub">Tap the animals to play. Record a song and play it back!</p>
+  </header>
+
+  <div class="grid" id="grid"></div>
+
+  <div class="controls">
+    <button class="b-rec" id="rec">⏺ Record</button>
+    <button class="b-play" id="play">▶ Play Song</button>
+    <button class="b-clear" id="clear">🗑️ Clear Song</button>
+  </div>
+  <p class="status" id="status">Tap an animal to hear it! 🎵</p>
+
+  <p class="back"><a href="https://littleplayers.github.io/">← Back to Little Players</a></p>
+
+<script>
+  // each animal: emoji, name, and a synth recipe
+  const ANIMALS=[
+    {e:"🐱",n:"Cat",   wave:"sine",     f0:700, f1:500, dur:0.4, kind:"slide"},
+    {e:"🐶",n:"Dog",   wave:"square",   f0:180, f1:120, dur:0.18,kind:"slide"},
+    {e:"🐮",n:"Cow",   wave:"sawtooth", f0:160, f1:120, dur:0.7, kind:"slide"},
+    {e:"🐸",n:"Frog",  wave:"square",   f0:140, f1:140, dur:0.12,kind:"double"},
+    {e:"🐦",n:"Bird",  wave:"sine",     f0:900, f1:1500,dur:0.18,kind:"slide"},
+    {e:"🐷",n:"Pig",   wave:"sawtooth", f0:220, f1:180, dur:0.22,kind:"double"},
+    {e:"🦆",n:"Duck",  wave:"sawtooth", f0:380, f1:330, dur:0.16,kind:"double"},
+    {e:"🐘",n:"Eleph", wave:"sawtooth", f0:200, f1:520, dur:0.6, kind:"slide"},
+  ];
+  const $=id=>document.getElementById(id);
+  let AC=null;
+  function ac(){ if(!AC){ AC=new (window.AudioContext||window.webkitAudioContext)(); } if(AC.state==="suspended")AC.resume(); return AC; }
+
+  function play(a){
+    const ctx=ac(), t=ctx.currentTime;
+    const g=ctx.createGain(); g.connect(ctx.destination);
+    g.gain.setValueAtTime(0.0001,t);
+    g.gain.exponentialRampToValueAtTime(0.5,t+0.02);
+    function blip(start,dur,f0,f1){
+      const o=ctx.createOscillator(); o.type=a.wave;
+      o.frequency.setValueAtTime(f0,start);
+      o.frequency.linearRampToValueAtTime(f1,start+dur);
+      o.connect(g); o.start(start); o.stop(start+dur);
+    }
+    if(a.kind==="double"){
+      blip(t,a.dur,a.f0,a.f1); blip(t+a.dur+0.05,a.dur,a.f0,a.f1);
+      g.gain.exponentialRampToValueAtTime(0.0001,t+a.dur*2+0.12);
+    } else {
+      blip(t,a.dur,a.f0,a.f1);
+      g.gain.exponentialRampToValueAtTime(0.0001,t+a.dur+0.05);
+    }
+  }
+
+  // recording
+  let recording=false, recStart=0, song=[];
+  function hit(i){
+    play(ANIMALS[i]);
+    const b=$("grid").children[i]; b.classList.add("hit"); setTimeout(()=>b.classList.remove("hit"),120);
+    if(recording){ song.push({i, t: performance.now()-recStart}); $("status").textContent=`⏺ Recording… ${song.length} notes`; }
+  }
+
+  ANIMALS.forEach((a,i)=>{
+    const b=document.createElement("button"); b.className="animal";
+    b.innerHTML=`<span class="emoji">${a.e}</span><span class="name">${a.n}</span>`;
+    b.onclick=()=>hit(i); $("grid").appendChild(b);
+  });
+
+  $("rec").onclick=()=>{
+    recording=!recording;
+    $("rec").classList.toggle("on",recording);
+    if(recording){ song=[]; recStart=performance.now(); $("rec").textContent="⏹ Stop"; $("status").textContent="⏺ Recording… tap animals!"; }
+    else { $("rec").textContent="⏺ Record"; $("status").textContent=`🎵 Recorded ${song.length} notes. Press Play!`; }
+  };
+  $("play").onclick=()=>{
+    if(!song.length){ $("status").textContent="Record a song first! ⏺"; return; }
+    $("status").textContent="▶ Playing your song…";
+    song.forEach(ev=>setTimeout(()=>hit(ev.i), ev.t));
+    const end=song[song.length-1].t+600;
+    setTimeout(()=>$("status").textContent="🎉 That was your song!", end);
+  };
+  $("clear").onclick=()=>{ song=[]; recording=false; $("rec").classList.remove("on"); $("rec").textContent="⏺ Record"; $("status").textContent="Song cleared. Make a new one! 🎵"; };
+</script>
+</body>
+</html>

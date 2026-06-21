@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Budget Hero — buy all the needs without overspending! A fun money game for kids that teaches needs vs wants and smart budgeting in Indian Rupees." />
+  <link rel="canonical" href="https://littleplayers.github.io/budget-hero/" />
+  <meta name="keywords" content="kids games, money game, budget game, Budget Hero, needs vs wants, free online game for kids, Little Players" />
+  <meta name="author" content="gauravs19" />
+  <meta name="theme-color" content="#f59e0b" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Little Players" />
+  <meta property="og:title" content="Budget Hero — Little Players" />
+  <meta property="og:description" content="Budget Hero — buy all the needs without overspending! A fun money game for kids that teaches needs vs wants and smart budgeting in Indian Rupees." />
+  <meta property="og:url" content="https://littleplayers.github.io/budget-hero/" />
+  <meta property="og:image" content="https://littleplayers.github.io/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Budget Hero — Little Players" />
+  <meta name="twitter:description" content="Budget Hero — buy all the needs without overspending! A fun money game for kids that teaches needs vs wants and smart budgeting in Indian Rupees." />
+  <meta name="twitter:image" content="https://littleplayers.github.io/og-image.png" />
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "VideoGame", "name": "Budget Hero", "url": "https://littleplayers.github.io/budget-hero/", "image": "https://littleplayers.github.io/og-image.png", "description": "Budget Hero — buy all the needs without overspending! A fun money game for kids that teaches needs vs wants and smart budgeting in Indian Rupees.", "applicationCategory": "Game", "operatingSystem": "Web Browser", "genre": "education", "author": {"@type": "Organization", "name": "Little Players"}, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "audience": {"@type": "PeopleAudience", "suggestedMinAge": 5}, "isPartOf": {"@type": "WebSite", "name": "Little Players", "url": "https://littleplayers.github.io/"}}</script>
+<title>💰 Budget Hero — Little Players</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💰</text></svg>" />
+<style>
+  :root{
+    --bg:#fff7ec; --card:#fff; --ink:#4a3a1d; --muted:#a08a63;
+    --accent:#f59e0b; --accent2:#22b07d; --good:#22b07d; --bad:#ff5d6c;
+    --shadow:0 10px 28px rgba(180,130,40,.16); --radius:18px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; min-height:100vh; color:var(--ink);
+    font-family:"Baloo 2","Comic Sans MS","Trebuchet MS",system-ui,sans-serif;
+    background:
+      radial-gradient(circle at 12% 10%,#ffe6b8 0,transparent 42%),
+      radial-gradient(circle at 88% 8%,#ffd9c2 0,transparent 44%),
+      var(--bg);
+    display:flex; flex-direction:column; align-items:center; padding:20px;
+  }
+  header{text-align:center; margin:14px 0 6px}
+  h1{margin:0; font-size:clamp(1.8rem,6vw,2.8rem)}
+  .sub{margin:6px 0 0; color:var(--muted); font-weight:700}
+
+  .scoreboard{display:flex; gap:10px; margin:16px 0 6px; flex-wrap:wrap; justify-content:center}
+  .pill{background:var(--card); border-radius:999px; padding:8px 15px; font-weight:800;
+    box-shadow:var(--shadow); font-size:.92rem; display:flex; align-items:center; gap:6px}
+
+  /* budget bar */
+  .budgetwrap{width:min(620px,94vw); margin:10px 0 2px}
+  .budgetline{display:flex; justify-content:space-between; font-weight:800; font-size:.95rem; margin:0 0 6px; flex-wrap:wrap; gap:6px}
+  .budgetline .left{color:var(--good)} .budgetline .left.over{color:var(--bad)}
+  .budgetbar{height:14px; border-radius:999px; background:#f1e2c6; overflow:hidden}
+  .budgetfill{height:100%; width:0%; border-radius:999px;
+    background:linear-gradient(90deg,#22b07d,#7bd88f); transition:width .25s ease}
+  .budgetfill.warn{background:linear-gradient(90deg,#ffb24a,#ffd27a)}
+  .budgetfill.danger{background:linear-gradient(90deg,#ff5d6c,#ff8aa0)}
+
+  /* needs checklist */
+  .needs{width:min(620px,94vw); background:var(--card); border-radius:var(--radius);
+    box-shadow:var(--shadow); padding:12px 16px; margin-top:12px}
+  .needs h3{margin:0 0 8px; font-size:1rem; color:var(--muted)}
+  .needlist{display:flex; flex-wrap:wrap; gap:8px}
+  .need{display:flex; align-items:center; gap:5px; font-weight:800; font-size:.9rem;
+    padding:6px 11px; border-radius:999px; background:#fdf1da; color:#b07d2a; transition:.2s}
+  .need.done{background:#d8f6e8; color:#1fa874}
+  .need .tick{font-size:.95rem}
+
+  /* shop */
+  .game{background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow);
+    padding:18px 16px; width:min(620px,94vw); margin-top:12px}
+  .shopgrid{display:grid; grid-template-columns:repeat(auto-fill,minmax(100px,1fr)); gap:12px}
+  .item{position:relative; border:none; cursor:pointer; font:inherit; text-align:center;
+    padding:14px 6px 12px; border-radius:16px; background:#fff8ea; color:var(--ink);
+    box-shadow:0 4px 0 #f0dcb0; transition:transform .08s,box-shadow .12s,background .15s}
+  .item:active{transform:translateY(3px); box-shadow:0 1px 0 #f0dcb0}
+  .item .emoji{font-size:2rem; display:block; line-height:1.1}
+  .item .nm{font-weight:800; font-size:.82rem; margin-top:4px; display:block}
+  .item .pr{font-weight:800; font-size:.9rem; color:var(--accent); margin-top:2px; display:block}
+  .item.want .pr{color:#e07b39}
+  .item.incart{background:linear-gradient(180deg,#d8f6e8,#bdedd6); box-shadow:0 4px 0 #8fd9b8; color:#1a8a5f}
+  .item.incart .pr{color:#178a5f}
+  .item .badge{position:absolute; top:6px; right:6px; font-size:1rem; opacity:0; transform:scale(.5); transition:.18s}
+  .item.incart .badge{opacity:1; transform:scale(1)}
+
+  /* cart */
+  .cartrow{display:flex; align-items:center; justify-content:space-between; gap:10px;
+    flex-wrap:wrap; margin-top:16px}
+  .cartlabel{font-weight:800; color:var(--muted); font-size:.9rem}
+  .cartitems{display:flex; flex-wrap:wrap; gap:6px; min-height:1.8em; flex:1}
+  .chip{font-weight:800; font-size:.85rem; padding:4px 10px; border-radius:999px;
+    background:#eef6ff; color:#2b6fb0}
+  .chip.want{background:#fff0e0; color:#d97320}
+  .chip.empty{background:transparent; color:var(--muted); padding-left:0}
+
+  .checkout{display:block; width:100%; margin-top:16px; border:none; cursor:pointer; font:inherit;
+    font-weight:800; font-size:1.25rem; padding:16px 0; border-radius:16px; color:#fff;
+    background:linear-gradient(180deg,var(--accent),#dd8606); box-shadow:0 5px 0 #c2760a;
+    transition:transform .08s,box-shadow .08s}
+  .checkout:active{transform:translateY(4px); box-shadow:0 1px 0 #c2760a}
+
+  .feedback{min-height:1.6em; font-weight:800; font-size:1.15rem; margin:14px 0 0; text-align:center}
+  .feedback.good{color:var(--good)} .feedback.bad{color:var(--bad)}
+  .hearts{font-size:1.1rem; letter-spacing:2px}
+
+  .overlay{position:fixed; inset:0; background:rgba(90,60,15,.55); display:none;
+    align-items:center; justify-content:center; padding:20px; z-index:9}
+  .overlay.show{display:flex}
+  .panel{background:var(--card); border-radius:22px; padding:30px 26px; text-align:center;
+    box-shadow:var(--shadow); width:min(420px,92vw)}
+  .panel h2{margin:0 0 6px; font-size:1.8rem}
+  .panel p{margin:6px 0; color:var(--muted); font-weight:700}
+  .panel .big{font-size:2.4rem; font-weight:800; color:var(--accent); margin:8px 0}
+  .panel button{margin-top:14px; border:none; cursor:pointer; font:inherit; font-weight:800;
+    padding:13px 26px; border-radius:999px; background:var(--accent); color:#fff; font-size:1.1rem}
+
+  .back{margin-top:18px}
+  .back a{color:var(--accent); font-weight:800; text-decoration:none}
+  @keyframes pop{0%{transform:scale(.9)}60%{transform:scale(1.08)}100%{transform:scale(1)}}
+  .pop{animation:pop .25s ease}
+  @keyframes wiggle{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+  .wiggle{animation:wiggle .3s ease}
+  @keyframes confettiUp{0%{transform:translateY(0) scale(1);opacity:1}100%{transform:translateY(-60px) scale(1.4);opacity:0}}
+  .star-burst{position:absolute; pointer-events:none; font-size:1.4rem; animation:confettiUp .7s ease forwards}
+  /* --- mobile/tablet responsiveness guard --- */
+  html,body{overflow-x:hidden}
+  body>*{max-width:100%}
+  @media (max-width:600px){
+    .sub{font-size:.84rem}
+    .shopgrid{grid-template-columns:repeat(auto-fill,minmax(86px,1fr))}
+    .item .emoji{font-size:1.7rem}
+  }
+</style>
+</head>
+<body>
+  <header>
+    <h1>💰 Budget Hero</h1>
+    <p class="sub">Buy every NEED, skip the WANTS, don't overspend!</p>
+  </header>
+
+  <div class="scoreboard">
+    <div class="pill">⭐ <span id="score">0</span></div>
+    <div class="pill">🏆 Best: <span id="best">0</span></div>
+    <div class="pill">📈 Lvl <span id="level">1</span></div>
+    <div class="pill hearts" id="hearts">❤️❤️❤️</div>
+  </div>
+
+  <div class="budgetwrap">
+    <div class="budgetline">
+      <span>💵 Budget ₹<span id="budget">0</span> · Spent ₹<span id="spent">0</span></span>
+      <span class="left" id="leftWrap">Left ₹<span id="left">0</span></span>
+    </div>
+    <div class="budgetbar"><div class="budgetfill" id="budgetfill"></div></div>
+  </div>
+
+  <section class="needs">
+    <h3>🛒 Shopping list — buy all of these:</h3>
+    <div class="needlist" id="needlist"></div>
+  </section>
+
+  <main class="game">
+    <div class="shopgrid" id="shop"></div>
+
+    <div class="cartrow">
+      <span class="cartlabel">🧺 Cart:</span>
+      <div class="cartitems" id="cartitems"></div>
+    </div>
+
+    <button class="checkout" id="checkout">✅ Checkout</button>
+    <p class="feedback" id="feedback">Tap items to add them to your cart!</p>
+  </main>
+
+  <p class="back"><a href="https://littleplayers.github.io/">← Back to Little Players</a></p>
+
+  <div class="overlay" id="overlay">
+    <div class="panel">
+      <h2 id="ovTitle">Game Over</h2>
+      <p id="ovMsg"></p>
+      <div class="big" id="ovScore">0</div>
+      <p id="ovBest"></p>
+      <button id="ovBtn">▶ Play Again</button>
+    </div>
+  </div>
+
+<script>
+  // ----- data pools -----
+  const NEEDS = [
+    {emoji:"🍚", name:"Rice"},   {emoji:"🥦", name:"Vegetables"},
+    {emoji:"🧼", name:"Soap"},   {emoji:"📒", name:"Notebook"},
+    {emoji:"🥛", name:"Milk"},   {emoji:"🍞", name:"Bread"},
+    {emoji:"💊", name:"Medicine"},{emoji:"✏️", name:"Pencil"},
+    {emoji:"🥚", name:"Eggs"},   {emoji:"🪥", name:"Toothbrush"},
+    {emoji:"🍎", name:"Apples"}, {emoji:"👕", name:"Shirt"},
+  ];
+  const WANTS = [
+    {emoji:"🍭", name:"Candy"},   {emoji:"🧸", name:"Toy"},
+    {emoji:"🥤", name:"Soda"},    {emoji:"🎈", name:"Balloon"},
+    {emoji:"🍫", name:"Chocolate"},{emoji:"🎮", name:"Game"},
+    {emoji:"🍦", name:"Ice Cream"},{emoji:"🪀", name:"Yo-yo"},
+  ];
+
+  const SK="bh_best";
+  const $=id=>document.getElementById(id);
+  const shopEl=$("shop"), needEl=$("needlist"), cartEl=$("cartitems"), fb=$("feedback"), fill=$("budgetfill");
+
+  let score=0, level=1, lives=3, best=load(SK,0);
+  let budget=0, cart=new Set(), items=[], requiredNames=[], locked=false;
+
+  function load(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}}
+  function save(k,v){localStorage.setItem(k,JSON.stringify(v))}
+  function ri(a,b){return a+Math.floor(Math.random()*(b-a+1))}
+  function shuffle(a){const x=[...a];for(let i=x.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[x[i],x[j]]=[x[j],x[i]]}return x}
+  function rupee(n){return "₹"+n}
+
+  // ----- level builder -----
+  // Guarantees: total cost of needs <= budget (always solvable),
+  // but budget < needs + cheapest want set, so you cannot buy everything.
+  function buildLevel(){
+    locked=false;
+    const needCount = Math.min(3 + Math.floor((level-1)/1), 7);   // 3..7 needs
+    const wantCount = Math.min(2 + Math.floor((level)/2), 5);     // tempting wants grow
+
+    // pick needs with prices
+    const chosenNeeds = shuffle(NEEDS).slice(0, needCount).map(n=>({
+      ...n, price: ri(8,22), need:true
+    }));
+    let needTotal = chosenNeeds.reduce((s,i)=>s+i.price,0);
+
+    // budget = needs total + a "slack" that shrinks as levels rise.
+    // Slack lets kids save / occasionally afford ONE cheap want at low levels.
+    const slack = Math.max(2, 14 - level*2);
+    budget = needTotal + slack;
+
+    // wants priced so that needs + ANY want would (mostly) blow the budget,
+    // teaching that you can't have everything. A want must cost > slack to be unaffordable-with-all-needs.
+    const chosenWants = shuffle(WANTS).slice(0, wantCount).map(w=>({
+      ...w, price: ri(slack+3, slack+14), need:false
+    }));
+
+    items = shuffle([...chosenNeeds, ...chosenWants]).map((it,idx)=>({...it, id:idx}));
+    requiredNames = chosenNeeds.map(n=>n.name);
+    cart = new Set();
+    render();
+    paint();
+  }
+
+  function spent(){ let s=0; cart.forEach(id=>s+=items[id].price); return s; }
+
+  // ----- rendering -----
+  function render(){
+    // needs checklist
+    needEl.innerHTML="";
+    items.filter(i=>i.need).forEach(it=>{
+      const d=document.createElement("div");
+      d.className="need"; d.id="need-"+it.name;
+      d.innerHTML=`<span class="tick">⬜</span>${it.emoji} ${it.name}`;
+      needEl.appendChild(d);
+    });
+    // shop grid
+    shopEl.innerHTML="";
+    items.forEach(it=>{
+      const b=document.createElement("button");
+      b.className="item"+(it.need?"":" want");
+      b.dataset.id=it.id;
+      b.innerHTML=`<span class="badge">✅</span>
+        <span class="emoji">${it.emoji}</span>
+        <span class="nm">${it.name}</span>
+        <span class="pr">${rupee(it.price)}</span>`;
+      b.onclick=()=>toggle(it.id, b);
+      shopEl.appendChild(b);
+    });
+    updateBudgetUI();
+    renderCart();
+  }
+
+  function toggle(id, btn){
+    if(locked) return;
+    if(cart.has(id)){ cart.delete(id); btn.classList.remove("incart"); }
+    else {
+      cart.add(id); btn.classList.add("incart");
+      btn.classList.remove("pop"); void btn.offsetWidth; btn.classList.add("pop");
+      burst(btn);
+    }
+    updateBudgetUI();
+    renderCart();
+    updateChecklist();
+    fb.textContent=""; fb.className="feedback";
+  }
+
+  function burst(btn){
+    const s=document.createElement("span");
+    s.className="star-burst"; s.textContent="✨";
+    s.style.left=(btn.offsetWidth/2-8)+"px"; s.style.top="4px";
+    btn.appendChild(s); setTimeout(()=>s.remove(),700);
+  }
+
+  function updateChecklist(){
+    items.filter(i=>i.need).forEach(it=>{
+      const d=$("need-"+it.name); if(!d) return;
+      const inCart=cart.has(it.id);
+      d.classList.toggle("done", inCart);
+      d.querySelector(".tick").textContent = inCart ? "✅" : "⬜";
+    });
+  }
+
+  function renderCart(){
+    cartEl.innerHTML="";
+    if(cart.size===0){
+      const e=document.createElement("span"); e.className="chip empty"; e.textContent="empty"; cartEl.appendChild(e); return;
+    }
+    cart.forEach(id=>{
+      const it=items[id];
+      const c=document.createElement("span");
+      c.className="chip"+(it.need?"":" want");
+      c.textContent=`${it.emoji} ${rupee(it.price)}`;
+      cartEl.appendChild(c);
+    });
+  }
+
+  function updateBudgetUI(){
+    const sp=spent(), left=budget-sp;
+    $("budget").textContent=budget; $("spent").textContent=sp; $("left").textContent=left;
+    const pct=budget>0?Math.min(100,(sp/budget)*100):0;
+    fill.style.width=pct+"%";
+    fill.className="budgetfill"+(left<0?" danger":pct>=80?" warn":"");
+    $("leftWrap").classList.toggle("over", left<0);
+  }
+
+  // ----- checkout / win / fail -----
+  function checkout(){
+    if(locked) return;
+    const sp=spent(), left=budget-sp;
+    const missing = items.filter(i=>i.need && !cart.has(i.id));
+    const wantsBought = [...cart].filter(id=>!items[id].need).length;
+
+    if(missing.length>0){
+      const m=missing[0];
+      lives--; paint();
+      fail(`Oops! You forgot the ${m.name.toLowerCase()} ${m.emoji}`);
+      return;
+    }
+    if(left<0){
+      lives--; paint();
+      fail(`Too expensive — you're ₹${-left} over! Put a want back. 😅`);
+      return;
+    }
+
+    // WIN
+    locked=true;
+    const base=50;
+    const saveBonus=left;                       // ₹ left over = saving points
+    const smart = wantsBought===0 ? 40 : 0;     // smart-shopper bonus
+    const gained = base + saveBonus + smart;
+    score += gained;
+    if(score>best){ best=score; save(SK,best); }
+    paint();
+
+    let msg = `🎉 Level done! +${base} pts, saved ₹${left} (+${saveBonus})`;
+    if(smart){ msg += ` · 🌟 Smart Shopper +${smart}!`; celebrate(); }
+    fb.textContent=msg; fb.className="feedback good";
+
+    level++;
+    setTimeout(()=>{ if(lives>0) buildLevel(); }, 1700);
+  }
+
+  function fail(msg){
+    fb.textContent="❌ "+msg+(lives>0?` (Lives left: ${lives})`:""); fb.className="feedback bad";
+    $("checkout").classList.remove("wiggle"); void $("checkout").offsetWidth; $("checkout").classList.add("wiggle");
+    if(lives<=0) setTimeout(gameOver,1200);
+  }
+
+  function celebrate(){
+    const emojis=["🎉","⭐","💰","🌟","✨"];
+    for(let i=0;i<14;i++){
+      const s=document.createElement("span");
+      s.className="star-burst";
+      s.textContent=emojis[i%emojis.length];
+      s.style.position="fixed";
+      s.style.left=(10+Math.random()*80)+"vw";
+      s.style.top=(30+Math.random()*30)+"vh";
+      s.style.fontSize=(1.2+Math.random()*1.4)+"rem";
+      s.style.zIndex=20;
+      document.body.appendChild(s);
+      setTimeout(()=>s.remove(),700);
+    }
+  }
+
+  function gameOver(){
+    $("ovTitle").textContent = (score>=best && score>0) ? "🏆 New Best!" : "Game Over";
+    $("ovMsg").textContent = `You reached Level ${level} and shopped like a hero!`;
+    $("ovScore").textContent = score+" pts";
+    $("ovBest").textContent = "Best score: "+best;
+    $("overlay").classList.add("show");
+  }
+
+  function paint(){
+    $("score").textContent=score; $("best").textContent=best; $("level").textContent=level;
+    $("hearts").textContent="❤️".repeat(Math.max(0,lives))+"🤍".repeat(Math.max(0,3-lives));
+  }
+
+  function startGame(){
+    score=0; level=1; lives=3;
+    $("overlay").classList.remove("show");
+    paint(); buildLevel();
+    fb.textContent="Tap items to add them to your cart!"; fb.className="feedback";
+  }
+
+  // ----- controls -----
+  $("checkout").onclick=checkout;
+  $("ovBtn").onclick=startGame;
+
+  // keyboard: number keys 1-9 toggle items, Enter = checkout
+  document.addEventListener("keydown",e=>{
+    if($("overlay").classList.contains("show")){
+      if(e.key==="Enter"){ startGame(); }
+      return;
+    }
+    if(locked) return;
+    if(e.key==="Enter"){ checkout(); return; }
+    const n=parseInt(e.key,10);
+    if(n>=1 && n<=9){
+      const btn=shopEl.children[n-1];
+      if(btn) toggle(+btn.dataset.id, btn);
+    }
+  });
+
+  startGame();
+</script>
+</body>
+</html>
