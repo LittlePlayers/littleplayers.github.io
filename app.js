@@ -57,18 +57,6 @@ function cardHTML(game) {
     </a>`;
 }
 
-function sectionHTML(cat, games) {
-  const cards = games.map(cardHTML).join("");
-  return `
-    <section class="cat-section" data-cat="${cat.id}">
-      <div class="cat-head">
-        <h2><span class="cat-icon">${cat.icon || "🎮"}</span> ${cat.label}</h2>
-        ${cat.blurb ? `<p class="cat-blurb">${cat.blurb}</p>` : ""}
-      </div>
-      <div class="grid">${cards}</div>
-    </section>`;
-}
-
 function renderCategories() {
   const chips = [{ id: "all", label: "All", icon: "🌈" }, ...state.categories];
   const wrap = document.getElementById("categoryFilters");
@@ -81,31 +69,29 @@ function renderCategories() {
     .join("");
 }
 
-function renderSections() {
+function visibleGames() {
+  const order = new Map(state.categories.map((c, i) => [c.id, i]));
+  return state.games
+    .filter(
+      (g) =>
+        (state.activeCategory === "all" || g.category === state.activeCategory) &&
+        matchesFilters(g)
+    )
+    .sort((a, b) => (order.get(a.category) ?? 99) - (order.get(b.category) ?? 99));
+}
+
+function renderGrid() {
   const host = document.getElementById("sections");
-  const visibleCats =
-    state.activeCategory === "all"
-      ? state.categories
-      : state.categories.filter((c) => c.id === state.activeCategory);
-
-  let total = 0;
-  const html = visibleCats
-    .map((cat) => {
-      const games = state.games.filter(
-        (g) => g.category === cat.id && matchesFilters(g)
-      );
-      total += games.length;
-      return games.length ? sectionHTML(cat, games) : "";
-    })
-    .join("");
-
-  host.innerHTML = html;
-  document.getElementById("emptyMsg").classList.toggle("hidden", total > 0);
+  const games = visibleGames();
+  host.innerHTML = games.length
+    ? `<div class="grid">${games.map(cardHTML).join("")}</div>`
+    : "";
+  document.getElementById("emptyMsg").classList.toggle("hidden", games.length > 0);
 }
 
 function renderAll() {
   renderCategories();
-  renderSections();
+  renderGrid();
 }
 
 // ---- events ----
@@ -127,12 +113,12 @@ document.addEventListener("click", (e) => {
 
 document.getElementById("favOnly").addEventListener("change", (e) => {
   state.favOnly = e.target.checked;
-  renderSections();
+  renderGrid();
 });
 
 document.getElementById("searchInput").addEventListener("input", (e) => {
   state.query = e.target.value;
-  renderSections();
+  renderGrid();
 });
 
 // ---- boot ----
