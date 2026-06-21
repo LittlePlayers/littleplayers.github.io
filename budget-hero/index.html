@@ -227,8 +227,9 @@
     }));
     let needTotal = chosenNeeds.reduce((s,i)=>s+i.price,0);
 
-    // budget = needs total + a "slack" that shrinks as levels rise.
-    // Slack lets kids save / occasionally afford ONE cheap want at low levels.
+    // budget = needs total + a small "slack" that shrinks as levels rise.
+    // Slack is always smaller than the cheapest want, so needs always fit
+    // but no want can ever be added on top — you can't buy everything.
     const slack = Math.max(2, 14 - level*2);
     budget = needTotal + slack;
 

@@ -235,8 +235,31 @@
   function tickLight(dt){
     lightTimer -= dt;
     if(lightTimer<=0){
-      if(light==="green"){ light="red"; lightTimer = Math.max(2.4, 3.4 - (level-1)*0.1); }
+      if(light==="green"){
+        light="red"; lightTimer = Math.max(2.4, 3.4 - (level-1)*0.1);
+        // Fairness: when the light turns RED, no car should already be sitting
+        // on top of the player. Push any overlapping car back behind the player
+        // (along its travel direction) so the kid always gets a chance to react.
+        clearCarsFromPlayer();
+      }
       else { light="green"; lightTimer = lightDur; }
+    }
+  }
+
+  // Shove cars that are currently overlapping the player's column clear of it,
+  // so a green->red flip can never cause an instant, unavoidable hit.
+  function clearCarsFromPlayer(){
+    if(!isLaneRow(player.row)) return;
+    const lane=laneIndexForRow(player.row);
+    const pcx=playerCx(), pHalf=rowH*0.28, margin=rowH*0.4;
+    for(const car of cars){
+      if(car.lane!==lane) continue;
+      const cLeft=car.x, cRight=car.x+car.w;
+      if(pcx+pHalf>cLeft && pcx-pHalf<cRight){
+        // Move the car so its leading edge is just behind the player.
+        if(car.dir>0) car.x = pcx - pHalf - car.w - margin; // came from left
+        else          car.x = pcx + pHalf + margin;         // came from right
+      }
     }
   }
 

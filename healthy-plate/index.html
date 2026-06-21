@@ -235,9 +235,6 @@
     const d=document.createElement("div");
     d.className="section"+(have>=target?" done":"");
     d.dataset.key=key;
-    const filled = key===BIN_KEY
-      ? "🗑️".repeat(0) // bin shows tossed treats below instead
-      : "";
     d.innerHTML=`<div class="label">${label}</div>
       <div class="prog">${have}/${target}${have>=target?" ✅":""}</div>
       <div class="slots" data-slots="${key}"></div>`;
