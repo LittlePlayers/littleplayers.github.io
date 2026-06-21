@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Logic Bot — guide a robot to the goal by building a program from command blocks! A coding-puzzle game that teaches kids sequencing, loops and debugging." />
+  <link rel="canonical" href="https://littleplayers.github.io/logic-bot/" />
+  <meta name="keywords" content="kids games, coding game, Logic Bot, learn to code, programming for kids, loops, sequencing, free online game for kids, Little Players" />
+  <meta name="author" content="gauravs19" />
+  <meta name="theme-color" content="#14b8a6" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Little Players" />
+  <meta property="og:title" content="Logic Bot — Little Players" />
+  <meta property="og:description" content="Logic Bot — guide a robot to the goal by building a program from command blocks! A coding-puzzle game that teaches kids sequencing, loops and debugging." />
+  <meta property="og:url" content="https://littleplayers.github.io/logic-bot/" />
+  <meta property="og:image" content="https://littleplayers.github.io/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Logic Bot — Little Players" />
+  <meta name="twitter:description" content="Logic Bot — guide a robot to the goal by building a program from command blocks! A coding-puzzle game that teaches kids sequencing, loops and debugging." />
+  <meta name="twitter:image" content="https://littleplayers.github.io/og-image.png" />
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "VideoGame", "name": "Logic Bot", "url": "https://littleplayers.github.io/logic-bot/", "image": "https://littleplayers.github.io/og-image.png", "description": "Logic Bot — guide a robot to the goal by building a program from command blocks! A coding-puzzle game that teaches kids sequencing, loops and debugging.", "applicationCategory": "Game", "operatingSystem": "Web Browser", "genre": "education", "author": {"@type": "Organization", "name": "Little Players"}, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "INR"}, "audience": {"@type": "PeopleAudience", "suggestedMinAge": 9}, "isPartOf": {"@type": "WebSite", "name": "Little Players", "url": "https://littleplayers.github.io/"}}</script>
+<title>🤖 Logic Bot — Little Players</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤖</text></svg>" />
+<style>
+  :root{
+    --bg:#eafaf6; --card:#fff; --ink:#1f3a36; --muted:#6f8a85;
+    --accent:#14b8a6; --accent2:#0e9488; --good:#22b07d; --bad:#ff5d6c;
+    --loop:#a855f7; --shadow:0 10px 28px rgba(20,120,110,.16); --radius:18px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; min-height:100vh; color:var(--ink);
+    font-family:"Baloo 2","Comic Sans MS","Trebuchet MS",system-ui,sans-serif;
+    background:
+      radial-gradient(circle at 12% 10%,#c7f2e9 0,transparent 42%),
+      radial-gradient(circle at 88% 8%,#cdeefb 0,transparent 44%),
+      var(--bg);
+    display:flex; flex-direction:column; align-items:center; padding:16px;
+  }
+  header{text-align:center; margin:10px 0 4px}
+  h1{margin:0; font-size:clamp(1.7rem,6vw,2.6rem)}
+  .sub{margin:6px 0 0; color:var(--muted); font-weight:700; font-size:.95rem}
+  .help{margin:4px 0 0; color:var(--muted); font-weight:700; font-size:.82rem}
+
+  .scoreboard{display:flex; gap:8px; margin:12px 0 6px; flex-wrap:wrap; justify-content:center}
+  .pill{background:var(--card); border-radius:999px; padding:7px 14px; font-weight:800;
+    box-shadow:var(--shadow); font-size:.88rem; display:flex; align-items:center; gap:6px}
+
+  .layout{display:flex; gap:16px; flex-wrap:wrap; justify-content:center; align-items:flex-start;
+    width:min(820px,96vw); margin-top:6px}
+
+  /* board */
+  .boardwrap{background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow);
+    padding:14px; display:flex; flex-direction:column; align-items:center; gap:10px}
+  canvas{display:block; border-radius:12px; touch-action:manipulation; max-width:100%}
+  .lvltitle{font-weight:800; font-size:1.05rem}
+  .lvltitle small{color:var(--muted)}
+
+  /* programming side */
+  .coder{background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow);
+    padding:14px; width:min(360px,96vw); display:flex; flex-direction:column; gap:10px}
+  .palette{display:flex; flex-wrap:wrap; gap:8px}
+  .cmdbtn{border:none; cursor:pointer; font:inherit; font-weight:800; font-size:.95rem;
+    padding:10px 12px; border-radius:12px; color:#fff; flex:1 1 auto; min-width:84px;
+    background:linear-gradient(180deg,var(--accent),var(--accent2));
+    box-shadow:0 4px 0 #0a7c72; transition:transform .08s,box-shadow .08s,opacity .2s}
+  .cmdbtn:active{transform:translateY(3px); box-shadow:0 1px 0 #0a7c72}
+  .cmdbtn.loop{background:linear-gradient(180deg,#b86bf7,#9333ea); box-shadow:0 4px 0 #7e22ce}
+  .cmdbtn:disabled{opacity:.4; cursor:default}
+
+  .progtitle{font-weight:800; display:flex; justify-content:space-between; align-items:center}
+  .progtitle small{color:var(--muted); font-weight:700}
+  .program{min-height:120px; max-height:280px; overflow:auto; background:#f3faf8;
+    border-radius:12px; padding:8px; display:flex; flex-direction:column; gap:5px}
+  .empty{color:var(--muted); font-weight:700; text-align:center; padding:24px 6px; font-size:.9rem}
+
+  .row{display:flex; align-items:center; gap:6px; cursor:pointer; user-select:none;
+    border-radius:9px; padding:7px 9px; font-weight:800; font-size:.92rem; color:#fff;
+    background:var(--accent); transition:transform .08s,filter .12s}
+  .row:hover{filter:brightness(1.06)}
+  .row.running{outline:3px solid #ffd166; outline-offset:1px; transform:scale(1.02)}
+  .row.loophead{background:var(--loop)}
+  .row.loopend{background:#c89bf0; color:#fff}
+  .row.indent{margin-left:22px}
+  .row .x{margin-left:auto; opacity:.85; font-size:1rem; line-height:1}
+  .loopn{background:rgba(255,255,255,.28); border-radius:7px; padding:1px 7px}
+  .loopn b{cursor:pointer}
+
+  .controls{display:flex; gap:8px; flex-wrap:wrap}
+  .controls button{border:none; cursor:pointer; font:inherit; font-weight:800; font-size:1rem;
+    padding:11px 0; border-radius:12px; color:#fff; flex:1 1 0; min-width:88px;
+    transition:transform .08s,box-shadow .08s,opacity .2s}
+  .controls button:active{transform:translateY(3px)}
+  .run{background:linear-gradient(180deg,#2bc98c,#1fa874); box-shadow:0 4px 0 #178a5f}
+  .reset{background:linear-gradient(180deg,#74b9ff,#3b82f6); box-shadow:0 4px 0 #2563eb}
+  .clear{background:linear-gradient(180deg,#ff8a9a,#ef4f63); box-shadow:0 4px 0 #c43d4a}
+  .controls button:active{box-shadow:0 1px 0 #0a7c72}
+  .controls button:disabled{opacity:.4; cursor:default}
+
+  .feedback{min-height:1.5em; font-weight:800; font-size:1rem; text-align:center}
+  .feedback.good{color:var(--good)} .feedback.bad{color:var(--bad)}
+
+  /* level select */
+  .levels{display:flex; gap:7px; flex-wrap:wrap; justify-content:center;
+    width:min(820px,96vw); margin:14px 0 2px}
+  .levels button{border:none; cursor:pointer; font:inherit; font-weight:800; font-size:.95rem;
+    width:42px; height:42px; border-radius:12px; background:#fff; color:var(--ink);
+    box-shadow:var(--shadow)}
+  .levels button.on{background:var(--accent); color:#fff}
+  .levels button.locked{opacity:.4; cursor:not-allowed}
+  .levels button.done::after{content:"✓"; font-size:.7rem; position:relative; top:-8px; left:2px; color:var(--good)}
+
+  .back{margin-top:16px}
+  .back a{color:var(--accent2); font-weight:800; text-decoration:none}
+
+  .overlay{position:fixed; inset:0; background:rgba(15,40,38,.55); display:none;
+    align-items:center; justify-content:center; padding:20px; z-index:9}
+  .overlay.show{display:flex}
+  .panel{background:var(--card); border-radius:22px; padding:30px 26px; text-align:center;
+    box-shadow:var(--shadow); width:min(420px,92vw)}
+  .panel h2{margin:0 0 6px; font-size:1.8rem}
+  .panel p{margin:6px 0; color:var(--muted); font-weight:700}
+  .panel .big{font-size:2.2rem; font-weight:800; color:var(--accent); margin:8px 0}
+  .panel .stars{font-size:1.8rem; letter-spacing:4px; margin:4px 0}
+  .panel button{margin:14px 6px 0; border:none; cursor:pointer; font:inherit; font-weight:800;
+    padding:12px 22px; border-radius:999px; background:var(--accent); color:#fff; font-size:1.05rem}
+  .panel button.ghost{background:#e3f4f0; color:var(--accent2)}
+
+  @keyframes pop{0%{transform:scale(.9)}60%{transform:scale(1.06)}100%{transform:scale(1)}}
+  .pop{animation:pop .25s ease}
+
+  /* mobile guard */
+  html,body{overflow-x:hidden}
+  body>*{max-width:100%}
+  @media (max-width:760px){ .layout{flex-direction:column; align-items:center} .coder{width:min(420px,96vw)} }
+  @media (max-width:400px){ .sub,.help{font-size:.78rem} .cmdbtn{min-width:0} }
+</style>
+</head>
+<body>
+  <header>
+    <h1>🤖 Logic Bot</h1>
+    <p class="sub">Build a program to guide the bot to the goal 🎯 and grab every star ⭐</p>
+    <p class="help">Tap commands to add them. Tap a block to delete it. Use <b>Repeat</b> loops to do less typing! Then press ▶ Run.</p>
+  </header>
+
+  <div class="scoreboard">
+    <div class="pill">📈 Level <span id="lvlnum">1</span>/<span id="lvltot">10</span></div>
+    <div class="pill">🧩 Blocks <span id="blocks">0</span></div>
+    <div class="pill">⭐ Stars <span id="totstars">0</span></div>
+  </div>
+
+  <div class="layout">
+    <div class="boardwrap">
+      <div class="lvltitle" id="lvltitle">Level 1</div>
+      <canvas id="board" width="360" height="360"></canvas>
+    </div>
+
+    <div class="coder">
+      <div class="palette" id="palette"></div>
+      <div class="progtitle">Your Program <small id="proglen">0 blocks</small></div>
+      <div class="program" id="program"></div>
+      <div class="controls">
+        <button class="run" id="runBtn">▶ Run</button>
+        <button class="reset" id="resetBtn">↺ Reset</button>
+        <button class="clear" id="clearBtn">🗑 Clear</button>
+      </div>
+      <p class="feedback" id="feedback"></p>
+    </div>
+  </div>
+
+  <div class="levels" id="levels"></div>
+
+  <p class="back"><a href="https://littleplayers.github.io/">← Back to Little Players</a></p>
+
+  <div class="overlay" id="overlay">
+    <div class="panel">
+      <h2 id="ovTitle">Level Complete!</h2>
+      <div class="stars" id="ovStars">⭐⭐⭐</div>
+      <p id="ovMsg"></p>
+      <div class="big" id="ovBig"></div>
+      <div>
+        <button class="ghost" id="ovReplay">↺ Replay</button>
+        <button id="ovNext">▶ Next Level</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+  "use strict";
+  const $=id=>document.getElementById(id);
+
+  // ===== Directions: 0=up,1=right,2=down,3=left =====
+  const DX=[0,1,0,-1], DY=[-1,0,1,0];
+  const ARROW=["⬆️","➡️","⬇️","⬅️"];
+
+  // ===== Level data =====
+  // grid: array of strings, each char a tile.
+  //   . floor   # wall   * star   G goal
+  // bot: [col,row], dir: 0..3
+  // par: target block count for 3 stars (efficiency)
+  // loops: whether the loop command is offered
+  const LEVELS=[
+    {name:"Go forward",      par:3, loops:false, dir:1, bot:[0,2],
+      grid:["....",
+            "....",
+            "...G",
+            "...."]},
+    {name:"Grab a star",     par:4, loops:false, dir:1, bot:[0,2],
+      grid:["....",
+            "....",
+            ".*.G",
+            "...."]},
+    {name:"Turn the corner", par:4, loops:false, dir:1, bot:[0,0],
+      grid:["..G.",
+            "..#.",
+            "..#.",
+            "...."]},
+    {name:"Up and over",     par:6, loops:false, dir:0, bot:[0,3],
+      grid:["...G",
+            ".##.",
+            ".##.",
+            "...."]},
+    {name:"Long hall",       par:5, loops:true, dir:1, bot:[0,2],
+      grid:["......",
+            "......",
+            ".....G",
+            "......"]},
+    {name:"Star runner",     par:6, loops:true, dir:1, bot:[0,2],
+      grid:["......",
+            "......",
+            ".*.*.G",
+            "......"]},
+    {name:"Stair climb",     par:8, loops:true, dir:1, bot:[0,4],
+      grid:[".....G",
+            "....#.",
+            "...##.",
+            "..###.",
+            ".####."]},
+    {name:"Loop the row",    par:5, loops:true, dir:1, bot:[0,0],
+      grid:["*****G",
+            "######",
+            "......",
+            "......"]},
+    {name:"Zig zag",         par:9, loops:true, dir:1, bot:[0,0],
+      grid:["...#..",
+            "...#..",
+            "...#..",
+            "......",
+            "###.#G"]},
+    {name:"Star spiral",     par:10, loops:true, dir:1, bot:[0,0],
+      grid:["....*.",
+            ".###..",
+            ".#G#..",
+            ".#.#..",
+            ".###.."]},
+    {name:"Two loops",       par:9, loops:true, dir:1, bot:[0,3],
+      grid:["G.....",
+            ".####.",
+            ".#..#.",
+            "*....*"]},
+    {name:"Grand finale",    par:12, loops:true, dir:1, bot:[0,0],
+      grid:["*....*",
+            ".####.",
+            ".#..#.",
+            ".#..#.",
+            "*.GG.*"]}  // first G is the goal; the second G is treated as floor by parseLevel
+  ];
+
+  // ===== Commands =====
+  // program is an array of nodes:
+  //   {t:"F"} forward   {t:"L"} left   {t:"R"} right
+  //   {t:"LOOP", n:Number, body:[...nodes...]}
+  // (one level of nesting supported for the player; interpreter supports arbitrary depth)
+  const SK="lb_level";
+  let unlocked=load(SK,1);          // highest level number unlocked (1-based)
+  let cur=Math.min(unlocked,LEVELS.length); // current level index+1
+  let program=[];
+  let running=false, animTimer=null;
+  let totalStars=load("lb_stars",0);
+  const earned=load("lb_earned",{}); // {levelIndex: starCount}
+
+  function load(k,d){try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch(e){return d}}
+  function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+
+  // ===== Parse a level into a working model =====
+  function parseLevel(L){
+    const rows=L.grid.length, cols=L.grid[0].length;
+    const walls=[], stars=[];
+    let goal=null;
+    for(let r=0;r<rows;r++){
+      for(let c=0;c<cols;c++){
+        const ch=L.grid[r][c];
+        if(ch==="#") walls.push(c+","+r);
+        else if(ch==="*") stars.push(c+","+r);
+        else if(ch==="G" && !goal) goal=[c,r]; // first G is the goal; extras treated as floor
+      }
+    }
+    return {rows,cols,walls:new Set(walls),starsInit:stars.map(s=>s.split(",").map(Number)),goal,
+            start:L.bot.slice(), dir:L.dir, name:L.name, par:L.par, loops:L.loops};
+  }
+
+  let M=null;            // current parsed model
+  let bot={x:0,y:0,dir:1};
+  let starsLeft=[];      // array of [c,r] not yet collected
+
+  function loadLevel(n){
+    stopAnim();
+    cur=n;
+    M=parseLevel(LEVELS[n-1]);
+    program=[];
+    resetBot();
+    renderAll();
+  }
+  function resetBot(){
+    bot={x:M.start[0], y:M.start[1], dir:M.dir};
+    starsLeft=M.starsInit.map(s=>s.slice());
+    feedback("","");
+    draw();
+  }
+
+  // ===== Interpreter =====
+  // Flatten the program into a step list with references to source rows for highlighting.
+  // Each step: {kind:"F"|"L"|"R", node} . Loops expanded by repetition.
+  function flatten(prog){
+    const steps=[];
+    function walk(list){
+      for(const node of list){
+        if(node.t==="LOOP"){
+          const n=Math.max(1,node.n|0);
+          for(let i=0;i<n;i++) walk(node.body);
+        } else {
+          steps.push({kind:node.t, node});
+        }
+      }
+    }
+    walk(prog);
+    return steps;
+  }
+
+  // Pure simulation used for verification & win-check (no animation).
+  // Returns {win, crash, reached, stars, steps:[states]}
+  function simulate(model, prog){
+    const steps=flatten(prog);
+    let x=model.start[0], y=model.start[1], dir=model.dir;
+    const collected=new Set();
+    const starSet=new Set(model.starsInit.map(s=>s[0]+","+s[1]));
+    const states=[{x,y,dir,collectedKey:null,crash:false}];
+    // collect star on start tile if any
+    if(starSet.has(x+","+y)) collected.add(x+","+y);
+    let crash=false;
+    for(const st of steps){
+      if(st.kind==="L"){ dir=(dir+3)%4; }
+      else if(st.kind==="R"){ dir=(dir+1)%4; }
+      else if(st.kind==="F"){
+        const nx=x+DX[dir], ny=y+DY[dir];
+        if(nx<0||ny<0||nx>=model.cols||ny>=model.rows || model.walls.has(nx+","+ny)){
+          crash=true; states.push({x,y,dir,crash:true,bump:[nx,ny]});
+          break;
+        }
+        x=nx; y=ny;
+      }
+      let collectedKey=null;
+      if(starSet.has(x+","+y) && !collected.has(x+","+y)){ collected.add(x+","+y); collectedKey=x+","+y; }
+      states.push({x,y,dir,collectedKey,crash:false});
+    }
+    const reached = x===model.goal[0] && y===model.goal[1];
+    const win = reached && collected.size===starSet.size && !crash;
+    return {win,crash,reached,allStars:collected.size===starSet.size,states};
+  }
+
+  // ===== Rendering the board (canvas) =====
+  const cv=$("board"), ctx=cv.getContext("2d");
+  function fitCanvas(){
+    // size cells so the whole grid fits in ~min(360, 92vw) box
+    const maxBox=Math.min(360, Math.floor(Math.min(window.innerWidth*0.92, 360)));
+    const cell=Math.floor(maxBox/Math.max(M.cols,M.rows));
+    const w=cell*M.cols, h=cell*M.rows;
+    cv.width=w; cv.height=h;
+    cv._cell=cell;
+  }
+  function draw(){
+    if(!M) return;
+    fitCanvas();
+    const cell=cv._cell;
+    ctx.clearRect(0,0,cv.width,cv.height);
+    for(let r=0;r<M.rows;r++){
+      for(let c=0;c<M.cols;c++){
+        const x=c*cell, y=r*cell, key=c+","+r;
+        const isWall=M.walls.has(key);
+        ctx.fillStyle=isWall ? "#1f3a36" : ((r+c)%2 ? "#e0f5ef" : "#eafaf6");
+        ctx.fillRect(x,y,cell,cell);
+        ctx.strokeStyle="rgba(20,120,110,.12)";
+        ctx.strokeRect(x+.5,y+.5,cell-1,cell-1);
+      }
+    }
+    const fs=Math.floor(cell*0.62);
+    ctx.font=fs+"px system-ui";
+    ctx.textAlign="center"; ctx.textBaseline="middle";
+    // goal
+    emoji("🎯", M.goal[0], M.goal[1], cell);
+    // stars left
+    for(const s of starsLeft) emoji("⭐", s[0], s[1], cell);
+    // bot (rotate arrow shown beside)
+    emoji("🤖", bot.x, bot.y, cell);
+    // facing indicator: small arrow in top-left of bot cell
+    ctx.font=Math.floor(cell*0.3)+"px system-ui";
+    ctx.fillText(ARROW[bot.dir], bot.x*cell+cell*0.78, bot.y*cell+cell*0.22);
+    ctx.font=fs+"px system-ui";
+  }
+  function emoji(ch,c,r,cell){ ctx.fillText(ch, c*cell+cell/2, r*cell+cell/2+2); }
+
+  // ===== Program rendering =====
+  function countBlocks(prog){
+    let n=0;
+    for(const node of prog){
+      n++;
+      if(node.t==="LOOP") n+=countBlocks(node.body);
+    }
+    return n;
+  }
+  function renderProgram(){
+    const wrap=$("program"); wrap.innerHTML="";
+    if(program.length===0){
+      const e=document.createElement("div"); e.className="empty";
+      e.textContent="No commands yet. Tap the blocks above to build a program! 👆";
+      wrap.appendChild(e);
+    } else {
+      program.forEach((node,i)=>renderNode(node,wrap,i,[i],false));
+    }
+    const total=countBlocks(program);
+    $("proglen").textContent=total+" block"+(total===1?"":"s");
+    $("blocks").textContent=total;
+  }
+  function renderNode(node,wrap,idx,path,indent){
+    if(node.t==="LOOP"){
+      const head=document.createElement("div");
+      head.className="row loophead"+(indent?" indent":"");
+      head.innerHTML='🔁 Repeat <span class="loopn">×<b>'+node.n+'</b></span> {';
+      head.title="Tap ×number to change. Tap 🗑 to delete the whole loop.";
+      const x=document.createElement("span"); x.className="x"; x.textContent="🗑";
+      x.onclick=(e)=>{e.stopPropagation(); deleteAt(path);};
+      head.appendChild(x);
+      head.querySelector(".loopn b").onclick=(e)=>{e.stopPropagation(); cycleLoop(path);};
+      head.dataset.path=path.join("-");
+      wrap.appendChild(head);
+      node.body.forEach((cn,j)=>renderNode(cn,wrap,j,path.concat(j),true));
+      const end=document.createElement("div");
+      end.className="row loopend"+(indent?" indent":"");
+      end.textContent="}";
+      end.dataset.pathEnd=path.join("-");
+      wrap.appendChild(end);
+    } else {
+      const row=document.createElement("div");
+      row.className="row"+(indent?" indent":"");
+      const label=node.t==="F"?"▶ Forward":node.t==="L"?"↺ Turn Left":"↻ Turn Right";
+      row.textContent=label;
+      const x=document.createElement("span"); x.className="x"; x.textContent="✕";
+      row.appendChild(x);
+      row.dataset.path=path.join("-");
+      row.onclick=()=>deleteAt(path);
+      wrap.appendChild(row);
+    }
+  }
+
+  // ===== Program editing =====
+  let loopTarget=null; // if a loop is "open" for appending into it
+  function append(t){
+    if(running) return;
+    if(t==="LOOP"){
+      const node={t:"LOOP", n:2, body:[]};
+      program.push(node);
+      loopTarget=node;     // new commands now go inside this loop
+    } else {
+      const node={t};
+      if(loopTarget){ loopTarget.body.push(node); }
+      else program.push(node);
+    }
+    renderProgram();
+    $("program").scrollTop=$("program").scrollHeight;
+  }
+  function getByPath(path){
+    let list=program, node=null, parent=null, idx=path[0];
+    for(let i=0;i<path.length;i++){
+      parent=list; idx=path[i]; node=list[idx];
+      if(i<path.length-1) list=node.body;
+    }
+    return {parent,idx,node};
+  }
+  function deleteAt(path){
+    if(running) return;
+    const {parent,idx,node}=getByPath(path);
+    if(node===loopTarget) loopTarget=null;
+    parent.splice(idx,1);
+    renderProgram();
+  }
+  function cycleLoop(path){
+    if(running) return;
+    const {node}=getByPath(path);
+    node.n = node.n>=8 ? 2 : node.n+1;   // cycle 2..8
+    renderProgram();
+  }
+  function clearProgram(){
+    if(running) return;
+    program=[]; loopTarget=null;
+    renderProgram(); resetBot();
+  }
+
+  // ===== Run with animation =====
+  function highlightStep(stepIndex, stepsMeta){
+    document.querySelectorAll(".row.running").forEach(r=>r.classList.remove("running"));
+    const meta=stepsMeta[stepIndex];
+    if(!meta||!meta.path) return;
+    const el=document.querySelector('.row[data-path="'+meta.path+'"]');
+    if(el) el.classList.add("running");
+  }
+
+  // Build flatten with path info for highlighting
+  function flattenWithPaths(prog){
+    const steps=[];
+    function walk(list,path){
+      list.forEach((node,i)=>{
+        const p=path.concat(i).join("-");
+        if(node.t==="LOOP"){
+          const n=Math.max(1,node.n|0);
+          for(let k=0;k<n;k++) walk(node.body, path.concat(i));
+        } else {
+          steps.push({kind:node.t, path:p});
+        }
+      });
+    }
+    walk(prog,[]);
+    return steps;
+  }
+
+  function run(){
+    if(running) return;
+    if(countBlocks(program)===0){ feedback("Add some commands first! 🧩","bad"); return; }
+    resetBot();
+    running=true; setControls(true);
+    const steps=flattenWithPaths(program);
+    let i=0;
+    feedback("Running… ▶","");
+    const tick=()=>{
+      if(i>=steps.length){ finishRun(false); return; }
+      highlightStep(i,steps);
+      const st=steps[i];
+      let crashed=false;
+      if(st.kind==="L"){ bot.dir=(bot.dir+3)%4; }
+      else if(st.kind==="R"){ bot.dir=(bot.dir+1)%4; }
+      else if(st.kind==="F"){
+        const nx=bot.x+DX[bot.dir], ny=bot.y+DY[bot.dir];
+        if(nx<0||ny<0||nx>=M.cols||ny>=M.rows || M.walls.has(nx+","+ny)){ crashed=true; }
+        else { bot.x=nx; bot.y=ny; }
+      }
+      // collect star
+      starsLeft=starsLeft.filter(s=>!(s[0]===bot.x&&s[1]===bot.y));
+      draw();
+      i++;
+      if(crashed){ finishRun(true); return; }
+      animTimer=setTimeout(tick,420);
+    };
+    animTimer=setTimeout(tick,300);
+  }
+
+  function finishRun(crashed){
+    stopAnim();
+    running=false; setControls(false);
+    document.querySelectorAll(".row.running").forEach(r=>r.classList.remove("running"));
+    const reached = bot.x===M.goal[0] && bot.y===M.goal[1];
+    const allStars = starsLeft.length===0;
+    if(crashed){
+      feedback("The bot bumped a wall! Fix your program 🔧","bad");
+      return;
+    }
+    if(reached && allStars){
+      winLevel();
+    } else if(reached && !allStars){
+      feedback("So close! Collect every ⭐ before the goal.","bad");
+    } else {
+      feedback("Program finished, but the bot isn't on the 🎯. Try again!","bad");
+    }
+  }
+
+  // ===== Win handling & scoring =====
+  function starsForRun(){
+    const used=countBlocks(program);
+    if(used<=M.par) return 3;
+    if(used<=M.par+2) return 2;
+    return 1;
+  }
+  function winLevel(){
+    const got=starsForRun();
+    const prev=earned[cur]||0;
+    if(got>prev){
+      totalStars += (got-prev);
+      earned[cur]=got;
+      save("lb_earned",earned);
+      save("lb_stars",totalStars);
+    }
+    // unlock next
+    if(cur+1>unlocked && cur<LEVELS.length){
+      unlocked=cur+1; save(SK,unlocked);
+    }
+    renderScoreboard(); renderLevels();
+    showWin(got);
+  }
+  function showWin(got){
+    $("ovTitle").textContent = cur===LEVELS.length ? "🏆 You finished Logic Bot!" : "Level Complete! 🎉";
+    $("ovStars").textContent = "⭐".repeat(got)+"☆".repeat(3-got);
+    const used=countBlocks(program);
+    $("ovMsg").textContent = got===3
+      ? "Perfect! Solved in "+used+" blocks — super efficient!"
+      : "Solved in "+used+" blocks. Par is "+M.par+" — try fewer blocks (use a loop!) for 3 stars.";
+    $("ovBig").textContent="";
+    $("ovNext").style.display = cur<LEVELS.length ? "" : "none";
+    $("overlay").classList.add("show");
+  }
+
+  // ===== UI helpers =====
+  function feedback(msg,cls){ const f=$("feedback"); f.textContent=msg; f.className="feedback"+(cls?(" "+cls):""); }
+  function setControls(run){
+    $("runBtn").disabled=run; $("resetBtn").disabled=false;
+    $("clearBtn").disabled=run;
+    document.querySelectorAll(".cmdbtn").forEach(b=>b.disabled=run);
+  }
+  function stopAnim(){ if(animTimer){clearTimeout(animTimer);animTimer=null} }
+
+  function renderPalette(){
+    const p=$("palette"); p.innerHTML="";
+    const cmds=[["F","▶ Forward"],["L","↺ Left"],["R","↻ Right"]];
+    cmds.forEach(([t,label])=>{
+      const b=document.createElement("button");
+      b.className="cmdbtn"; b.textContent=label;
+      b.onclick=()=>append(t);
+      p.appendChild(b);
+    });
+    if(M.loops){
+      const b=document.createElement("button");
+      b.className="cmdbtn loop"; b.textContent="🔁 Repeat";
+      b.onclick=()=>append("LOOP");
+      p.appendChild(b);
+    }
+  }
+
+  function renderScoreboard(){
+    $("lvlnum").textContent=cur;
+    $("lvltot").textContent=LEVELS.length;
+    $("totstars").textContent=totalStars;
+    $("lvltitle").textContent="Level "+cur+": "+M.name;
+  }
+
+  function renderLevels(){
+    const wrap=$("levels"); wrap.innerHTML="";
+    for(let i=1;i<=LEVELS.length;i++){
+      const b=document.createElement("button");
+      b.textContent=i;
+      if(i===cur) b.classList.add("on");
+      if(i>unlocked) b.classList.add("locked");
+      if(earned[i]) b.classList.add("done");
+      if(i<=unlocked){ b.onclick=()=>{ loadLevel(i); renderAll(); }; }
+      wrap.appendChild(b);
+    }
+  }
+
+  function renderAll(){
+    renderPalette();
+    renderProgram();
+    renderScoreboard();
+    renderLevels();
+    draw();
+  }
+
+  // ===== Wire up =====
+  $("runBtn").onclick=run;
+  $("resetBtn").onclick=()=>{ if(!running) resetBot(); };
+  $("clearBtn").onclick=clearProgram;
+  $("ovReplay").onclick=()=>{ $("overlay").classList.remove("show"); clearProgram(); };
+  $("ovNext").onclick=()=>{ $("overlay").classList.remove("show"); if(cur<LEVELS.length){ loadLevel(cur+1); renderAll(); } };
+
+  // keyboard: f=forward, l=left, r=right, Enter=run, Backspace=clear last
+  document.addEventListener("keydown",e=>{
+    if(running) return;
+    const k=e.key.toLowerCase();
+    if(k==="f"){ append("F"); }
+    else if(k==="l"){ append("L"); }
+    else if(k==="r"){ append("R"); }
+    else if(e.key==="Enter"){ run(); }
+    else if(e.key==="Backspace"){ e.preventDefault(); if(program.length){ // delete last top-level node
+        program.pop(); if(loopTarget && !program.includes(loopTarget)) loopTarget=null; renderProgram(); } }
+  });
+
+  window.addEventListener("resize",()=>{ if(M) draw(); });
+
+  // expose simulate for self-test in console
+  window.__LB={LEVELS, parseLevel, simulate, flatten};
+
+  // ===== Boot =====
+  loadLevel(cur);
+  renderAll();
+</script>
+</body>
+</html>

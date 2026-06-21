@@ -29,6 +29,24 @@
       "label": "Creativity",
       "icon": "🎨",
       "blurb": "Draw, design, make music and create your own art."
+    },
+    {
+      "id": "logic",
+      "label": "Logic & Strategy",
+      "icon": "🧩",
+      "blurb": "Deduction, patterns and brain-bending puzzles for bigger kids."
+    },
+    {
+      "id": "stem",
+      "label": "STEM & Code",
+      "icon": "🤖",
+      "blurb": "Coding, ciphers and circuits — think like an engineer."
+    },
+    {
+      "id": "explore",
+      "label": "Explore the World",
+      "icon": "🗺️",
+      "blurb": "Geography and the world around us."
     }
   ],
   "games": [
@@ -184,6 +202,60 @@
       "icon": "👗",
       "color": "#ff5d9e",
       "description": "Mix and match characters, hats and accessories to create your own friend. Save it!"
+    },
+    {
+      "title": "Nonogram",
+      "slug": "nonogram",
+      "url": "https://littleplayers.github.io/nonogram/",
+      "category": "logic",
+      "icon": "🧩",
+      "color": "#0ea5e9",
+      "description": "Use the number clues to fill the grid and reveal a hidden picture!"
+    },
+    {
+      "title": "Code Breaker",
+      "slug": "code-breaker",
+      "url": "https://littleplayers.github.io/code-breaker/",
+      "category": "logic",
+      "icon": "🎯",
+      "color": "#8b5cf6",
+      "description": "Crack the secret colour code using clever clues. How few guesses can you do it in?"
+    },
+    {
+      "title": "Logic Bot",
+      "slug": "logic-bot",
+      "url": "https://littleplayers.github.io/logic-bot/",
+      "category": "stem",
+      "icon": "🤖",
+      "color": "#14b8a6",
+      "description": "Program the robot with moves and loops to collect the stars and reach the goal!"
+    },
+    {
+      "title": "Cipher School",
+      "slug": "cipher-school",
+      "url": "https://littleplayers.github.io/cipher-school/",
+      "category": "stem",
+      "icon": "🔐",
+      "color": "#f43f5e",
+      "description": "Crack secret messages! Spin the dial, find the shift and become a codebreaker."
+    },
+    {
+      "title": "Circuit Logic",
+      "slug": "circuit-logic",
+      "url": "https://littleplayers.github.io/circuit-logic/",
+      "category": "stem",
+      "icon": "💡",
+      "color": "#f59e0b",
+      "description": "Flip the switches and pick the right gates to light the bulb. Learn how logic works!"
+    },
+    {
+      "title": "World Quiz",
+      "slug": "world-quiz",
+      "url": "https://littleplayers.github.io/world-quiz/",
+      "category": "explore",
+      "icon": "🗺️",
+      "color": "#0891b2",
+      "description": "Test your geography — flags, capitals and continents from around the world!"
     }
   ]
 }

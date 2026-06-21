@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Cipher School — crack secret messages and learn how codes work! A logic and cryptography game for kids with Caesar and substitution ciphers." />
+  <link rel="canonical" href="https://littleplayers.github.io/cipher-school/" />
+  <meta name="keywords" content="kids games, cryptography game, Cipher School, Caesar cipher, secret codes, logic game for kids, free online game, Little Players" />
+  <meta name="author" content="gauravs19" />
+  <meta name="theme-color" content="#f43f5e" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Little Players" />
+  <meta property="og:title" content="Cipher School — Little Players" />
+  <meta property="og:description" content="Cipher School — crack secret messages and learn how codes work! A logic and cryptography game for kids with Caesar and substitution ciphers." />
+  <meta property="og:url" content="https://littleplayers.github.io/cipher-school/" />
+  <meta property="og:image" content="https://littleplayers.github.io/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Cipher School — Little Players" />
+  <meta name="twitter:description" content="Cipher School — crack secret messages and learn how codes work! A logic and cryptography game for kids with Caesar and substitution ciphers." />
+  <meta name="twitter:image" content="https://littleplayers.github.io/og-image.png" />
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "VideoGame", "name": "Cipher School", "url": "https://littleplayers.github.io/cipher-school/", "image": "https://littleplayers.github.io/og-image.png", "description": "Cipher School — crack secret messages and learn how codes work! A logic and cryptography game for kids with Caesar and substitution ciphers.", "applicationCategory": "Game", "operatingSystem": "Web Browser", "genre": "education", "author": {"@type": "Organization", "name": "Little Players"}, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "INR"}, "audience": {"@type": "PeopleAudience", "suggestedMinAge": 9}, "isPartOf": {"@type": "WebSite", "name": "Little Players", "url": "https://littleplayers.github.io/"}}</script>
+<title>🔐 Cipher School — Little Players</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔐</text></svg>" />
+<style>
+  :root{
+    --bg:#fff1f4; --card:#fff; --ink:#3a1f2a; --muted:#9b7d88;
+    --accent:#f43f5e; --accent2:#fb7185; --good:#22b07d; --bad:#ff5d6c;
+    --shadow:0 10px 28px rgba(244,63,94,.16); --radius:18px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; min-height:100vh; color:var(--ink);
+    font-family:"Baloo 2","Comic Sans MS","Trebuchet MS",system-ui,sans-serif;
+    background:
+      radial-gradient(circle at 12% 10%,#ffd6df 0,transparent 42%),
+      radial-gradient(circle at 88% 8%,#ffe1cf 0,transparent 44%),
+      var(--bg);
+    display:flex; flex-direction:column; align-items:center; padding:20px;
+  }
+  header{text-align:center; margin:14px 0 6px}
+  h1{margin:0; font-size:clamp(1.8rem,6vw,2.8rem)}
+  .sub{margin:6px 0 0; color:var(--muted); font-weight:700}
+
+  .diff{display:flex; gap:10px; justify-content:center; margin:10px 0 0; flex-wrap:wrap}
+  .diff button{border:none;cursor:pointer;font:inherit;font-weight:800;padding:9px 16px;
+    border-radius:999px;background:#fff;color:var(--ink);box-shadow:var(--shadow)}
+  .diff button.on{background:var(--accent);color:#fff}
+
+  .scoreboard{display:flex; gap:10px; margin:16px 0 6px; flex-wrap:wrap; justify-content:center}
+  .pill{background:var(--card); border-radius:999px; padding:8px 15px; font-weight:800;
+    box-shadow:var(--shadow); font-size:.92rem; display:flex; align-items:center; gap:6px}
+
+  .game{background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow);
+    padding:24px 22px; width:min(560px,94vw); margin-top:10px; text-align:center}
+
+  .explainer{background:#fff5f7; border:2px dashed #ffc2cf; border-radius:14px;
+    padding:10px 12px; font-size:.92rem; font-weight:700; color:#7a4a57; margin:0 0 16px}
+  .explainer b{color:var(--accent)}
+
+  .label{font-size:.8rem; font-weight:800; color:var(--muted); text-transform:uppercase;
+    letter-spacing:1px; margin:14px 0 6px; text-align:left}
+
+  .cipher,.preview{font-family:"Courier New",ui-monospace,monospace; font-weight:700;
+    border-radius:12px; padding:14px 12px; word-break:break-word; line-height:1.5;
+    font-size:clamp(1rem,3.4vw,1.3rem); letter-spacing:1px}
+  .cipher{background:#fdeef0; color:#b3334a}
+  .preview{background:#eef9f3; color:#1f7a55; min-height:1.6em}
+  .preview .blank{color:#c9a7b1}
+
+  /* shift wheel */
+  .wheelrow{display:flex; align-items:center; justify-content:center; gap:18px; margin:8px 0}
+  .wheel{width:88px; height:88px; border-radius:50%; flex:0 0 auto;
+    background:conic-gradient(var(--accent2),#ffd1da,var(--accent2));
+    display:flex; align-items:center; justify-content:center; position:relative;
+    box-shadow:inset 0 0 0 6px #fff, var(--shadow)}
+  .wheel .w-in{font-weight:800; font-size:1.05rem; color:var(--accent); text-align:center; line-height:1.2}
+  .wheel .w-in span{font-size:1.5rem; display:block}
+
+  .slider{width:100%; -webkit-appearance:none; appearance:none; height:14px; border-radius:999px;
+    background:#ffd9e0; outline:none; margin:6px 0}
+  .slider::-webkit-slider-thumb{-webkit-appearance:none; appearance:none; width:30px; height:30px;
+    border-radius:50%; background:var(--accent); cursor:pointer; box-shadow:0 3px 8px rgba(244,63,94,.5)}
+  .slider::-moz-range-thumb{width:30px; height:30px; border:none; border-radius:50%;
+    background:var(--accent); cursor:pointer; box-shadow:0 3px 8px rgba(244,63,94,.5)}
+  .shiftnum{font-weight:800; font-size:1.1rem; color:var(--accent)}
+
+  /* shift choice buttons (tier 2) */
+  .choices{display:grid; grid-template-columns:repeat(auto-fit,minmax(64px,1fr)); gap:10px}
+  .choices button{border:none; cursor:pointer; font:inherit; font-weight:800; font-size:1.1rem;
+    padding:14px 0; border-radius:14px; color:#fff;
+    background:linear-gradient(180deg,var(--accent2),var(--accent));
+    box-shadow:0 5px 0 #c9304a; transition:transform .08s,box-shadow .08s}
+  .choices button:active{transform:translateY(4px); box-shadow:0 1px 0 #c9304a}
+  .choices button.on{background:linear-gradient(180deg,#2bc98c,#1fa874); box-shadow:0 5px 0 #178a5f}
+
+  /* substitution grid */
+  .subgrid{display:grid; grid-template-columns:repeat(auto-fit,minmax(46px,1fr)); gap:8px; margin:4px 0}
+  .cell{background:#fff5f7; border-radius:10px; padding:6px 2px; text-align:center}
+  .cell .from{font-family:"Courier New",monospace; font-weight:800; color:#b3334a; font-size:1rem}
+  .cell .arrow{color:var(--muted); font-size:.8rem}
+  .cell input{width:100%; border:2px solid #ffc2cf; border-radius:8px; text-align:center;
+    font:inherit; font-weight:800; font-size:1.05rem; padding:4px 0; color:var(--accent);
+    text-transform:uppercase; background:#fff}
+  .cell input:focus{outline:none; border-color:var(--accent)}
+  .cell.given input{background:#eef9f3; color:#1f7a55; border-color:#bfe7d4}
+
+  /* text answer input (tier 2 typing) */
+  .answerbox{width:100%; border:2px solid #ffc2cf; border-radius:12px; padding:12px;
+    font:inherit; font-weight:700; font-size:1.05rem; color:var(--ink); text-align:center}
+  .answerbox:focus{outline:none; border-color:var(--accent)}
+
+  .actionrow{display:flex; gap:10px; justify-content:center; margin-top:18px; flex-wrap:wrap}
+  .btn{border:none; cursor:pointer; font:inherit; font-weight:800; font-size:1.1rem;
+    padding:14px 26px; border-radius:999px; color:#fff;
+    background:linear-gradient(180deg,var(--accent2),var(--accent)); box-shadow:0 5px 0 #c9304a;
+    transition:transform .08s,box-shadow .08s}
+  .btn:active{transform:translateY(4px); box-shadow:0 1px 0 #c9304a}
+  .btn.ghost{background:#fff; color:var(--accent); box-shadow:0 0 0 2px #ffc2cf inset}
+  .btn:disabled{opacity:.55; cursor:default}
+
+  .feedback{min-height:1.6em; font-weight:800; font-size:1.2rem; margin:14px 0 0}
+  .feedback.good{color:var(--good)} .feedback.bad{color:var(--bad)}
+  .hearts{font-size:1.1rem; letter-spacing:2px}
+
+  .help{margin:14px 0 0; color:var(--muted); font-weight:700; font-size:.9rem}
+
+  .overlay{position:fixed; inset:0; background:rgba(70,20,40,.5); display:none;
+    align-items:center; justify-content:center; padding:20px; z-index:9}
+  .overlay.show{display:flex}
+  .panel{background:var(--card); border-radius:22px; padding:30px 26px; text-align:center;
+    box-shadow:var(--shadow); width:min(420px,92vw)}
+  .panel h2{margin:0 0 6px; font-size:1.8rem}
+  .panel p{margin:6px 0; color:var(--muted); font-weight:700}
+  .panel .big{font-size:2.4rem; font-weight:800; color:var(--accent); margin:8px 0}
+  .panel button{margin-top:14px; border:none; cursor:pointer; font:inherit; font-weight:800;
+    padding:13px 26px; border-radius:999px; background:var(--accent); color:#fff; font-size:1.1rem}
+
+  .back{margin-top:18px}
+  .back a{color:var(--accent); font-weight:800; text-decoration:none}
+  @keyframes pop{0%{transform:scale(.9)}60%{transform:scale(1.06)}100%{transform:scale(1)}}
+  .pop{animation:pop .25s ease}
+  /* --- mobile/tablet responsiveness guard --- */
+  html,body{overflow-x:hidden}
+  body>*{max-width:100%}
+  @media (max-width:600px){ .sub,.help,.explainer{font-size:.84rem} .wheel{width:74px;height:74px} }
+</style>
+</head>
+<body>
+  <header>
+    <h1>🔐 Cipher School</h1>
+    <p class="sub">Crack the secret message — learn how codes work!</p>
+  </header>
+
+  <div class="diff" id="diff">
+    <button data-d="t1" class="on">🎚️ Caesar (dial)</button>
+    <button data-d="t2">🧠 Caesar (no peek)</button>
+    <button data-d="t3">🔤 Substitution</button>
+  </div>
+
+  <div class="scoreboard">
+    <div class="pill">⭐ <span id="score">0</span></div>
+    <div class="pill">🏆 Best: <span id="best">0</span></div>
+    <div class="pill">📈 Msg <span id="level">1</span></div>
+    <div class="pill hearts" id="hearts">❤️❤️❤️</div>
+  </div>
+
+  <main class="game">
+    <p class="explainer" id="explainer"></p>
+
+    <div class="label">🔒 Secret message</div>
+    <div class="cipher" id="cipher">···</div>
+
+    <!-- TOOL AREA: swapped per tier -->
+    <div id="tool"></div>
+
+    <div class="label" id="previewLabel">👀 Your decoding</div>
+    <div class="preview" id="preview">···</div>
+
+    <div class="actionrow">
+      <button class="btn ghost" id="hintBtn">💡 Hint</button>
+      <button class="btn" id="submitBtn">✅ Submit</button>
+    </div>
+
+    <p class="feedback" id="feedback"></p>
+    <p class="help" id="help"></p>
+  </main>
+
+  <p class="back"><a href="https://littleplayers.github.io/">← Back to Little Players</a></p>
+
+  <div class="overlay" id="overlay">
+    <div class="panel">
+      <h2 id="ovTitle">Game Over</h2>
+      <p id="ovMsg"></p>
+      <div class="big" id="ovScore">0</div>
+      <p id="ovBest"></p>
+      <button id="ovBtn">▶ Play Again</button>
+    </div>
+  </div>
+
+<script>
+  "use strict";
+  const SK="cs_best";
+  const $=id=>document.getElementById(id);
+  const fb=$("feedback");
+  const AZ="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+  // ---------- cipher core ----------
+  // Caesar: shift each A-Z letter forward by n (wrap), preserve case + non-letters.
+  function caesar(text,n){
+    n=((n%26)+26)%26;
+    let out="";
+    for(const ch of text){
+      const c=ch.charCodeAt(0);
+      if(c>=65&&c<=90)      out+=String.fromCharCode((c-65+n)%26+65);
+      else if(c>=97&&c<=122)out+=String.fromCharCode((c-97+n)%26+97);
+      else out+=ch;
+    }
+    return out;
+  }
+  // Substitution encode using a map (plain->cipher), both uppercase keys.
+  function subEncode(text,map){
+    let out="";
+    for(const ch of text){
+      const up=ch.toUpperCase();
+      if(up>="A"&&up<="Z"){
+        const enc=map[up];
+        out+= (ch===up) ? enc : enc.toLowerCase();
+      } else out+=ch;
+    }
+    return out;
+  }
+  // Random derangement-ish substitution map (a bijection where letter != itself).
+  function randomSubMap(){
+    let letters;
+    do{
+      letters=shuffle(AZ.split(""));
+    }while(letters.some((l,i)=>l===AZ[i]));   // ensure no letter maps to itself
+    const map={};
+    for(let i=0;i<26;i++) map[AZ[i]]=letters[i];
+    return map; // plain -> cipher
+  }
+  // normalise for comparison: uppercase, strip everything but A-Z
+  function norm(s){ return s.toUpperCase().replace(/[^A-Z]/g,""); }
+
+  // ---------- helpers ----------
+  function load(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}}
+  function save(k,v){localStorage.setItem(k,JSON.stringify(v))}
+  function ri(a,b){return a+Math.floor(Math.random()*(b-a+1))}
+  function shuffle(a){const x=[...a];for(let i=x.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[x[i],x[j]]=[x[j],x[i]]}return x}
+  function pick(a){return a[Math.floor(Math.random()*a.length)]}
+
+  // ---------- phrase bank (kid-friendly, positive, simple) ----------
+  const PHRASES=[
+    "BE KIND ALWAYS",
+    "DREAM BIG TODAY",
+    "YOU CAN DO IT",
+    "READING IS FUN",
+    "STARS SHINE BRIGHT",
+    "PRACTICE MAKES PERFECT",
+    "NEVER GIVE UP",
+    "A SMILE IS FREE",
+    "HONEY BEES MAKE HONEY",
+    "THE SUN IS A STAR",
+    "PLAY FAIR AND SHARE",
+    "CURIOUS MINDS GROW",
+    "BRAVE HEARTS WIN",
+    "SHARING IS CARING",
+    "LEARN SOMETHING NEW",
+    "OCTOPUS HAVE EIGHT ARMS",
+    "WATER IS GOOD FOR YOU",
+    "EVERY DAY IS A GIFT",
+    "MISTAKES HELP US LEARN",
+    "KEEP TRYING YOUR BEST"
+  ];
+
+  // ---------- state ----------
+  let tier="t1", score=0, msgNum=1, lives=3, cracked=0;
+  let best=load(SK,0);
+  let plain="", cipherText="", curShift=0, curMap=null, locked=false;
+  let hintsUsed=0, startTime=0;
+
+  // ---------- difficulty / explainers ----------
+  const TIERS={
+    t1:{label:"Caesar (dial)"},
+    t2:{label:"Caesar (no peek)"},
+    t3:{label:"Substitution"}
+  };
+
+  function newRound(){
+    locked=false; hintsUsed=0; startTime=Date.now();
+    fb.textContent=""; fb.className="feedback";
+    $("submitBtn").disabled=false;
+    plain=pick(PHRASES);
+
+    if(tier==="t1"||tier==="t2"){
+      curShift=ri(1,25);
+      cipherText=caesar(plain,curShift);
+      curMap=null;
+    }else{
+      curMap=randomSubMap();
+      cipherText=subEncode(plain,curMap);
+    }
+    $("cipher").textContent=cipherText;
+    $("cipher").classList.remove("pop"); void $("cipher").offsetWidth; $("cipher").classList.add("pop");
+    buildTool();
+    paint();
+    updatePreview();
+  }
+
+  // ---------- tool builders ----------
+  let guessShift=0;          // tier1/tier2 chosen shift
+  let chosenChoice=null;     // tier2 selected button
+  let userMap={};            // tier3 cipher-letter -> guessed plain letter
+
+  function buildTool(){
+    const tool=$("tool");
+    tool.innerHTML="";
+    $("hintBtn").style.display="";
+    if(tier==="t1"){
+      $("explainer").innerHTML='A <b>Caesar cipher</b> shifts every letter forward by the same amount. Turn the dial to slide letters back until real words appear!';
+      $("previewLabel").style.display="";
+      $("help").textContent="Drag the slider (or ← → keys). When it reads clearly, press Submit.";
+      guessShift=0;
+      tool.innerHTML=
+        '<div class="wheelrow">'+
+          '<div class="wheel"><div class="w-in" id="wIn">A<span>↓</span>A</div></div>'+
+          '<div style="flex:1;text-align:left">'+
+            '<div class="label" style="margin-top:0">🎚️ Shift dial: <span class="shiftnum" id="shiftNum">0</span></div>'+
+            '<input type="range" class="slider" id="slider" min="0" max="25" value="0" />'+
+          '</div>'+
+        '</div>';
+      const sl=$("slider");
+      sl.addEventListener("input",()=>{ guessShift=+sl.value; refreshWheel(); updatePreview(); });
+      refreshWheel();
+    }
+    else if(tier==="t2"){
+      $("explainer").innerHTML='Same <b>Caesar cipher</b> — but no live preview! Read the code and pick which shift unlocks it.';
+      $("previewLabel").style.display="none";
+      $("preview").style.display="none";
+      $("help").textContent="Decode it in your head, then choose the shift. (Hint reveals the first letter.)";
+      chosenChoice=null;
+      // build choice set: correct shift + 5 distractors
+      const set=new Set([curShift]);
+      while(set.size<6){ set.add(ri(1,25)); }
+      const choices=shuffle([...set]);
+      const wrap=document.createElement("div");
+      wrap.className="choices";
+      choices.forEach(sh=>{
+        const b=document.createElement("button");
+        b.textContent="↩ "+sh;
+        b.onclick=()=>{ if(locked)return;
+          chosenChoice=sh;
+          [...wrap.children].forEach(x=>x.classList.toggle("on",x===b));
+        };
+        wrap.appendChild(b);
+      });
+      const lab=document.createElement("div");
+      lab.className="label"; lab.style.marginTop="0"; lab.textContent="Pick the shift used:";
+      tool.appendChild(lab); tool.appendChild(wrap);
+    }
+    else{
+      $("explainer").innerHTML='A <b>substitution cipher</b> swaps each letter for another. Some letters are filled in to start you off. Tip: <b>E</b> is the most common letter in English!';
+      $("previewLabel").style.display="";
+      $("preview").style.display="";
+      $("help").textContent="Fill the boxes so the preview reads as real words. Hint reveals one more letter.";
+      userMap={};
+      // only build cells for cipher letters that actually appear in the message
+      const used=[...new Set(norm(cipherText).split(""))].sort();
+      // reverse map: cipher letter -> true plain letter
+      const cipherToPlain={};
+      for(const p in curMap){ cipherToPlain[curMap[p]]=p; }
+      // give away ~3 starters
+      const givens=shuffle(used).slice(0,Math.min(3,Math.max(1,used.length-3)));
+      const grid=document.createElement("div");
+      grid.className="subgrid";
+      used.forEach(cl=>{
+        const cell=document.createElement("div");
+        cell.className="cell";
+        const given=givens.includes(cl);
+        if(given){
+          cell.classList.add("given");
+          userMap[cl]=cipherToPlain[cl];
+        }
+        cell.innerHTML='<div class="from">'+cl+'</div><div class="arrow">▼</div>';
+        const inp=document.createElement("input");
+        inp.maxLength=1; inp.value=given?cipherToPlain[cl]:"";
+        inp.disabled=given;
+        inp.dataset.cl=cl;
+        inp.addEventListener("input",()=>{
+          let v=inp.value.toUpperCase().replace(/[^A-Z]/g,"");
+          inp.value=v;
+          if(v) userMap[cl]=v; else delete userMap[cl];
+          updatePreview();
+        });
+        cell.appendChild(inp);
+        grid.appendChild(cell);
+      });
+      tool.appendChild(grid);
+    }
+  }
+
+  function refreshWheel(){
+    $("shiftNum").textContent=guessShift;
+    // wheel shows how A would decode at this shift: cipher A -> plain (A shifted back)
+    const dec=caesar("A",-guessShift);
+    $("wIn").innerHTML="A<span>↓</span>"+dec;
+  }
+
+  // ---------- live preview ----------
+  function updatePreview(){
+    const pv=$("preview");
+    if(tier==="t1"){
+      pv.textContent=caesar(cipherText,-guessShift);
+    }else if(tier==="t3"){
+      let out="";
+      for(const ch of cipherText){
+        const up=ch.toUpperCase();
+        if(up>="A"&&up<="Z"){
+          const g=userMap[up];
+          if(g){ out+=(ch===up)?g:g.toLowerCase(); }
+          else out+="·";
+        } else out+=ch;
+      }
+      pv.innerHTML = out.replace(/·/g,'<span class="blank">·</span>');
+    }
+  }
+
+  // ---------- hints ----------
+  function useHint(){
+    if(locked) return;
+    if(tier==="t1"){
+      // nudge slider toward the answer by one step
+      hintsUsed++;
+      const sl=$("slider");
+      // correct decode shift equals curShift
+      if(guessShift!==curShift){
+        guessShift += (guessShift<curShift? 1 : -1);
+        sl.value=guessShift; refreshWheel(); updatePreview();
+      }
+      fb.textContent="💡 Nudged the dial closer!"; fb.className="feedback";
+    }
+    else if(tier==="t2"){
+      hintsUsed++;
+      fb.textContent="💡 First letter is “"+plain[0]+"”."; fb.className="feedback";
+    }
+    else{
+      // reveal one unfilled letter
+      const cipherToPlain={};
+      for(const p in curMap){ cipherToPlain[curMap[p]]=p; }
+      const inputs=[...$("tool").querySelectorAll("input")].filter(i=>!i.disabled && !userMap[i.dataset.cl]);
+      if(inputs.length){
+        hintsUsed++;
+        const inp=pick(inputs);
+        const cl=inp.dataset.cl;
+        inp.value=cipherToPlain[cl];
+        userMap[cl]=cipherToPlain[cl];
+        inp.disabled=true; inp.parentElement.classList.add("given");
+        updatePreview();
+        fb.textContent="💡 Revealed a letter!"; fb.className="feedback";
+      } else {
+        fb.textContent="No letters left to reveal!"; fb.className="feedback";
+      }
+    }
+  }
+
+  // ---------- submit / check ----------
+  function submit(){
+    if(locked) return;
+    let correct=false, decoded="";
+    if(tier==="t1"){
+      decoded=caesar(cipherText,-guessShift);
+      correct=(((guessShift%26)+26)%26)===curShift || norm(decoded)===norm(plain);
+    }
+    else if(tier==="t2"){
+      if(chosenChoice==null){ fb.textContent="Pick a shift first!"; fb.className="feedback bad"; return; }
+      correct=(chosenChoice===curShift);
+      decoded=caesar(cipherText,-chosenChoice);
+    }
+    else{
+      // build decoded using userMap
+      let out="";
+      for(const ch of cipherText){
+        const up=ch.toUpperCase();
+        if(up>="A"&&up<="Z"){ out+= userMap[up]||"·"; } else out+=ch;
+      }
+      decoded=out;
+      correct = norm(decoded)===norm(plain);
+    }
+
+    locked=true;
+    if(correct){
+      const secs=(Date.now()-startTime)/1000;
+      const timeBonus=Math.max(0,Math.round(40-secs));      // generous time bonus
+      const hintBonus=Math.max(0,20-hintsUsed*8);
+      const base= tier==="t1"?30 : tier==="t2"?45 : 60;
+      const pts=base+timeBonus+hintBonus;
+      score+=pts; cracked++;
+      if(best<score){best=score; save(SK,best);}
+      fb.innerHTML='🎉 Cracked it! <b>"'+plain+'"</b> +'+pts+' (⏱+'+timeBonus+', 💡+'+hintBonus+')';
+      fb.className="feedback good";
+      $("submitBtn").disabled=true;
+      paint();
+      setTimeout(()=>{ msgNum++; newRound(); },1600);
+    } else {
+      lives--; paint();
+      const reveal = tier==="t2" ? ' The shift was '+curShift+'.' : '';
+      fb.textContent="❌ Not quite — keep trying!"+reveal;
+      fb.className="feedback bad";
+      if(lives<=0){ setTimeout(gameOver,1400); }
+      else { setTimeout(()=>{ locked=false; },650); }
+    }
+  }
+
+  // ---------- game flow ----------
+  function startGame(){
+    score=0; msgNum=1; lives=3; cracked=0;
+    $("overlay").classList.remove("show");
+    $("preview").style.display="";
+    newRound();
+  }
+
+  function gameOver(){
+    $("ovTitle").textContent=(score>=best && score>0)?"🏆 New Best!":"Game Over";
+    $("ovMsg").textContent="You cracked "+cracked+" message"+(cracked===1?"":"s")+" on "+TIERS[tier].label+".";
+    $("ovScore").textContent=score+" pts";
+    $("ovBest").textContent="Best score: "+best;
+    $("overlay").classList.add("show");
+  }
+
+  function paint(){
+    $("score").textContent=score; $("best").textContent=best;
+    $("level").textContent=msgNum;
+    $("hearts").textContent="❤️".repeat(Math.max(0,lives))+"🤍".repeat(Math.max(0,3-lives));
+  }
+
+  // ---------- wiring ----------
+  document.querySelectorAll("#diff button").forEach(b=>{
+    b.onclick=()=>{ tier=b.dataset.d;
+      document.querySelectorAll("#diff button").forEach(x=>x.classList.toggle("on",x===b));
+      startGame();
+    };
+  });
+
+  $("submitBtn").onclick=submit;
+  $("hintBtn").onclick=useHint;
+  $("ovBtn").onclick=startGame;
+
+  // keyboard: arrows move the dial (tier1), Enter submits
+  document.addEventListener("keydown",e=>{
+    if(locked) return;
+    if(tier==="t1"){
+      const sl=$("slider"); if(!sl) return;
+      if(e.key==="ArrowRight"||e.key==="ArrowUp"){ guessShift=Math.min(25,guessShift+1); sl.value=guessShift; refreshWheel(); updatePreview(); e.preventDefault(); }
+      if(e.key==="ArrowLeft"||e.key==="ArrowDown"){ guessShift=Math.max(0,guessShift-1); sl.value=guessShift; refreshWheel(); updatePreview(); e.preventDefault(); }
+    }
+    if(e.key==="Enter") submit();
+  });
+
+  startGame();
+</script>
+</body>
+</html>

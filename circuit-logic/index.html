@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Circuit Logic — light the bulb by mastering logic gates! Learn AND, OR, NOT, XOR and NAND in a fun puzzle game for kids." />
+  <link rel="canonical" href="https://littleplayers.github.io/circuit-logic/" />
+  <meta name="keywords" content="kids games, logic game, Circuit Logic, boolean logic, logic gates, AND OR NOT XOR, free online game for kids, Little Players" />
+  <meta name="author" content="gauravs19" />
+  <meta name="theme-color" content="#f59e0b" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Little Players" />
+  <meta property="og:title" content="Circuit Logic — Little Players" />
+  <meta property="og:description" content="Circuit Logic — light the bulb by mastering logic gates! Learn AND, OR, NOT, XOR and NAND in a fun puzzle game for kids." />
+  <meta property="og:url" content="https://littleplayers.github.io/circuit-logic/" />
+  <meta property="og:image" content="https://littleplayers.github.io/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Circuit Logic — Little Players" />
+  <meta name="twitter:description" content="Circuit Logic — light the bulb by mastering logic gates! Learn AND, OR, NOT, XOR and NAND in a fun puzzle game for kids." />
+  <meta name="twitter:image" content="https://littleplayers.github.io/og-image.png" />
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "VideoGame", "name": "Circuit Logic", "url": "https://littleplayers.github.io/circuit-logic/", "image": "https://littleplayers.github.io/og-image.png", "description": "Circuit Logic — light the bulb by mastering logic gates! Learn AND, OR, NOT, XOR and NAND in a fun puzzle game for kids.", "applicationCategory": "Game", "operatingSystem": "Web Browser", "genre": "education", "author": {"@type": "Organization", "name": "Little Players"}, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "INR"}, "audience": {"@type": "PeopleAudience", "suggestedMinAge": 9}, "isPartOf": {"@type": "WebSite", "name": "Little Players", "url": "https://littleplayers.github.io/"}}</script>
+<title>💡 Circuit Logic — Little Players</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💡</text></svg>" />
+<style>
+  :root{
+    --bg:#fff7ec; --card:#fff; --ink:#3a2e1d; --muted:#9b8a72;
+    --accent:#f59e0b; --accent2:#22b07d; --good:#22b07d; --bad:#ff5d6c;
+    --wire:#b9a98e; --wireOn:#f59e0b;
+    --shadow:0 10px 28px rgba(180,130,40,.18); --radius:18px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; min-height:100vh; color:var(--ink);
+    font-family:"Baloo 2","Comic Sans MS","Trebuchet MS",system-ui,sans-serif;
+    background:
+      radial-gradient(circle at 12% 10%,#ffe9c2 0,transparent 42%),
+      radial-gradient(circle at 88% 8%,#ffd9c2 0,transparent 44%),
+      var(--bg);
+    display:flex; flex-direction:column; align-items:center; padding:20px;
+  }
+  header{text-align:center; margin:14px 0 6px}
+  h1{margin:0; font-size:clamp(1.8rem,6vw,2.8rem)}
+  .sub{margin:6px 0 0; color:var(--muted); font-weight:700}
+
+  .scoreboard{display:flex; gap:10px; margin:16px 0 6px; flex-wrap:wrap; justify-content:center}
+  .pill{background:var(--card); border-radius:999px; padding:8px 15px; font-weight:800;
+    box-shadow:var(--shadow); font-size:.92rem; display:flex; align-items:center; gap:6px}
+  .pill.hearts{letter-spacing:2px}
+
+  .game{background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow);
+    padding:22px 18px; width:min(560px,94vw); margin-top:10px; text-align:center}
+
+  .task{font-size:1.15rem; font-weight:800; margin:2px 0 6px}
+  .task .gate-name{color:var(--accent)}
+  .target{font-weight:800; color:var(--muted); margin:0 0 10px; font-size:.98rem}
+  .target b{color:var(--ink)}
+
+  .stage{width:100%; display:block; margin:0 auto; touch-action:manipulation}
+
+  /* gate picker (puzzle type B) */
+  .gatepick{display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin:12px 0 2px}
+  .gatepick button{border:none;cursor:pointer;font:inherit;font-weight:800;padding:10px 16px;
+    border-radius:14px;background:#fff;color:var(--ink);box-shadow:0 4px 0 #e7d6b4;border:2px solid #f0e2c6;
+    transition:transform .08s,box-shadow .08s}
+  .gatepick button:active{transform:translateY(3px);box-shadow:0 1px 0 #e7d6b4}
+  .gatepick button.sel{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 4px 0 #c97f08}
+
+  .controls{display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin:14px 0 0}
+  .btn{border:none; cursor:pointer; font:inherit; font-weight:800; font-size:1.05rem;
+    padding:13px 24px; border-radius:14px; color:#fff;
+    background:linear-gradient(180deg,var(--accent),#d8860b); box-shadow:0 5px 0 #b7700a;
+    transition:transform .08s,box-shadow .08s}
+  .btn:active{transform:translateY(4px); box-shadow:0 1px 0 #b7700a}
+  .btn.ghost{background:#fff;color:var(--ink);box-shadow:0 4px 0 #e7d6b4;border:2px solid #f0e2c6}
+  .btn:disabled{opacity:.5;cursor:default}
+
+  .feedback{min-height:1.6em; font-weight:800; font-size:1.15rem; margin:14px 0 0}
+  .feedback.good{color:var(--good)} .feedback.bad{color:var(--bad)}
+
+  /* truth-table hint popover */
+  .hintbox{margin:12px auto 0; max-width:340px; display:none}
+  .hintbox.show{display:block}
+  .tt{margin:0 auto; border-collapse:collapse; font-weight:800; font-size:.95rem}
+  .tt caption{font-weight:800;color:var(--accent);margin-bottom:4px}
+  .tt th,.tt td{border:2px solid #f0e2c6; padding:5px 12px; text-align:center}
+  .tt th{background:#fff4e0;color:var(--muted)}
+  .tt td.on{color:var(--accent)}
+
+  .help{width:min(560px,94vw); margin:14px 0 0; color:var(--muted); font-weight:700; font-size:.9rem; text-align:center}
+  .legend{display:flex;gap:8px 14px;flex-wrap:wrap;justify-content:center;margin:8px 0 0}
+  .legend span{background:#fff;border-radius:999px;padding:5px 12px;box-shadow:var(--shadow);color:var(--ink);font-size:.85rem}
+
+  .overlay{position:fixed; inset:0; background:rgba(80,55,20,.55); display:none;
+    align-items:center; justify-content:center; padding:20px; z-index:9}
+  .overlay.show{display:flex}
+  .panel{background:var(--card); border-radius:22px; padding:30px 26px; text-align:center;
+    box-shadow:var(--shadow); width:min(420px,92vw)}
+  .panel h2{margin:0 0 6px; font-size:1.8rem}
+  .panel p{margin:6px 0; color:var(--muted); font-weight:700}
+  .panel .big{font-size:2.4rem; font-weight:800; color:var(--accent); margin:8px 0}
+  .panel button{margin-top:14px; border:none; cursor:pointer; font:inherit; font-weight:800;
+    padding:13px 26px; border-radius:999px; background:var(--accent); color:#fff; font-size:1.1rem}
+
+  .back{margin-top:18px}
+  .back a{color:var(--accent); font-weight:800; text-decoration:none}
+  @keyframes pop{0%{transform:scale(.9)}60%{transform:scale(1.06)}100%{transform:scale(1)}}
+  .pop{animation:pop .25s ease}
+
+  html,body{overflow-x:hidden}
+  body>*{max-width:100%}
+  @media (max-width:600px){ .sub,.help{font-size:.84rem} .task{font-size:1.02rem} }
+</style>
+</head>
+<body>
+  <header>
+    <h1>💡 Circuit Logic</h1>
+    <p class="sub">Make the bulb match the target with logic gates!</p>
+  </header>
+
+  <div class="scoreboard">
+    <div class="pill">⭐ <span id="score">0</span></div>
+    <div class="pill">🏆 Best: <span id="best">0</span></div>
+    <div class="pill">📈 Lvl <span id="level">1</span></div>
+    <div class="pill hearts" id="hearts">❤️❤️❤️</div>
+  </div>
+
+  <main class="game">
+    <p class="task" id="task">Set the switches</p>
+    <p class="target" id="target"></p>
+    <canvas class="stage" id="stage" width="520" height="240"></canvas>
+    <div class="gatepick" id="gatepick"></div>
+    <div class="controls">
+      <button class="btn ghost" id="hintBtn">🔎 Gate hint</button>
+      <button class="btn" id="checkBtn">✅ Check</button>
+    </div>
+    <div class="hintbox" id="hintbox"></div>
+    <p class="feedback" id="feedback"></p>
+  </main>
+
+  <div class="help">
+    <div><b>How to play:</b> Tap the input switches to flip them 1/0. In "Choose the gate" rounds, tap a gate. Then press <b>Check</b> to see if the bulb matches the target! 3 wrong = game over.</div>
+    <div class="legend">
+      <span>AND = both 1</span>
+      <span>OR = any 1</span>
+      <span>NOT = flips it</span>
+      <span>XOR = different</span>
+      <span>NAND = not-AND</span>
+    </div>
+  </div>
+
+  <p class="back"><a href="https://littleplayers.github.io/">← Back to Little Players</a></p>
+
+  <div class="overlay" id="overlay">
+    <div class="panel">
+      <h2 id="ovTitle">Game Over</h2>
+      <p id="ovMsg"></p>
+      <div class="big" id="ovScore">0</div>
+      <p id="ovBest"></p>
+      <button id="ovBtn">▶ Play Again</button>
+    </div>
+  </div>
+
+<script>
+  "use strict";
+  const SK="cl_best";
+  const $=id=>document.getElementById(id);
+
+  /* ---------- Logic gate engine ---------- */
+  // All gates take 0/1 ints and return 0/1.
+  const GATES={
+    AND:(a,b)=> (a && b)?1:0,
+    OR :(a,b)=> (a || b)?1:0,
+    NOT:(a)  => a?0:1,
+    XOR:(a,b)=> (a!==b)?1:0,
+    NAND:(a,b)=> (a && b)?0:1,
+  };
+  const ARITY={AND:2,OR:2,NOT:1,XOR:2,NAND:2};
+
+  // Evaluate a circuit spec given current switch values (array of 0/1).
+  // spec.gates: list of {type, in:[refs]} where a ref is {sw:i} or {g:i}.
+  // Output = last gate's value.
+  function evalCircuit(spec, sw){
+    const gv=[];
+    for(let i=0;i<spec.gates.length;i++){
+      const g=spec.gates[i];
+      const vals=g.in.map(ref=> ref.sw!==undefined ? sw[ref.sw] : gv[ref.g]);
+      gv[i] = ARITY[g.type]===1 ? GATES[g.type](vals[0]) : GATES[g.type](vals[0],vals[1]);
+    }
+    return {out: gv[gv.length-1], gv};
+  }
+
+  /* ---------- Puzzle generation ---------- */
+  function ri(a,b){return a+Math.floor(Math.random()*(b-a+1));}
+  function shuffle(a){const x=[...a];for(let i=x.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[x[i],x[j]]=[x[j],x[i]];}return x;}
+  function load(k,d){try{return JSON.parse(localStorage.getItem(k))??d;}catch{return d;}}
+  function save(k,v){localStorage.setItem(k,JSON.stringify(v));}
+
+  // Single-gate circuit factory.
+  function single(type){
+    return {gates:[{type, in: ARITY[type]===1 ? [{sw:0}] : [{sw:0},{sw:1}]}], nSw:ARITY[type]};
+  }
+  // Two-gate network: (s0 G1 s1) G2 (s2)   [G2 combines gate0 with switch2]
+  function twoGate(t1,t2){
+    return {gates:[
+      {type:t1, in:[{sw:0},{sw:1}]},
+      {type:t2, in: ARITY[t2]===1 ? [{g:0}] : [{g:0},{sw:2}]}
+    ], nSw: ARITY[t2]===1 ? 2 : 3};
+  }
+
+  // Pick available gate types by level.
+  function gatePool(level){
+    if(level<=2) return ["NOT","AND","OR"];
+    if(level<=4) return ["NOT","AND","OR","XOR"];
+    return ["NOT","AND","OR","XOR","NAND"];
+  }
+
+  // Build a solvable puzzle for the current level. Returns puzzle object.
+  function makePuzzle(level){
+    const pool=gatePool(level);
+    const useTwoGate = level>=3 && Math.random()<0.5;
+    let spec;
+    if(useTwoGate){
+      const two=["AND","OR","XOR","NAND"];
+      const t1=two[ri(0,two.length-1)];
+      const t2= pool[ri(0,pool.length-1)];
+      spec=twoGate(t1,t2);
+    } else {
+      const t=pool[ri(0,pool.length-1)];
+      spec=single(t);
+    }
+
+    // Two puzzle modes.
+    const mode = Math.random()<0.5 ? "switches" : "gate";
+
+    if(mode==="switches"){
+      // Fixed gate network; player sets switches to reach a target output.
+      // Choose a target that is achievable (always true: every gate has both outputs reachable).
+      const target = Math.random()<0.5?1:0;
+      // Find a solution exists check (guaranteed below by enumeration in code, but verify).
+      const sol = solveSwitches(spec, target);
+      if(!sol){ // fallback: flip target (every gate yields both 0 and 1 over its domain, so this is safe)
+        return makePuzzle(level);
+      }
+      return {mode, spec, target, sw: spec.nSw===1?[0]:spec.nSw===2?[0,0]:[0,0,0]};
+    } else {
+      // "Choose the gate": switches fixed & shown, player picks the gate (only the LAST gate is the unknown).
+      // We fix random switch values, fix earlier gates, and ask which final gate makes output match target.
+      const sw = Array.from({length:spec.nSw}, ()=> ri(0,1));
+      // Build option set for the final gate: its arity must match.
+      const lastIdx=spec.gates.length-1;
+      const lastArity=ARITY[spec.gates[lastIdx].type];
+      // candidate gates with same arity from pool
+      let cands=pool.filter(t=>ARITY[t]===lastArity);
+      // ensure variety: outputs across candidates differ where possible
+      const correct=spec.gates[lastIdx].type;
+      // choose target = output produced by the correct gate
+      const target = evalCircuit(spec, sw).out;
+      // assemble up to 4 options including the correct one, preferring ones that give a DIFFERENT output (so choice matters)
+      let options=[correct];
+      const others=shuffle(cands.filter(t=>t!==correct));
+      for(const t of others){
+        if(options.length>= (lastArity===1?2:4)) break;
+        options.push(t);
+      }
+      options=shuffle(options);
+      // ensure at least one option yields a different output than target (otherwise puzzle is trivial/ambiguous-safe)
+      return {mode, spec, target, sw, options, correctGate:correct, lastIdx};
+    }
+  }
+
+  // Enumerate switch combos to find one giving target output. Returns array or null.
+  function solveSwitches(spec, target){
+    const n=spec.nSw;
+    for(let m=0;m<(1<<n);m++){
+      const sw=[];
+      for(let i=0;i<n;i++) sw.push((m>>i)&1);
+      if(evalCircuit(spec,sw).out===target) return sw;
+    }
+    return null;
+  }
+
+  /* ---------- State ---------- */
+  let score=0, level=1, lives=3, firstTry=true, solved=0;
+  let best=load(SK,0);
+  let puzzle=null, locked=false;
+  let pStart=0;
+  let pickedGate=null;
+
+  /* ---------- Canvas rendering ---------- */
+  const cv=$("stage"), ctx=cv.getContext("2d");
+  // hit-boxes for switches (in canvas coords)
+  let switchBoxes=[];
+
+  function fitCanvas(){
+    const cssW=cv.clientWidth||520;
+    const ratio=240/520;
+    const dpr=window.devicePixelRatio||1;
+    cv.width=Math.round(cssW*dpr);
+    cv.height=Math.round(cssW*ratio*dpr);
+    cv.style.height=(cssW*ratio)+"px";
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    draw();
+  }
+  // logical drawing size
+  function W(){return cv.clientWidth||520;}
+  function H(){return (cv.clientWidth||520)*240/520;}
+
+  function draw(){
+    if(!puzzle) return;
+    const w=W(), h=H();
+    ctx.clearRect(0,0,w,h);
+    switchBoxes=[];
+    const spec=puzzle.spec;
+    const cur = evalCircuit(spec, puzzle.sw);
+
+    // layout columns
+    const colSw = w*0.12;
+    const colG1 = w*0.42;
+    const colG2 = w*0.66;
+    const colBulb = w*0.88;
+
+    const twoG = spec.gates.length===2;
+
+    // ---- input switches ----
+    const n=spec.nSw;
+    const swYs=[];
+    for(let i=0;i<n;i++){
+      swYs.push(h*( (i+1)/(n+1) ));
+    }
+    // wire endpoints to gates computed after we place gates
+    // place gate1
+    const g1y = twoG ? (swYs[0]+swYs[1])/2 : (n===1? swYs[0] : (swYs[0]+swYs[1])/2);
+    const g1x = twoG ? colG1 : colG1+ w*0.04;
+    // place gate2 (if any)
+    const g2y = twoG ? (g1y + (swYs[2]!==undefined?swYs[2]:g1y))/2 : 0;
+    const g2x = colG2;
+
+    // Determine each switch's destination point
+    const dests=[];
+    if(!twoG){
+      for(let i=0;i<n;i++) dests.push([g1x- w*0.07, g1y + (n===1?0:(i===0?-12:12))]);
+    } else {
+      dests.push([g1x- w*0.07, g1y-12]);
+      dests.push([g1x- w*0.07, g1y+12]);
+      if(spec.nSw===3) dests.push([g2x- w*0.07, g2y+14]);
+    }
+
+    // draw wires from switches
+    for(let i=0;i<n;i++){
+      const on = puzzle.sw[i]===1;
+      wire(colSw+22, swYs[i], dests[i][0], dests[i][1], on);
+    }
+    // draw switches
+    for(let i=0;i<n;i++){
+      drawSwitch(colSw, swYs[i], puzzle.sw[i], i);
+    }
+
+    // gate 1
+    const g1type = spec.gates[0].type;
+    const g1val = cur.gv[0];
+    drawGate(g1x, g1y, g1type, isUnknownGate(0)?"?":g1type, g1val);
+    // gate1 -> next
+    if(twoG){
+      const into = spec.gates[1].in.find(r=>r.g===0)?[g2x-w*0.07, g2y-12]:null;
+      wire(g1x+w*0.05, g1y, g2x-w*0.07, g2y-12, g1val===1);
+      // gate 2
+      const g2type=spec.gates[1].type;
+      const g2val=cur.gv[1];
+      drawGate(g2x, g2y, g2type, isUnknownGate(1)?"?":g2type, g2val);
+      // to bulb
+      wire(g2x+w*0.05, g2y, colBulb-22, h/2, g2val===1);
+      drawBulb(colBulb, h/2, cur.out===1);
+    } else {
+      wire(g1x+w*0.05, g1y, colBulb-22, h/2, g1val===1);
+      drawBulb(colBulb, h/2, cur.out===1);
+    }
+  }
+
+  // Which gate index is the "unknown" in choose-the-gate mode (shown as ? until picked)
+  function isUnknownGate(idx){
+    if(puzzle.mode!=="gate") return false;
+    if(idx!==puzzle.lastIdx) return false;
+    return pickedGate===null;
+  }
+
+  function wire(x1,y1,x2,y2,on){
+    ctx.beginPath();
+    ctx.moveTo(x1,y1);
+    // simple elbow
+    const mx=(x1+x2)/2;
+    ctx.lineTo(mx,y1);
+    ctx.lineTo(mx,y2);
+    ctx.lineTo(x2,y2);
+    ctx.lineWidth=Math.max(3, W()*0.008);
+    ctx.strokeStyle= on ? getColor("--wireOn") : getColor("--wire");
+    ctx.lineCap="round"; ctx.lineJoin="round";
+    if(on){ ctx.shadowColor="rgba(245,158,11,.6)"; ctx.shadowBlur=8; }
+    ctx.stroke();
+    ctx.shadowBlur=0;
+  }
+
+  function getColor(v){
+    return getComputedStyle(document.documentElement).getPropertyValue(v).trim()||"#b9a98e";
+  }
+
+  function drawSwitch(x,y,val,idx){
+    const w=W();
+    const r=Math.max(20, w*0.05);
+    const bw=r*1.5, bh=r*2.1;
+    const left=x-bw/2, top=y-bh/2;
+    // body
+    roundRect(left,top,bw,bh,8);
+    ctx.fillStyle= val? "#fde7bd":"#eef0f3";
+    ctx.fill();
+    ctx.lineWidth=2; ctx.strokeStyle= val? "#f59e0b":"#c8cdd6"; ctx.stroke();
+    // knob
+    const knobR=bw*0.34;
+    const knobY= val? top+knobR+6 : top+bh-knobR-6;
+    ctx.beginPath(); ctx.arc(x,knobY,knobR,0,7);
+    ctx.fillStyle= val? "#f59e0b":"#aab2bf"; ctx.fill();
+    // label 1/0
+    ctx.fillStyle= val? "#a86a06":"#7d8aa8";
+    ctx.font="800 "+Math.round(r*0.62)+"px 'Baloo 2',sans-serif";
+    ctx.textAlign="center"; ctx.textBaseline="middle";
+    ctx.fillText(val?"1":"0", x, val? top+bh-knobR-2 : top+knobR );
+    // store hitbox (css coords)
+    switchBoxes.push({x:left,y:top,w:bw,h:bh,idx});
+  }
+
+  function drawGate(x,y,type,label,val){
+    const w=W();
+    const gw=Math.max(56, w*0.15), gh=Math.max(40, w*0.11);
+    roundRect(x-gw/2,y-gh/2,gw,gh,10);
+    ctx.fillStyle= val===1 ? "#fff2da" : "#ffffff";
+    ctx.lineWidth=3;
+    ctx.strokeStyle= val===1 ? "#f59e0b":"#d9c8a8";
+    ctx.fill(); ctx.stroke();
+    ctx.fillStyle= label==="?" ? "#f59e0b" : "#3a2e1d";
+    ctx.font="800 "+Math.round(gh*0.42)+"px 'Baloo 2',sans-serif";
+    ctx.textAlign="center"; ctx.textBaseline="middle";
+    ctx.fillText(label, x, y);
+  }
+
+  function drawBulb(x,y,lit){
+    const w=W();
+    const r=Math.max(22, w*0.058);
+    if(lit){ ctx.shadowColor="rgba(245,200,40,.9)"; ctx.shadowBlur=28; }
+    ctx.beginPath(); ctx.arc(x,y-r*0.25,r,0,7);
+    ctx.fillStyle= lit? "#ffe169":"#e9e4d6"; ctx.fill();
+    ctx.lineWidth=3; ctx.strokeStyle= lit? "#f59e0b":"#c9c2b0"; ctx.stroke();
+    ctx.shadowBlur=0;
+    // base
+    ctx.fillStyle= lit? "#d99a1a":"#b7b09c";
+    roundRect(x-r*0.5, y+r*0.55, r, r*0.55, 4); ctx.fill();
+    // emoji glyph
+    ctx.font=Math.round(r*1.1)+"px serif";
+    ctx.textAlign="center"; ctx.textBaseline="middle";
+    ctx.fillText(lit?"💡":"⚪", x, y-r*0.25);
+  }
+
+  function roundRect(x,y,w,h,r){
+    ctx.beginPath();
+    ctx.moveTo(x+r,y);
+    ctx.arcTo(x+w,y,x+w,y+h,r);
+    ctx.arcTo(x+w,y+h,x,y+h,r);
+    ctx.arcTo(x,y+h,x,y,r);
+    ctx.arcTo(x,y,x+w,y,r);
+    ctx.closePath();
+  }
+
+  /* ---------- Interaction ---------- */
+  function canvasPoint(e){
+    const rect=cv.getBoundingClientRect();
+    const cx=(e.touches?e.touches[0].clientX:e.clientX)-rect.left;
+    const cy=(e.touches?e.touches[0].clientY:e.clientY)-rect.top;
+    return {x:cx, y:cy};
+  }
+  function onTap(e){
+    if(locked||!puzzle) return;
+    if(puzzle.mode!=="switches") return; // gate mode toggles via buttons, switches fixed
+    const p=canvasPoint(e);
+    for(const b of switchBoxes){
+      if(p.x>=b.x && p.x<=b.x+b.w && p.y>=b.y && p.y<=b.y+b.h){
+        puzzle.sw[b.idx]= puzzle.sw[b.idx]?0:1;
+        draw();
+        e.preventDefault();
+        return;
+      }
+    }
+  }
+  cv.addEventListener("click",onTap);
+  cv.addEventListener("touchstart",onTap,{passive:false});
+
+  /* ---------- Round flow ---------- */
+  function startGame(){
+    score=0; level=1; lives=3; solved=0;
+    $("overlay").classList.remove("show");
+    paint();
+    newRound();
+  }
+
+  function newRound(){
+    locked=false; firstTry=true; pickedGate=null;
+    puzzle=makePuzzle(level);
+    $("hintbox").classList.remove("show");
+    $("feedback").textContent=""; $("feedback").className="feedback";
+
+    if(puzzle.mode==="switches"){
+      $("task").innerHTML="🔌 Set the switches";
+      $("target").innerHTML='Make the bulb <b>'+(puzzle.target? "light up 💡 (output 1)":"stay OFF ⚪ (output 0)")+'</b>';
+      $("gatepick").innerHTML="";
+      $("gatepick").style.display="none";
+    } else {
+      $("task").innerHTML='🧩 Choose the gate to fill the <span class="gate-name">?</span>';
+      $("target").innerHTML='Pick the gate so the bulb <b>'+(puzzle.target? "lights up 💡 (1)":"stays OFF ⚪ (0)")+'</b>';
+      $("gatepick").style.display="flex";
+      $("gatepick").innerHTML="";
+      puzzle.options.forEach(t=>{
+        const b=document.createElement("button");
+        b.textContent=t; b.dataset.g=t;
+        b.onclick=()=>{ if(locked) return; pickGate(t,b); };
+        $("gatepick").appendChild(b);
+      });
+    }
+    pStart=Date.now();
+    fitCanvas();
+  }
+
+  function pickGate(t,btn){
+    pickedGate=t;
+    puzzle.spec.gates[puzzle.lastIdx].type=t; // live-evaluate with chosen gate
+    [...$("gatepick").children].forEach(b=>b.classList.toggle("sel",b===btn));
+    draw();
+  }
+
+  function check(){
+    if(locked||!puzzle) return;
+    if(puzzle.mode==="gate" && pickedGate===null){
+      flash("Pick a gate first!","bad");
+      return;
+    }
+    const out=evalCircuit(puzzle.spec, puzzle.sw).out;
+    if(out===puzzle.target){
+      win();
+    } else {
+      lose();
+    }
+  }
+
+  function win(){
+    locked=true;
+    const secs=(Date.now()-pStart)/1000;
+    const timeBonus=Math.max(0, Math.round(20 - secs*1.5));
+    const ftBonus= firstTry? 15:0;
+    const pts=20+timeBonus+ftBonus+(level-1)*5;
+    score+=pts; solved++;
+    if(best<score){best=score; save(SK,best);}
+    if(solved%3===0) level++;
+    paint();
+    flash("🎉 +"+pts+"  (⏱+"+timeBonus+(ftBonus?"  ✨first-try+"+ftBonus:"")+")","good");
+    setTimeout(newRound, 1100);
+  }
+
+  function lose(){
+    firstTry=false;
+    lives--;
+    paint();
+    if(lives<=0){
+      locked=true;
+      flash("❌ Out of lives!","bad");
+      setTimeout(gameOver, 900);
+    } else {
+      flash("❌ Bulb doesn't match — try again! (lost a life)","bad");
+    }
+  }
+
+  function flash(msg,kind){
+    const f=$("feedback"); f.textContent=msg; f.className="feedback "+kind;
+    f.classList.remove("pop"); void f.offsetWidth; f.classList.add("pop");
+  }
+
+  function gameOver(){
+    $("ovTitle").textContent=(score>=best && score>0)?"🏆 New Best!":"Game Over";
+    $("ovMsg").textContent="You solved "+solved+" circuit"+(solved===1?"":"s")+"!";
+    $("ovScore").textContent=score+" pts";
+    $("ovBest").textContent="Best score: "+best;
+    $("overlay").classList.add("show");
+  }
+
+  function paint(){
+    $("score").textContent=score;
+    $("best").textContent=best;
+    $("level").textContent=level;
+    $("hearts").textContent="❤️".repeat(Math.max(0,lives))+"🤍".repeat(Math.max(0,3-lives));
+  }
+
+  /* ---------- Truth-table hint ---------- */
+  function buildHint(){
+    if(!puzzle) return "";
+    // show truth tables for every gate type used in this puzzle (or the options in gate mode)
+    let types=[];
+    if(puzzle.mode==="gate"){ types=[...puzzle.options]; }
+    else { types=puzzle.spec.gates.map(g=>g.type); }
+    types=[...new Set(types)];
+    let html="";
+    for(const t of types){
+      html+=ttTable(t);
+    }
+    return html;
+  }
+  function ttTable(type){
+    const ar=ARITY[type];
+    let rows="";
+    if(ar===1){
+      for(const a of [0,1]){
+        const o=GATES[type](a);
+        rows+="<tr><td>"+a+"</td><td class='"+(o?"on":"")+"'>"+o+"</td></tr>";
+      }
+      return "<table class='tt'><caption>"+type+"</caption><tr><th>in</th><th>out</th></tr>"+rows+"</table>";
+    } else {
+      for(const a of [0,1]) for(const b of [0,1]){
+        const o=GATES[type](a,b);
+        rows+="<tr><td>"+a+"</td><td>"+b+"</td><td class='"+(o?"on":"")+"'>"+o+"</td></tr>";
+      }
+      return "<table class='tt'><caption>"+type+"</caption><tr><th>A</th><th>B</th><th>out</th></tr>"+rows+"</table>";
+    }
+  }
+
+  $("hintBtn").onclick=()=>{
+    const hb=$("hintbox");
+    if(hb.classList.contains("show")){ hb.classList.remove("show"); return; }
+    hb.innerHTML="<div style='display:flex;gap:14px;flex-wrap:wrap;justify-content:center'>"+buildHint()+"</div>";
+    hb.classList.add("show");
+  };
+  $("checkBtn").onclick=check;
+  $("ovBtn").onclick=startGame;
+
+  // keyboard: number keys toggle switches; Enter checks; H = hint
+  document.addEventListener("keydown",e=>{
+    if(locked||!puzzle) return;
+    if(e.key==="Enter"){ check(); return; }
+    if(e.key==="h"||e.key==="H"){ $("hintBtn").click(); return; }
+    if(puzzle.mode==="switches"){
+      const n=parseInt(e.key,10);
+      if(n>=1 && n<=puzzle.sw.length){
+        puzzle.sw[n-1]= puzzle.sw[n-1]?0:1; draw();
+      }
+    } else {
+      // gate mode: keys 1..N pick option
+      const n=parseInt(e.key,10);
+      if(n>=1 && n<=puzzle.options.length){
+        const btn=$("gatepick").children[n-1];
+        if(btn) pickGate(puzzle.options[n-1], btn);
+      }
+    }
+  });
+
+  window.addEventListener("resize", fitCanvas);
+  startGame();
+</script>
+</body>
+</html>

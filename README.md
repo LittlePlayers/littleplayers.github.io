@@ -93,3 +93,9 @@ deploy from `main`) if not already.
 | 🔮 Kaleidoscope Draw | Creativity | [/kaleidoscope-draw/](https://littleplayers.github.io/kaleidoscope-draw/) |
 | 🐸 Animal Band | Creativity | [/animal-band/](https://littleplayers.github.io/animal-band/) |
 | 👗 Dress Up | Creativity | [/dress-up/](https://littleplayers.github.io/dress-up/) |
+| 🧩 Nonogram | Logic & Strategy | [/nonogram/](https://littleplayers.github.io/nonogram/) |
+| 🎯 Code Breaker | Logic & Strategy | [/code-breaker/](https://littleplayers.github.io/code-breaker/) |
+| 🤖 Logic Bot | STEM & Code | [/logic-bot/](https://littleplayers.github.io/logic-bot/) |
+| 🔐 Cipher School | STEM & Code | [/cipher-school/](https://littleplayers.github.io/cipher-school/) |
+| 💡 Circuit Logic | STEM & Code | [/circuit-logic/](https://littleplayers.github.io/circuit-logic/) |
+| 🗺️ World Quiz | Explore the World | [/world-quiz/](https://littleplayers.github.io/world-quiz/) |

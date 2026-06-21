@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="World Quiz — a fast geography game for kids! Match flags, capitals and continents before the timer runs out. Levels, lives and combo streaks." />
+  <link rel="canonical" href="https://littleplayers.github.io/world-quiz/" />
+  <meta name="keywords" content="kids games, geography game, World Quiz, flags quiz, capitals quiz, continents, free online game for kids, Little Players" />
+  <meta name="author" content="gauravs19" />
+  <meta name="theme-color" content="#0891b2" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Little Players" />
+  <meta property="og:title" content="World Quiz — Little Players" />
+  <meta property="og:description" content="World Quiz — a fast geography game for kids! Match flags, capitals and continents before the timer runs out. Levels, lives and combo streaks." />
+  <meta property="og:url" content="https://littleplayers.github.io/world-quiz/" />
+  <meta property="og:image" content="https://littleplayers.github.io/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="World Quiz — Little Players" />
+  <meta name="twitter:description" content="World Quiz — a fast geography game for kids! Match flags, capitals and continents before the timer runs out." />
+  <meta name="twitter:image" content="https://littleplayers.github.io/og-image.png" />
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "VideoGame", "name": "World Quiz", "url": "https://littleplayers.github.io/world-quiz/", "image": "https://littleplayers.github.io/og-image.png", "description": "World Quiz — a fast geography game for kids! Match flags, capitals and continents before the timer runs out.", "applicationCategory": "Game", "operatingSystem": "Web Browser", "genre": "education", "author": {"@type": "Organization", "name": "Little Players"}, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "INR"}, "audience": {"@type": "PeopleAudience", "suggestedMinAge": 9}, "isPartOf": {"@type": "WebSite", "name": "Little Players", "url": "https://littleplayers.github.io/"}}</script>
+<title>🗺️ World Quiz — Little Players</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🗺️</text></svg>" />
+<style>
+  :root{
+    --bg:#e8f7fb; --card:#fff; --ink:#16384a; --muted:#6f8597;
+    --accent:#0891b2; --accent2:#22b07d; --good:#22b07d; --bad:#ff5d6c;
+    --shadow:0 10px 28px rgba(8,145,178,.16); --radius:18px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; min-height:100vh; color:var(--ink);
+    font-family:"Baloo 2","Comic Sans MS","Trebuchet MS",system-ui,sans-serif;
+    background:
+      radial-gradient(circle at 12% 10%,#c5ecf6 0,transparent 42%),
+      radial-gradient(circle at 88% 8%,#d2f5e6 0,transparent 44%),
+      var(--bg);
+    display:flex; flex-direction:column; align-items:center; padding:20px;
+  }
+  header{text-align:center; margin:14px 0 6px}
+  h1{margin:0; font-size:clamp(1.8rem,6vw,2.8rem)}
+  .sub{margin:6px 0 0; color:var(--muted); font-weight:700}
+  .help{margin:8px auto 0; color:var(--muted); font-weight:700; font-size:.9rem; max-width:520px}
+
+  .diff{display:flex; gap:10px; justify-content:center; margin:10px 0 0; flex-wrap:wrap}
+  .diff button{border:none;cursor:pointer;font:inherit;font-weight:800;padding:9px 16px;
+    border-radius:999px;background:#fff;color:var(--ink);box-shadow:var(--shadow)}
+  .diff button.on{background:var(--accent);color:#fff}
+
+  .scoreboard{display:flex; gap:10px; margin:16px 0 6px; flex-wrap:wrap; justify-content:center}
+  .pill{background:var(--card); border-radius:999px; padding:8px 15px; font-weight:800;
+    box-shadow:var(--shadow); font-size:.92rem; display:flex; align-items:center; gap:6px}
+
+  .timerwrap{width:min(520px,94vw); margin:8px 0 2px}
+  .timerbar{height:12px; border-radius:999px; background:#d3eaf2; overflow:hidden}
+  .timerfill{height:100%; width:100%; border-radius:999px;
+    background:linear-gradient(90deg,#22b07d,#7bd88f); transition:width .25s linear}
+  .timerfill.warn{background:linear-gradient(90deg,#ffb24a,#ffd27a)}
+  .timerfill.danger{background:linear-gradient(90deg,#ff5d6c,#ff8aa0)}
+
+  .game{background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow);
+    padding:26px 22px; width:min(520px,94vw); margin-top:10px; text-align:center}
+  .qtype{color:var(--muted); font-weight:800; font-size:.85rem; text-transform:uppercase; letter-spacing:1px}
+  .question{font-size:clamp(1.5rem,5.5vw,2.1rem); font-weight:800; margin:6px 0 22px; line-height:1.25}
+  .question .bigflag{display:block; font-size:clamp(3.4rem,16vw,5rem); margin:4px 0 2px; line-height:1}
+  .answers{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+  .answer{border:none; cursor:pointer; font:inherit; font-weight:800; font-size:1.25rem;
+    padding:18px 8px; border-radius:16px; color:#fff; min-height:64px;
+    display:flex; align-items:center; justify-content:center; text-align:center; line-height:1.15;
+    background:linear-gradient(180deg,var(--accent),#06748f);
+    box-shadow:0 5px 0 #05647c; transition:transform .08s,box-shadow .08s,opacity .2s}
+  .answer.flagopt{font-size:clamp(2.6rem,12vw,3.6rem); padding:14px 8px}
+  .answer:active{transform:translateY(4px); box-shadow:0 1px 0 #05647c}
+  .answer.correct{background:linear-gradient(180deg,#2bc98c,#1fa874)!important; box-shadow:0 5px 0 #178a5f!important}
+  .answer.wrong{background:linear-gradient(180deg,#ff6f7c,#e8505f)!important; box-shadow:0 5px 0 #c43d4a!important}
+  .answer:disabled{cursor:default}
+
+  .feedback{min-height:1.6em; font-weight:800; font-size:1.15rem; margin:16px 0 0}
+  .feedback.good{color:var(--good)} .feedback.bad{color:var(--bad)}
+  .hearts{font-size:1.1rem; letter-spacing:2px}
+
+  .overlay{position:fixed; inset:0; background:rgba(10,50,65,.55); display:none;
+    align-items:center; justify-content:center; padding:20px; z-index:9}
+  .overlay.show{display:flex}
+  .panel{background:var(--card); border-radius:22px; padding:30px 26px; text-align:center;
+    box-shadow:var(--shadow); width:min(420px,92vw)}
+  .panel h2{margin:0 0 6px; font-size:1.8rem}
+  .panel p{margin:6px 0; color:var(--muted); font-weight:700}
+  .panel .big{font-size:2.4rem; font-weight:800; color:var(--accent); margin:8px 0}
+  .panel button{margin-top:14px; border:none; cursor:pointer; font:inherit; font-weight:800;
+    padding:13px 26px; border-radius:999px; background:var(--accent); color:#fff; font-size:1.1rem}
+
+  .back{margin-top:18px}
+  .back a{color:var(--accent); font-weight:800; text-decoration:none}
+  @keyframes pop{0%{transform:scale(.9)}60%{transform:scale(1.06)}100%{transform:scale(1)}}
+  .pop{animation:pop .25s ease}
+  /* --- mobile/tablet responsiveness guard --- */
+  html,body{overflow-x:hidden}
+  body>*{max-width:100%}
+  @media (max-width:600px){ .sub,.help{font-size:.84rem} }
+  @media (max-width:400px){ .answer{font-size:1.05rem; padding:16px 6px} }
+</style>
+</head>
+<body>
+  <header>
+    <h1>🗺️ World Quiz</h1>
+    <p class="sub">Flags, capitals &amp; continents — beat the timer!</p>
+    <p class="help">Tap the right answer (or press 1–4). Correct answers earn points + a time bonus. Build a combo streak, but you only have 3 lives!</p>
+  </header>
+
+  <div class="diff" id="diff">
+    <button data-d="easy" class="on">😀 Easy</button>
+    <button data-d="medium">😎 Medium</button>
+    <button data-d="hard">🤓 Hard</button>
+  </div>
+
+  <div class="scoreboard">
+    <div class="pill">⭐ <span id="score">0</span></div>
+    <div class="pill">🏆 Best: <span id="best">0</span></div>
+    <div class="pill">📈 Lvl <span id="level">1</span></div>
+    <div class="pill">🔥 Combo <span id="streak">0</span></div>
+    <div class="pill hearts" id="hearts">❤️❤️❤️</div>
+  </div>
+
+  <div class="timerwrap"><div class="timerbar"><div class="timerfill" id="timerfill"></div></div></div>
+
+  <main class="game">
+    <div class="qtype" id="qtype">Geography</div>
+    <div class="question" id="question">Loading…</div>
+    <div class="answers" id="answers"></div>
+    <p class="feedback" id="feedback"></p>
+  </main>
+
+  <p class="back"><a href="https://littleplayers.github.io/">← Back to Little Players</a></p>
+
+  <div class="overlay" id="overlay">
+    <div class="panel">
+      <h2 id="ovTitle">Game Over</h2>
+      <p id="ovMsg"></p>
+      <div class="big" id="ovScore">0</div>
+      <p id="ovBest"></p>
+      <button id="ovBtn">▶ Play Again</button>
+    </div>
+  </div>
+
+<script>
+  // ---- Country data (verified: name, flag emoji, capital, continent) ----
+  // tier 1 = very well known, 2 = well known, 3 = more obscure. Difficulty ramps use tiers.
+  const COUNTRIES = [
+    // --- Asia ---
+    {n:"India",        f:"🇮🇳", c:"New Delhi",   k:"Asia",   t:1},
+    {n:"China",        f:"🇨🇳", c:"Beijing",     k:"Asia",   t:1},
+    {n:"Japan",        f:"🇯🇵", c:"Tokyo",       k:"Asia",   t:1},
+    {n:"South Korea",  f:"🇰🇷", c:"Seoul",       k:"Asia",   t:2},
+    {n:"Thailand",     f:"🇹🇭", c:"Bangkok",     k:"Asia",   t:2},
+    {n:"Indonesia",    f:"🇮🇩", c:"Jakarta",     k:"Asia",   t:2},
+    {n:"Saudi Arabia", f:"🇸🇦", c:"Riyadh",      k:"Asia",   t:2},
+    {n:"Vietnam",      f:"🇻🇳", c:"Hanoi",       k:"Asia",   t:3},
+    {n:"Pakistan",     f:"🇵🇰", c:"Islamabad",   k:"Asia",   t:3},
+    {n:"Nepal",        f:"🇳🇵", c:"Kathmandu",   k:"Asia",   t:3},
+    {n:"Philippines",  f:"🇵🇭", c:"Manila",      k:"Asia",   t:3},
+    {n:"Turkey",       f:"🇹🇷", c:"Ankara",      k:"Asia",   t:3},
+    // --- Europe ---
+    {n:"United Kingdom",f:"🇬🇧",c:"London",      k:"Europe", t:1},
+    {n:"France",       f:"🇫🇷", c:"Paris",       k:"Europe", t:1},
+    {n:"Germany",      f:"🇩🇪", c:"Berlin",      k:"Europe", t:1},
+    {n:"Italy",        f:"🇮🇹", c:"Rome",        k:"Europe", t:1},
+    {n:"Spain",        f:"🇪🇸", c:"Madrid",      k:"Europe", t:1},
+    {n:"Russia",       f:"🇷🇺", c:"Moscow",      k:"Europe", t:2},
+    {n:"Greece",       f:"🇬🇷", c:"Athens",      k:"Europe", t:2},
+    {n:"Portugal",     f:"🇵🇹", c:"Lisbon",      k:"Europe", t:2},
+    {n:"Netherlands",  f:"🇳🇱", c:"Amsterdam",   k:"Europe", t:2},
+    {n:"Switzerland",  f:"🇨🇭", c:"Bern",        k:"Europe", t:3},
+    {n:"Sweden",       f:"🇸🇪", c:"Stockholm",   k:"Europe", t:3},
+    {n:"Norway",       f:"🇳🇴", c:"Oslo",        k:"Europe", t:3},
+    {n:"Ireland",      f:"🇮🇪", c:"Dublin",      k:"Europe", t:3},
+    {n:"Poland",       f:"🇵🇱", c:"Warsaw",      k:"Europe", t:3},
+    // --- Africa ---
+    {n:"Egypt",        f:"🇪🇬", c:"Cairo",       k:"Africa", t:1},
+    {n:"South Africa", f:"🇿🇦", c:"Pretoria",    k:"Africa", t:2},
+    {n:"Nigeria",      f:"🇳🇬", c:"Abuja",       k:"Africa", t:2},
+    {n:"Kenya",        f:"🇰🇪", c:"Nairobi",     k:"Africa", t:2},
+    {n:"Morocco",      f:"🇲🇦", c:"Rabat",       k:"Africa", t:3},
+    {n:"Ethiopia",     f:"🇪🇹", c:"Addis Ababa", k:"Africa", t:3},
+    {n:"Ghana",        f:"🇬🇭", c:"Accra",       k:"Africa", t:3},
+    {n:"Tanzania",     f:"🇹🇿", c:"Dodoma",      k:"Africa", t:3},
+    // --- North America ---
+    {n:"United States",f:"🇺🇸", c:"Washington, D.C.", k:"North America", t:1},
+    {n:"Canada",       f:"🇨🇦", c:"Ottawa",      k:"North America", t:1},
+    {n:"Mexico",       f:"🇲🇽", c:"Mexico City", k:"North America", t:1},
+    {n:"Cuba",         f:"🇨🇺", c:"Havana",      k:"North America", t:3},
+    {n:"Jamaica",      f:"🇯🇲", c:"Kingston",    k:"North America", t:3},
+    // --- South America ---
+    {n:"Brazil",       f:"🇧🇷", c:"Brasília",    k:"South America", t:1},
+    {n:"Argentina",    f:"🇦🇷", c:"Buenos Aires",k:"South America", t:1},
+    {n:"Peru",         f:"🇵🇪", c:"Lima",        k:"South America", t:2},
+    {n:"Chile",        f:"🇨🇱", c:"Santiago",    k:"South America", t:2},
+    {n:"Colombia",     f:"🇨🇴", c:"Bogotá",      k:"South America", t:3},
+    {n:"Venezuela",    f:"🇻🇪", c:"Caracas",     k:"South America", t:3},
+    // --- Oceania ---
+    {n:"Australia",    f:"🇦🇺", c:"Canberra",    k:"Oceania", t:1},
+    {n:"New Zealand",  f:"🇳🇿", c:"Wellington",  k:"Oceania", t:2},
+    {n:"Fiji",         f:"🇫🇯", c:"Suva",        k:"Oceania", t:3},
+  ];
+  const CONTINENTS = ["Asia","Europe","Africa","North America","South America","Oceania"];
+
+  const DIFF = {
+    easy:   {maxTier:1, time:14, label:"Easy"},
+    medium: {maxTier:2, time:12, label:"Medium"},
+    hard:   {maxTier:3, time:10, label:"Hard"},
+  };
+  const SK="wq_best";
+  const $=id=>document.getElementById(id);
+  const fill=$("timerfill"), ansEl=$("answers"), fb=$("feedback");
+
+  let diff="easy", score=0, level=1, streak=0, lives=3, solved=0;
+  let best=load(SK,0);
+  let correctVal=null, locked=false;
+  let timeLeft, timeMax, timer=null, running=false;
+
+  function load(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}}
+  function save(k,v){localStorage.setItem(k,JSON.stringify(v))}
+  function ri(a,b){return a+Math.floor(Math.random()*(b-a+1))}
+  function shuffle(a){const x=[...a];for(let i=x.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[x[i],x[j]]=[x[j],x[i]]}return x}
+  function pick(a){return a[Math.floor(Math.random()*a.length)]}
+
+  // pool of countries allowed at the current level (tier grows with level)
+  function pool(){
+    const maxTier = Math.min(3, DIFF[diff].maxTier + Math.floor((level-1)/3));
+    return COUNTRIES.filter(c=>c.t<=maxTier);
+  }
+
+  // pick n distinct "distractor" countries from arr (excluding `not`), prefer same continent
+  function distractors(arr, correct, n, sameKey){
+    let prefer = arr.filter(c=>c!==correct && (!sameKey || c.k===correct.k));
+    let rest   = arr.filter(c=>c!==correct && (!sameKey || c.k!==correct.k));
+    const out=[];
+    for(const c of shuffle(prefer)){ if(out.length<n) out.push(c); }
+    for(const c of shuffle(rest)){ if(out.length<n) out.push(c); }
+    return out;
+  }
+
+  // Build a question object: {qtype, html, options:[{label,flag?,correct}], correctLabel}
+  function makeQuestion(){
+    const p = pool();
+    const subject = pick(p);
+    const type = pick([1,2,3,4]);
+    let qtype, html, opts;
+
+    if(type===1){
+      // Which flag is <Country>?
+      qtype="Find the flag";
+      html = `Which flag is <b>${subject.n}</b>?`;
+      const ds = distractors(p, subject, 3, true);
+      opts = shuffle([subject, ...ds]).map(c=>({
+        label:c.f, flag:true, correct:c===subject
+      }));
+    } else if(type===2){
+      // What is the capital of <Country>?
+      qtype="Capital city";
+      html = `<span class="bigflag">${subject.f}</span>What is the capital of <b>${subject.n}</b>?`;
+      const ds = distractors(p, subject, 3, true);
+      opts = shuffle([subject, ...ds]).map(c=>({
+        label:c.c, correct:c===subject
+      }));
+    } else if(type===3){
+      // <Capital> is the capital of which country?
+      qtype="Which country?";
+      html = `<b>${subject.c}</b> is the capital of which country?`;
+      const ds = distractors(p, subject, 3, true);
+      opts = shuffle([subject, ...ds]).map(c=>({
+        label:c.n, correct:c===subject
+      }));
+    } else {
+      // Which continent is <Country> in?
+      qtype="Continent";
+      html = `<span class="bigflag">${subject.f}</span>Which continent is <b>${subject.n}</b> in?`;
+      const wrong = shuffle(CONTINENTS.filter(k=>k!==subject.k)).slice(0,3);
+      opts = shuffle([subject.k, ...wrong]).map(k=>({
+        label:k, correct:k===subject.k
+      }));
+    }
+    // safety: exactly one correct, 4 unique options
+    return {qtype, html, opts};
+  }
+
+  function startGame(){
+    score=0; level=1; streak=0; lives=3; solved=0;
+    $("overlay").classList.remove("show");
+    paint(); nextQ();
+  }
+
+  function nextQ(){
+    const q=makeQuestion(); locked=false;
+    $("qtype").textContent=q.qtype;
+    $("question").innerHTML=q.html;
+    $("question").classList.remove("pop"); void $("question").offsetWidth; $("question").classList.add("pop");
+    fb.textContent=""; fb.className="feedback";
+    ansEl.innerHTML="";
+    // find the correct label so feedback/highlight is reliable
+    correctVal = q.opts.find(o=>o.correct).label;
+    q.opts.forEach(o=>{
+      const b=document.createElement("button");
+      b.className="answer"+(o.flag?" flagopt":"");
+      b.textContent=o.label;
+      b.dataset.correct=o.correct?"1":"0";
+      b.onclick=()=>choose(b);
+      ansEl.appendChild(b);
+    });
+    timeMax=Math.max(5, DIFF[diff].time - (level-1)*0.5);
+    timeLeft=timeMax; startTimer();
+  }
+
+  function startTimer(){
+    stopTimer(); running=true; updateBar();
+    timer=setInterval(()=>{
+      timeLeft-=0.1;
+      if(timeLeft<=0){timeLeft=0; updateBar(); timeUp();} else updateBar();
+    },100);
+  }
+  function stopTimer(){ if(timer){clearInterval(timer);timer=null} running=false; }
+  function updateBar(){
+    const pct=Math.max(0,(timeLeft/timeMax)*100);
+    fill.style.width=pct+"%";
+    fill.className="timerfill"+(pct<25?" danger":pct<50?" warn":"");
+  }
+
+  function revealCorrect(){
+    [...ansEl.children].forEach(b=>{ b.disabled=true; if(b.dataset.correct==="1") b.classList.add("correct"); });
+  }
+
+  function choose(btn){
+    if(locked) return; locked=true; stopTimer();
+    [...ansEl.children].forEach(b=>b.disabled=true);
+    if(btn.dataset.correct==="1"){
+      btn.classList.add("correct");
+      const timeBonus=Math.round(timeLeft*2);
+      const pts=10+timeBonus+streak*3;
+      streak++; solved++; score+=pts;
+      if(best<score){best=score; save(SK,best);}
+      if(solved%5===0) level++;
+      paint();
+      fb.textContent=`🎉 +${pts} (⏱ +${timeBonus})`; fb.className="feedback good";
+      setTimeout(nextQ,800);
+    } else {
+      btn.classList.add("wrong");
+      revealCorrect();
+      lives--; streak=0; paint();
+      fb.textContent=`❌ It was ${correctVal}`; fb.className="feedback bad";
+      if(lives<=0) setTimeout(gameOver,1300); else setTimeout(nextQ,1300);
+    }
+  }
+
+  function timeUp(){
+    if(locked) return; locked=true;
+    revealCorrect();
+    lives--; streak=0; paint();
+    fb.textContent=`⏰ Time! It was ${correctVal}`; fb.className="feedback bad";
+    if(lives<=0) setTimeout(gameOver,1400); else setTimeout(nextQ,1400);
+  }
+
+  function gameOver(){
+    stopTimer();
+    $("ovTitle").textContent = (score>=best && score>0) ? "🏆 New Best!" : "Game Over";
+    $("ovMsg").textContent=`You answered ${solved} correct on ${DIFF[diff].label}.`;
+    $("ovScore").textContent=score+" pts";
+    $("ovBest").textContent="Best score: "+best;
+    $("overlay").classList.add("show");
+  }
+
+  function paint(){
+    $("score").textContent=score; $("best").textContent=best;
+    $("level").textContent=level; $("streak").textContent=streak;
+    $("hearts").textContent="❤️".repeat(Math.max(0,lives))+"🤍".repeat(Math.max(0,3-lives));
+  }
+
+  document.querySelectorAll("#diff button").forEach(b=>{
+    b.onclick=()=>{ diff=b.dataset.d;
+      document.querySelectorAll("#diff button").forEach(x=>x.classList.toggle("on",x===b));
+      startGame(); };
+  });
+
+  // keyboard 1-4 selects an answer
+  document.addEventListener("keydown",e=>{
+    if(!running||locked) return;
+    const n=parseInt(e.key,10);
+    if(n>=1&&n<=4){ const b=ansEl.children[n-1]; if(b) choose(b); }
+  });
+
+  $("ovBtn").onclick=startGame;
+  startGame();
+</script>
+</body>
+</html>

@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Code Breaker — crack the secret colour code! A fun Mastermind deduction puzzle for kids with levels, hints and score bonuses." />
+  <link rel="canonical" href="https://littleplayers.github.io/code-breaker/" />
+  <meta name="keywords" content="kids games, deduction game, Mastermind, Code Breaker, puzzle game for kids, Little Players, logic puzzle" />
+  <meta name="author" content="gauravs19" />
+  <meta name="theme-color" content="#8b5cf6" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Little Players" />
+  <meta property="og:title" content="Code Breaker — Little Players" />
+  <meta property="og:description" content="Code Breaker — crack the secret colour code! A fun Mastermind deduction puzzle for kids with levels, hints and score bonuses." />
+  <meta property="og:url" content="https://littleplayers.github.io/code-breaker/" />
+  <meta property="og:image" content="https://littleplayers.github.io/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Code Breaker — Little Players" />
+  <meta name="twitter:description" content="Code Breaker — crack the secret colour code! A fun Mastermind deduction puzzle for kids with levels, hints and score bonuses." />
+  <meta name="twitter:image" content="https://littleplayers.github.io/og-image.png" />
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "VideoGame", "name": "Code Breaker", "url": "https://littleplayers.github.io/code-breaker/", "image": "https://littleplayers.github.io/og-image.png", "description": "Code Breaker — crack the secret colour code! A fun Mastermind deduction puzzle for kids with levels, hints and score bonuses.", "applicationCategory": "Game", "operatingSystem": "Web Browser", "genre": "puzzle", "author": {"@type": "Organization", "name": "Little Players"}, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "INR"}, "audience": {"@type": "PeopleAudience", "suggestedMinAge": 9}, "isPartOf": {"@type": "WebSite", "name": "Little Players", "url": "https://littleplayers.github.io/"}}</script>
+<title>🎯 Code Breaker — Little Players</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎯</text></svg>" />
+<style>
+  :root{
+    --bg:#f3eeff; --card:#fff; --ink:#2c2348; --muted:#8579a8;
+    --accent:#8b5cf6; --accent2:#22b07d; --good:#22b07d; --bad:#ff5d6c;
+    --shadow:0 10px 28px rgba(120,90,180,.18); --radius:18px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; min-height:100vh; color:var(--ink);
+    font-family:"Baloo 2","Comic Sans MS","Trebuchet MS",system-ui,sans-serif;
+    background:
+      radial-gradient(circle at 12% 10%,#e3d6ff 0,transparent 42%),
+      radial-gradient(circle at 88% 8%,#ffe0f3 0,transparent 44%),
+      var(--bg);
+    display:flex; flex-direction:column; align-items:center; padding:20px;
+  }
+  header{text-align:center; margin:14px 0 6px}
+  h1{margin:0; font-size:clamp(1.8rem,6vw,2.8rem)}
+  .sub{margin:6px 0 0; color:var(--muted); font-weight:700}
+  .help{margin:8px auto 0; color:var(--muted); font-weight:700; max-width:520px;
+    font-size:.9rem; line-height:1.4}
+
+  .scoreboard{display:flex; gap:10px; margin:14px 0 4px; flex-wrap:wrap; justify-content:center}
+  .pill{background:var(--card); border-radius:999px; padding:8px 15px; font-weight:800;
+    box-shadow:var(--shadow); font-size:.92rem; display:flex; align-items:center; gap:6px}
+
+  .legend{display:flex; gap:16px; justify-content:center; flex-wrap:wrap; margin:8px 0 2px;
+    color:var(--muted); font-weight:700; font-size:.86rem}
+  .legend span{display:inline-flex; align-items:center; gap:5px}
+  .legend .fp{display:inline-block; width:14px; height:14px; border-radius:50%;
+    border:1.5px solid #b9add6}
+  .legend .fp.black{background:#2c2348; border-color:#2c2348}
+  .legend .fp.white{background:#fff}
+
+  .game{background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow);
+    padding:20px 18px; width:min(540px,95vw); margin-top:10px; text-align:center}
+
+  /* peg / disk */
+  .disk{display:inline-flex; align-items:center; justify-content:center;
+    border-radius:50%; font-weight:800; color:#fff; user-select:none;
+    text-shadow:0 1px 2px rgba(0,0,0,.35); box-shadow:inset 0 -3px 6px rgba(0,0,0,.22),0 2px 4px rgba(0,0,0,.18)}
+  .c0{background:radial-gradient(circle at 32% 28%,#ff8a8a,#e0344a)} /* Red */
+  .c1{background:radial-gradient(circle at 32% 28%,#7db8ff,#1f6fe0)} /* Blue */
+  .c2{background:radial-gradient(circle at 32% 28%,#7fe3a0,#1fa055)} /* Green */
+  .c3{background:radial-gradient(circle at 32% 28%,#ffe27a,#f2b400);color:#5a4500;text-shadow:none} /* Yellow */
+  .c4{background:radial-gradient(circle at 32% 28%,#d3a3ff,#8b3fd6)} /* Purple */
+  .c5{background:radial-gradient(circle at 32% 28%,#ffc07a,#f07a1f)} /* Orange */
+  .c6{background:radial-gradient(circle at 32% 28%,#9fe9e9,#1fb0b0)} /* Cyan */
+  .c7{background:radial-gradient(circle at 32% 28%,#ffaad4,#e0489a)} /* Pink */
+
+  /* history board */
+  .board{display:flex; flex-direction:column; gap:8px; align-items:center;
+    margin:4px 0 12px; max-height:46vh; overflow-y:auto; padding:2px}
+  .row{display:flex; align-items:center; gap:10px; justify-content:center}
+  .rownum{width:22px; text-align:right; color:var(--muted); font-weight:800; font-size:.85rem}
+  .slots{display:flex; gap:7px}
+  .slot{width:clamp(30px,8vw,40px); height:clamp(30px,8vw,40px);
+    font-size:clamp(.85rem,2.6vw,1.05rem)}
+  .empty{background:#efeafc; box-shadow:inset 0 2px 4px rgba(0,0,0,.08);
+    border:2px dashed #cfc3ee; color:transparent}
+  .feedgrid{display:grid; grid-template-columns:1fr 1fr; gap:3px; width:36px;
+    flex:0 0 auto}
+  .fp{width:13px; height:13px; border-radius:50%; justify-self:center}
+  .fp.black{background:#2c2348}
+  .fp.white{background:#fff; border:1.5px solid #2c2348}
+  .fp.none{background:#e7e0f7}
+
+  /* current guess row */
+  .current{margin:6px 0 10px}
+  .current .row{gap:10px}
+  .current .slot{width:clamp(38px,11vw,52px); height:clamp(38px,11vw,52px);
+    font-size:clamp(1rem,3.5vw,1.4rem); cursor:pointer; transition:transform .08s}
+  .current .slot:active{transform:scale(.93)}
+  .current .slot.sel{outline:3px solid var(--accent); outline-offset:2px}
+
+  /* palette */
+  .palette{display:flex; gap:9px; justify-content:center; flex-wrap:wrap; margin:8px 0 12px}
+  .palette .disk{width:clamp(38px,11vw,50px); height:clamp(38px,11vw,50px);
+    font-size:clamp(1rem,3.5vw,1.35rem); cursor:pointer; border:none; transition:transform .08s}
+  .palette .disk:active{transform:scale(.9)}
+
+  .controls{display:flex; gap:10px; justify-content:center; flex-wrap:wrap}
+  .controls button{border:none; cursor:pointer; font:inherit; font-weight:800;
+    padding:11px 20px; border-radius:999px; box-shadow:var(--shadow); font-size:1rem}
+  .btn-clear{background:#fff; color:var(--ink)}
+  .btn-back{background:#fff; color:var(--ink)}
+  .btn-submit{background:linear-gradient(180deg,var(--accent),#6d3fd6); color:#fff;
+    box-shadow:0 5px 0 #5a30bd}
+  .btn-submit:active{transform:translateY(4px); box-shadow:0 1px 0 #5a30bd}
+  .btn-submit:disabled{opacity:.5; cursor:default}
+
+  .feedback{min-height:1.5em; font-weight:800; font-size:1.1rem; margin:10px 0 0}
+  .feedback.good{color:var(--good)} .feedback.bad{color:var(--bad)}
+
+  .overlay{position:fixed; inset:0; background:rgba(50,35,90,.55); display:none;
+    align-items:center; justify-content:center; padding:20px; z-index:9}
+  .overlay.show{display:flex}
+  .panel{background:var(--card); border-radius:22px; padding:30px 26px; text-align:center;
+    box-shadow:var(--shadow); width:min(420px,92vw)}
+  .panel h2{margin:0 0 6px; font-size:1.8rem}
+  .panel p{margin:6px 0; color:var(--muted); font-weight:700}
+  .panel .reveal{display:flex; gap:8px; justify-content:center; margin:12px 0}
+  .panel .reveal .disk{width:40px; height:40px; font-size:1.1rem}
+  .panel .big{font-size:2.4rem; font-weight:800; color:var(--accent); margin:8px 0}
+  .panel button{margin-top:14px; border:none; cursor:pointer; font:inherit; font-weight:800;
+    padding:13px 26px; border-radius:999px; background:var(--accent); color:#fff; font-size:1.1rem}
+
+  .back{margin-top:18px}
+  .back a{color:var(--accent); font-weight:800; text-decoration:none}
+  @keyframes pop{0%{transform:scale(.7)}60%{transform:scale(1.12)}100%{transform:scale(1)}}
+  .pop{animation:pop .25s ease}
+  /* --- mobile/tablet responsiveness guard --- */
+  html,body{overflow-x:hidden}
+  body>*{max-width:100%}
+  @media (max-width:600px){ .sub,.help,.legend{font-size:.8rem} }
+</style>
+</head>
+<body>
+  <header>
+    <h1>🎯 Code Breaker</h1>
+    <p class="sub">Crack the hidden colour code!</p>
+    <p class="help">Tap a colour to fill the slots left-to-right (or tap a slot first, then a colour).
+      Colours can repeat. Hit <b>Submit</b> to check. You have a limited number of guesses!</p>
+  </header>
+
+  <div class="scoreboard">
+    <div class="pill">⭐ <span id="score">0</span></div>
+    <div class="pill">🏆 Best: <span id="best">0</span></div>
+    <div class="pill">📈 Lvl <span id="level">1</span></div>
+    <div class="pill">❤️ Tries <span id="tries">10</span></div>
+  </div>
+
+  <div class="legend">
+    <span><i class="fp black"></i> = right colour &amp; right spot</span>
+    <span><i class="fp white"></i> = right colour, wrong spot</span>
+  </div>
+
+  <main class="game">
+    <div class="board" id="board"></div>
+
+    <div class="current" id="current"></div>
+
+    <div class="palette" id="palette"></div>
+
+    <div class="controls">
+      <button class="btn-back" id="btnBack">⌫ Back</button>
+      <button class="btn-clear" id="btnClear">✕ Clear</button>
+      <button class="btn-submit" id="btnSubmit" disabled>✓ Submit</button>
+    </div>
+
+    <p class="feedback" id="feedback"></p>
+  </main>
+
+  <p class="back"><a href="https://littleplayers.github.io/">← Back to Little Players</a></p>
+
+  <div class="overlay" id="overlay">
+    <div class="panel">
+      <h2 id="ovTitle">Game Over</h2>
+      <p id="ovMsg"></p>
+      <div class="reveal" id="ovReveal"></div>
+      <div class="big" id="ovScore">0</div>
+      <p id="ovBest"></p>
+      <button id="ovBtn">▶ Play Again</button>
+    </div>
+  </div>
+
+<script>
+  // ----- colour definitions: distinct colours + letter for colourblind kids -----
+  const COLORS = [
+    {cls:"c0", letter:"R", name:"Red"},
+    {cls:"c1", letter:"B", name:"Blue"},
+    {cls:"c2", letter:"G", name:"Green"},
+    {cls:"c3", letter:"Y", name:"Yellow"},
+    {cls:"c4", letter:"P", name:"Purple"},
+    {cls:"c5", letter:"O", name:"Orange"},
+    {cls:"c6", letter:"C", name:"Cyan"},
+    {cls:"c7", letter:"K", name:"Pink"},
+  ];
+
+  // Level config: number of colours available and number of slots in the code.
+  function levelConfig(level){
+    // colours: 6 -> up to 8 ; slots: 4 -> 5 at higher levels
+    let colors = Math.min(8, 6 + Math.floor((level-1)/2));
+    let slots  = level >= 4 ? 5 : 4;
+    let tries  = slots === 5 ? 11 : 10;
+    return {colors, slots, tries};
+  }
+
+  const SK="cb_best";
+  const $=id=>document.getElementById(id);
+  const boardEl=$("board"), curEl=$("current"), palEl=$("palette"), fb=$("feedback");
+
+  let level=1, score=0, best=load(SK,0);
+  let cfg, secret=[], guess=[], selSlot=0, rowsLeft, roundStart=0, locked=false;
+
+  function load(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}}
+  function save(k,v){localStorage.setItem(k,JSON.stringify(v))}
+  function ri(a,b){return a+Math.floor(Math.random()*(b-a+1))}
+
+  // ----- core scoring: classic two-pass black/white peg count -----
+  // Returns {black, white}. black = right colour & position; white = right colour wrong spot.
+  // Never double-counts a peg.
+  function scoreGuess(secret, guess){
+    let black=0, white=0;
+    const sCount={}, gCount={};
+    for(let i=0;i<secret.length;i++){
+      if(secret[i]===guess[i]){ black++; }
+      else {
+        sCount[secret[i]]=(sCount[secret[i]]||0)+1;
+        gCount[guess[i]]=(gCount[guess[i]]||0)+1;
+      }
+    }
+    for(const c in gCount){
+      if(sCount[c]) white += Math.min(sCount[c], gCount[c]);
+    }
+    return {black, white};
+  }
+
+  // expose for Node test
+  if(typeof module!=="undefined") module.exports={scoreGuess};
+
+  function diskHTML(idx, sizeClass){
+    const c=COLORS[idx];
+    return `<span class="disk ${c.cls} ${sizeClass||""}">${c.letter}</span>`;
+  }
+
+  function startGame(){
+    level=1; score=0;
+    $("overlay").classList.remove("show");
+    newRound();
+  }
+
+  function newRound(){
+    cfg=levelConfig(level);
+    rowsLeft=cfg.tries;
+    locked=false;
+    secret=Array.from({length:cfg.slots},()=>ri(0,cfg.colors-1));
+    guess=Array(cfg.slots).fill(null);
+    selSlot=0;
+    roundStart=Date.now();
+    boardEl.innerHTML="";
+    fb.textContent=""; fb.className="feedback";
+    paint();
+    renderPalette();
+    renderCurrent();
+  }
+
+  function renderPalette(){
+    palEl.innerHTML="";
+    for(let i=0;i<cfg.colors;i++){
+      const b=document.createElement("button");
+      b.className=`disk ${COLORS[i].cls}`;
+      b.textContent=COLORS[i].letter;
+      b.title=COLORS[i].name;
+      b.setAttribute("aria-label",COLORS[i].name);
+      b.onclick=()=>pickColor(i);
+      palEl.appendChild(b);
+    }
+  }
+
+  function renderCurrent(){
+    const row=document.createElement("div");
+    row.className="row";
+    const num=document.createElement("div");
+    num.className="rownum"; num.textContent="▶";
+    row.appendChild(num);
+    const slots=document.createElement("div");
+    slots.className="slots";
+    for(let i=0;i<cfg.slots;i++){
+      const s=document.createElement("div");
+      if(guess[i]===null){
+        s.className="disk slot empty";
+        s.textContent="?";
+      } else {
+        s.className=`disk slot ${COLORS[guess[i]].cls}`;
+        s.textContent=COLORS[guess[i]].letter;
+      }
+      if(i===selSlot) s.classList.add("sel");
+      s.onclick=()=>{ selSlot=i; renderCurrent(); };
+      slots.appendChild(s);
+    }
+    row.appendChild(slots);
+    // placeholder for feedback alignment
+    const fg=document.createElement("div"); fg.style.width="36px";
+    row.appendChild(fg);
+    curEl.innerHTML="";
+    curEl.appendChild(row);
+    $("btnSubmit").disabled = guess.includes(null);
+  }
+
+  function pickColor(idx){
+    if(locked) return;
+    // fill selected slot, then advance to next empty slot left-to-right
+    guess[selSlot]=idx;
+    let next=guess.indexOf(null);
+    selSlot = next===-1 ? selSlot : next;
+    renderCurrent();
+  }
+
+  function backspace(){
+    if(locked) return;
+    // remove from selected slot if filled, else from last filled slot
+    let target = guess[selSlot]!==null ? selSlot : -1;
+    if(target===-1){
+      for(let i=cfg.slots-1;i>=0;i--){ if(guess[i]!==null){ target=i; break; } }
+    }
+    if(target>=0){ guess[target]=null; selSlot=target; renderCurrent(); }
+  }
+
+  function clearGuess(){
+    if(locked) return;
+    guess=Array(cfg.slots).fill(null); selSlot=0; renderCurrent();
+  }
+
+  function addHistoryRow(g, res){
+    const row=document.createElement("div");
+    row.className="row pop";
+    const num=document.createElement("div");
+    num.className="rownum";
+    num.textContent=(cfg.tries-rowsLeft);
+    row.appendChild(num);
+    const slots=document.createElement("div");
+    slots.className="slots";
+    g.forEach(ci=>{
+      const s=document.createElement("div");
+      s.className=`disk slot ${COLORS[ci].cls}`;
+      s.textContent=COLORS[ci].letter;
+      slots.appendChild(s);
+    });
+    row.appendChild(slots);
+    // feedback pegs (2x2 / dynamic grid)
+    const fg=document.createElement("div");
+    fg.className="feedgrid";
+    const total=cfg.slots;
+    const pegs=[];
+    for(let i=0;i<res.black;i++) pegs.push("black");
+    for(let i=0;i<res.white;i++) pegs.push("white");
+    while(pegs.length<total) pegs.push("none");
+    pegs.forEach(t=>{ const p=document.createElement("div"); p.className="fp "+t; fg.appendChild(p); });
+    row.appendChild(fg);
+    boardEl.appendChild(row);
+    boardEl.scrollTop=boardEl.scrollHeight;
+  }
+
+  function submitGuess(){
+    if(locked || guess.includes(null)) return;
+    const res=scoreGuess(secret, guess);
+    rowsLeft--;
+    addHistoryRow(guess.slice(), res);
+    paint();
+
+    if(res.black===cfg.slots){
+      // WIN
+      locked=true;
+      const guessesUsed=cfg.tries-rowsLeft;
+      const timeSec=Math.round((Date.now()-roundStart)/1000);
+      const base=100*cfg.slots;
+      const guessBonus=Math.max(0, rowsLeft)*40;     // fewer guesses = more points
+      const timeBonus=Math.max(0, 120-timeSec)*2;    // faster = more points
+      const lvlBonus=level*25;
+      const gained=base+guessBonus+timeBonus+lvlBonus;
+      score+=gained;
+      if(score>best){ best=score; save(SK,best); }
+      fb.textContent=`🎉 Cracked it! +${gained} pts`; fb.className="feedback good";
+      paint();
+      level++;
+      setTimeout(newRound, 1600);
+    } else if(rowsLeft<=0){
+      // OUT OF TRIES
+      locked=true;
+      gameOver();
+    } else {
+      fb.textContent=`⚫ ${res.black} • ⚪ ${res.white} — keep going!`; fb.className="feedback";
+      guess=Array(cfg.slots).fill(null); selSlot=0; renderCurrent();
+    }
+  }
+
+  function gameOver(){
+    if(score>best){ best=score; save(SK,best); }
+    $("ovTitle").textContent = (score>=best && score>0) ? "🏆 New Best!" : "Out of tries!";
+    $("ovMsg").textContent=`The secret code was:`;
+    $("ovReveal").innerHTML=secret.map(i=>diskHTML(i)).join("");
+    $("ovScore").textContent=score+" pts";
+    $("ovBest").textContent="Best score: "+best;
+    $("overlay").classList.add("show");
+  }
+
+  function paint(){
+    $("score").textContent=score;
+    $("best").textContent=best;
+    $("level").textContent=level;
+    $("tries").textContent=Math.max(0,rowsLeft);
+  }
+
+  // ----- controls -----
+  $("btnBack").onclick=backspace;
+  $("btnClear").onclick=clearGuess;
+  $("btnSubmit").onclick=submitGuess;
+  $("ovBtn").onclick=startGame;
+
+  // keyboard: number keys 1..N pick a colour, Backspace removes, Enter submits
+  document.addEventListener("keydown",e=>{
+    if(locked) return;
+    if(e.key==="Enter"){ if(!guess.includes(null)) submitGuess(); return; }
+    if(e.key==="Backspace"){ e.preventDefault(); backspace(); return; }
+    if(e.key==="Delete"){ clearGuess(); return; }
+    const n=parseInt(e.key,10);
+    if(n>=1 && n<=cfg.colors){ pickColor(n-1); }
+    // arrow keys to move selected slot
+    if(e.key==="ArrowLeft"){ selSlot=(selSlot-1+cfg.slots)%cfg.slots; renderCurrent(); }
+    if(e.key==="ArrowRight"){ selSlot=(selSlot+1)%cfg.slots; renderCurrent(); }
+  });
+
+  startGame();
+</script>
+</body>
+</html>

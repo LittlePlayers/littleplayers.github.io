@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Nonogram — a picture-logic puzzle for kids! Read the number clues, fill the grid, and reveal the hidden picture. Levels, lives and big tap targets." />
+  <link rel="canonical" href="https://littleplayers.github.io/nonogram/" />
+  <meta name="keywords" content="kids games, nonogram, picross, picture logic puzzle, brain game for kids, Little Players, free online game for kids" />
+  <meta name="author" content="gauravs19" />
+  <meta name="theme-color" content="#0ea5e9" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Little Players" />
+  <meta property="og:title" content="Nonogram — Little Players" />
+  <meta property="og:description" content="Nonogram — a picture-logic puzzle for kids! Read the number clues, fill the grid, and reveal the hidden picture." />
+  <meta property="og:url" content="https://littleplayers.github.io/nonogram/" />
+  <meta property="og:image" content="https://littleplayers.github.io/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Nonogram — Little Players" />
+  <meta name="twitter:description" content="Nonogram — a picture-logic puzzle for kids! Read the number clues, fill the grid, and reveal the hidden picture." />
+  <meta name="twitter:image" content="https://littleplayers.github.io/og-image.png" />
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "VideoGame", "name": "Nonogram", "url": "https://littleplayers.github.io/nonogram/", "image": "https://littleplayers.github.io/og-image.png", "description": "Nonogram — a picture-logic puzzle for kids! Read the number clues, fill the grid, and reveal the hidden picture.", "applicationCategory": "Game", "operatingSystem": "Web Browser", "genre": "puzzle", "author": {"@type": "Organization", "name": "Little Players"}, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "INR"}, "audience": {"@type": "PeopleAudience", "suggestedMinAge": 9}, "isPartOf": {"@type": "WebSite", "name": "Little Players", "url": "https://littleplayers.github.io/"}}</script>
+<title>🧩 Nonogram — Little Players</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧩</text></svg>" />
+<style>
+  :root{
+    --bg:#eef6ff; --card:#fff; --ink:#22304d; --muted:#7d8aa8;
+    --accent:#0ea5e9; --accent2:#22b07d; --good:#22b07d; --bad:#ff5d6c;
+    --line:#bcd3e8; --linebold:#7d99b5; --fill:#1488e0; --xmark:#ff5d6c;
+    --shadow:0 10px 28px rgba(60,110,180,.16); --radius:18px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; min-height:100vh; color:var(--ink);
+    font-family:"Baloo 2","Comic Sans MS","Trebuchet MS",system-ui,sans-serif;
+    background:
+      radial-gradient(circle at 12% 10%,#cfe8ff 0,transparent 42%),
+      radial-gradient(circle at 88% 8%,#d2f5e6 0,transparent 44%),
+      var(--bg);
+    display:flex; flex-direction:column; align-items:center; padding:18px 12px 30px;
+    -webkit-user-select:none; user-select:none; -webkit-tap-highlight-color:transparent;
+  }
+  header{text-align:center; margin:10px 0 4px}
+  h1{margin:0; font-size:clamp(1.8rem,6vw,2.8rem)}
+  .sub{margin:6px 0 0; color:var(--muted); font-weight:700; font-size:.95rem}
+
+  .scoreboard{display:flex; gap:8px; margin:14px 0 6px; flex-wrap:wrap; justify-content:center}
+  .pill{background:var(--card); border-radius:999px; padding:7px 13px; font-weight:800;
+    box-shadow:var(--shadow); font-size:.9rem; display:flex; align-items:center; gap:6px; white-space:nowrap}
+
+  .tools{display:flex; gap:10px; justify-content:center; margin:8px 0 4px; flex-wrap:wrap}
+  .tools button{border:none;cursor:pointer;font:inherit;font-weight:800;padding:10px 16px;
+    border-radius:999px;background:#fff;color:var(--ink);box-shadow:var(--shadow);transition:transform .08s}
+  .tools button:active{transform:translateY(2px)}
+  .tools button.on{background:var(--accent);color:#fff}
+  .hint{color:var(--muted); font-weight:700; font-size:.82rem; text-align:center; margin:4px 12px 0; max-width:520px}
+
+  .boardwrap{background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow);
+    padding:14px; margin-top:12px; width:min(560px,96vw); overflow:hidden;
+    display:flex; justify-content:center}
+  .grid{display:grid; gap:0; touch-action:manipulation}
+
+  .cell{display:flex; align-items:center; justify-content:center; position:relative;
+    background:var(--card); border:1px solid var(--line);
+    font-weight:800; line-height:1; cursor:pointer; overflow:hidden}
+  /* corner spacer (top-left) */
+  .corner{background:transparent;border:none}
+  /* clue cells */
+  .clueTop,.clueLeft{background:#f2f8fd; color:var(--ink); border:1px solid #e2eef8;
+    font-weight:800; line-height:1.05; overflow:hidden}
+  .clueTop{flex-direction:column; justify-content:flex-end; padding-bottom:2px; gap:1px}
+  .clueLeft{flex-direction:row; justify-content:flex-end; align-items:center; padding-right:3px; gap:3px}
+  .clueTop.done,.clueLeft.done{color:#b7c6d6}
+  /* play cells */
+  .play{background:#fbfdff}
+  .play.fill{background:linear-gradient(180deg,var(--accent),var(--fill))}
+  .play.fill.pop{animation:cellpop .22s ease}
+  .play.x{color:var(--xmark); font-size:1.1em}
+  .play.x.shake{animation:shake .35s ease}
+  /* thick separators every 5 */
+  .grid .b-top{border-top:2px solid var(--linebold)}
+  .grid .b-left{border-left:2px solid var(--linebold)}
+  .grid .b-right{border-right:2px solid var(--linebold)}
+  .grid .b-bottom{border-bottom:2px solid var(--linebold)}
+
+  @keyframes cellpop{0%{transform:scale(.5)}60%{transform:scale(1.12)}100%{transform:scale(1)}}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+
+  .feedback{min-height:1.4em; font-weight:800; font-size:1.05rem; margin:12px 0 0; text-align:center}
+  .feedback.good{color:var(--good)} .feedback.bad{color:var(--bad)}
+
+  .overlay{position:fixed; inset:0; background:rgba(20,40,70,.55); display:none;
+    align-items:center; justify-content:center; padding:20px; z-index:9}
+  .overlay.show{display:flex}
+  .panel{background:var(--card); border-radius:22px; padding:28px 24px; text-align:center;
+    box-shadow:var(--shadow); width:min(420px,92vw)}
+  .panel h2{margin:0 0 6px; font-size:1.8rem}
+  .panel p{margin:6px 0; color:var(--muted); font-weight:700}
+  .panel .big{font-size:2.4rem; font-weight:800; color:var(--accent); margin:8px 0}
+  .panel button{margin-top:14px; border:none; cursor:pointer; font:inherit; font-weight:800;
+    padding:13px 26px; border-radius:999px; background:var(--accent); color:#fff; font-size:1.1rem}
+  .pic{display:grid; gap:2px; justify-content:center; margin:10px auto 4px}
+  .pic .pc{border-radius:3px; background:#e8f0f8}
+  .pic .pc.on{background:linear-gradient(180deg,var(--accent),var(--fill))}
+
+  .back{margin-top:18px}
+  .back a{color:var(--accent); font-weight:800; text-decoration:none}
+
+  /* --- mobile/tablet responsiveness guard --- */
+  html,body{overflow-x:hidden}
+  body>*{max-width:100%}
+  @media (max-width:600px){ .sub{font-size:.84rem} .pill{font-size:.82rem;padding:6px 11px} }
+</style>
+</head>
+<body>
+  <header>
+    <h1>🧩 Nonogram</h1>
+    <p class="sub">Use the number clues to fill the grid and reveal the picture!</p>
+  </header>
+
+  <div class="scoreboard">
+    <div class="pill">⭐ <span id="score">0</span></div>
+    <div class="pill">🏆 Best: <span id="best">0</span></div>
+    <div class="pill">📈 Lvl <span id="level">1</span></div>
+    <div class="pill">⏱ <span id="time">0:00</span></div>
+    <div class="pill hearts" id="hearts">❤️❤️❤️</div>
+  </div>
+
+  <div class="tools" id="tools">
+    <button data-m="fill" class="on" id="btnFill">🖌️ Fill</button>
+    <button data-m="x" id="btnX">❌ Mark X</button>
+  </div>
+  <p class="hint">Tap with the chosen tool. On a computer you can right-click a cell to mark X. Wrong fills cost a life!</p>
+
+  <div class="boardwrap">
+    <div class="grid" id="grid"></div>
+  </div>
+  <p class="feedback" id="feedback"></p>
+
+  <p class="back"><a href="https://littleplayers.github.io/">← Back to Little Players</a></p>
+
+  <div class="overlay" id="overlay">
+    <div class="panel">
+      <h2 id="ovTitle">Game Over</h2>
+      <p id="ovMsg"></p>
+      <div class="pic" id="ovPic"></div>
+      <div class="big" id="ovScore">0</div>
+      <p id="ovBest"></p>
+      <button id="ovBtn">▶ Play Again</button>
+    </div>
+  </div>
+
+<script>
+  const SK="ng_best";
+  const $=id=>document.getElementById(id);
+  const gridEl=$("grid"), fb=$("feedback");
+
+  // Level -> grid size. Capped at 10x10 for mobile friendliness.
+  const SIZES=[5,5,8,8,10];
+  function sizeForLevel(lv){ return SIZES[Math.min(lv-1, SIZES.length-1)]; }
+
+  let mode="fill";               // "fill" | "x"
+  let score=0, level=1, lives=3;
+  let best=load(SK,0);
+  let N=5;                        // current grid size
+  let sol=[];                    // solution: sol[r][c] = 1 filled / 0 empty
+  let state=[];                  // player: 0 empty, 1 filled, 2 marked-x
+  let rowClues=[], colClues=[];
+  let solved=false;
+  let startTime=0, elapsed=0, timer=null;
+  let painting=false, paintAs=null; // drag-paint support
+
+  function load(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}}
+  function save(k,v){localStorage.setItem(k,JSON.stringify(v))}
+
+  // ---- Puzzle generation -------------------------------------------------
+  // Build a random solvable solution (~50-60% filled) with no fully-empty
+  // row or column (avoids degenerate/blank puzzles), then compute clues.
+  function makeSolution(n){
+    let grid;
+    for(let attempt=0; attempt<200; attempt++){
+      grid=[];
+      let total=0;
+      for(let r=0;r<n;r++){
+        const row=[];
+        for(let c=0;c<n;c++){ const v=Math.random()<0.56?1:0; row.push(v); total+=v; }
+        grid.push(row);
+      }
+      // ensure each row has >=1 filled
+      for(let r=0;r<n;r++){
+        if(grid[r].every(v=>v===0)){ grid[r][Math.floor(Math.random()*n)]=1; }
+      }
+      // ensure each column has >=1 filled
+      for(let c=0;c<n;c++){
+        let any=false; for(let r=0;r<n;r++) if(grid[r][c]) any=true;
+        if(!any){ grid[Math.floor(Math.random()*n)][c]=1; }
+      }
+      // require a sensible fill ratio so it's not nearly all filled / empty
+      total=0; for(let r=0;r<n;r++) for(let c=0;c<n;c++) total+=grid[r][c];
+      const ratio=total/(n*n);
+      if(ratio>=0.40 && ratio<=0.68) return grid;
+    }
+    return grid; // fallback (already valid: no empty row/col)
+  }
+
+  // Compute run-length clues for one line (array of 0/1).
+  function clueFor(line){
+    const out=[]; let run=0;
+    for(const v of line){
+      if(v){ run++; } else if(run){ out.push(run); run=0; }
+    }
+    if(run) out.push(run);
+    return out.length? out : [0];
+  }
+
+  function computeClues(){
+    rowClues=[]; colClues=[];
+    for(let r=0;r<N;r++) rowClues.push(clueFor(sol[r]));
+    for(let c=0;c<N;c++){
+      const col=[]; for(let r=0;r<N;r++) col.push(sol[r][c]);
+      colClues.push(clueFor(col));
+    }
+  }
+
+  // ---- Win / clue-satisfied checks --------------------------------------
+  function isWin(){
+    for(let r=0;r<N;r++) for(let c=0;c<N;c++){
+      if(sol[r][c]===1 && state[r][c]!==1) return false;
+    }
+    return true;
+  }
+  // Does the player's filled cells in a row/col exactly match its clue?
+  function lineFilled(getter,len){
+    const arr=[]; for(let i=0;i<len;i++) arr.push(getter(i)===1?1:0);
+    return arr;
+  }
+  function arrEq(a,b){ if(a.length!==b.length) return false; for(let i=0;i<a.length;i++) if(a[i]!==b[i]) return false; return true; }
+  function rowSatisfied(r){ return arrEq(clueFor(lineFilled(c=>state[r][c],N)), rowClues[r]); }
+  function colSatisfied(c){ return arrEq(clueFor(lineFilled(r=>state[r][c],N)), colClues[c]); }
+
+  // ---- Rendering --------------------------------------------------------
+  function maxRowClueLen(){ let m=1; for(const rc of rowClues) m=Math.max(m,rc.length); return m; }
+  function maxColClueLen(){ let m=1; for(const cc of colClues) m=Math.max(m,cc.length); return m; }
+
+  function buildBoard(){
+    const rcl=maxRowClueLen();   // clue columns on the left
+    const ccl=maxColClueLen();   // clue rows on the top
+    const cols=rcl+N, rows=ccl+N;
+    // size cells so the whole board fits the wrap width
+    const wrapW=Math.min(560, window.innerWidth*0.96)-28; // minus padding
+    let cell=Math.floor(wrapW/cols);
+    cell=Math.max(20, Math.min(cell, 52));
+    gridEl.style.gridTemplateColumns=`repeat(${cols},${cell}px)`;
+    gridEl.style.gridTemplateRows=`repeat(${rows},${cell}px)`;
+    const fs=Math.max(10, Math.round(cell*0.42));
+    gridEl.innerHTML="";
+
+    for(let gr=0; gr<rows; gr++){
+      for(let gc=0; gc<cols; gc++){
+        const d=document.createElement("div");
+        d.style.fontSize=fs+"px";
+        const inClueTop = gr<ccl;
+        const inClueLeft= gc<rcl;
+        if(inClueTop && inClueLeft){
+          d.className="cell corner";
+        } else if(inClueTop){
+          // top clue column for board column (gc-rcl)
+          const c=gc-rcl;
+          d.className="cell clueTop"+(gc>=rcl && ((gc-rcl)%5===0)?" b-left":"");
+          d.dataset.col=c;
+          const cc=colClues[c];
+          cc.forEach(num=>{ const s=document.createElement("span"); s.textContent=num; d.appendChild(s); });
+        } else if(inClueLeft){
+          const r=gr-ccl;
+          d.className="cell clueLeft"+((r%5===0)?" b-top":"");
+          d.dataset.row=r;
+          const rc=rowClues[r];
+          rc.forEach(num=>{ const s=document.createElement("span"); s.textContent=num; d.appendChild(s); });
+        } else {
+          const r=gr-ccl, c=gc-rcl;
+          let cls="cell play";
+          if(r%5===0) cls+=" b-top";
+          if(c%5===0) cls+=" b-left";
+          if(r===N-1) cls+=" b-bottom";
+          if(c===N-1) cls+=" b-right";
+          d.className=cls;
+          d.dataset.r=r; d.dataset.c=c;
+        }
+        gridEl.appendChild(d);
+      }
+    }
+    refreshClueDim();
+  }
+
+  function cellNode(r,c){ return gridEl.querySelector(`.play[data-r="${r}"][data-c="${c}"]`); }
+
+  function paintCell(r,c){
+    const node=cellNode(r,c); if(!node) return;
+    node.classList.remove("fill","x","pop","shake");
+    const st=state[r][c];
+    if(st===1){ node.textContent=""; node.classList.add("fill"); }
+    else if(st===2){ node.textContent="✕"; node.classList.add("x"); }
+    else { node.textContent=""; }
+  }
+
+  function refreshClueDim(){
+    for(let r=0;r<N;r++){
+      const el=gridEl.querySelector(`.clueLeft[data-row="${r}"]`);
+      if(el) el.classList.toggle("done", rowSatisfied(r));
+    }
+    for(let c=0;c<N;c++){
+      const el=gridEl.querySelector(`.clueTop[data-col="${c}"]`);
+      if(el) el.classList.toggle("done", colSatisfied(c));
+    }
+  }
+
+  // ---- Interaction ------------------------------------------------------
+  function applyAction(r,c,forced){
+    if(solved) return;
+    const desired = forced || mode; // "fill" or "x"
+    const st=state[r][c];
+
+    if(desired==="x"){
+      // toggle X on empties; never overwrite a correct fill
+      if(st===1) return;
+      state[r][c] = (st===2)?0:2;
+      paintCell(r,c);
+      checkWin();
+      refreshClueDim();
+      return;
+    }
+
+    // FILL mode
+    if(st===1){ // already filled -> toggle off
+      state[r][c]=0; paintCell(r,c); refreshClueDim(); return;
+    }
+    if(sol[r][c]===1){
+      state[r][c]=1; paintCell(r,c);
+      const node=cellNode(r,c); if(node){ void node.offsetWidth; node.classList.add("pop"); }
+      flash("good","🎉");
+      refreshClueDim(); checkWin();
+    } else {
+      // mistake: auto-mark X and lose a life
+      state[r][c]=2; paintCell(r,c);
+      const node=cellNode(r,c); if(node){ void node.offsetWidth; node.classList.add("shake"); }
+      lives--; paint();
+      flash("bad","💔 Oops! That cell is empty.");
+      refreshClueDim();
+      if(lives<=0) setTimeout(gameOver,650);
+    }
+  }
+
+  function flash(kind,msg){
+    fb.textContent=msg; fb.className="feedback "+(kind==="good"?"good":"bad");
+    if(kind==="good"){ clearTimeout(flash._t); flash._t=setTimeout(()=>{ if(!solved) fb.textContent=""; },500); }
+  }
+
+  function checkWin(){
+    if(isWin() && !solved){
+      solved=true; stopTimer();
+      const timeBonus=Math.max(0, 300 - elapsed)* (N>=8?2:1);
+      const livesBonus=lives*50;
+      const base=N*N*4;
+      const pts=base+timeBonus+livesBonus;
+      score+=pts;
+      if(score>best){ best=score; save(SK,best); }
+      paint();
+      revealAndWin(pts,timeBonus,livesBonus);
+    }
+  }
+
+  // Pointer handling on the grid (mouse + touch via Pointer events)
+  function rcFromEvent(e){
+    const t=e.target.closest(".play"); if(!t) return null;
+    return {r:+t.dataset.r, c:+t.dataset.c};
+  }
+  gridEl.addEventListener("pointerdown",e=>{
+    const rc=rcFromEvent(e); if(!rc) return;
+    e.preventDefault();
+    const forced = (e.button===2 || e.pointerType==="mouse"&&e.buttons===2) ? "x" : null;
+    painting=true;
+    // remember the resulting state of the first cell so drag repeats it
+    applyAction(rc.r,rc.c,forced);
+    paintAs={mode: forced||mode, val: state[rc.r][rc.c]};
+  });
+  gridEl.addEventListener("pointerover",e=>{
+    if(!painting||!paintAs) return;
+    const rc=rcFromEvent(e); if(!rc) return;
+    // only continue dragging for the X tool (filling by drag is risky for mistakes)
+    if(paintAs.mode==="x"){
+      if(state[rc.r][rc.c]!==1 && state[rc.r][rc.c]!==paintAs.val){
+        applyAction(rc.r,rc.c,"x");
+      }
+    }
+  });
+  window.addEventListener("pointerup",()=>{ painting=false; paintAs=null; });
+  gridEl.addEventListener("contextmenu",e=>{ // right-click = mark X
+    const rc=rcFromEvent(e); if(rc){ e.preventDefault(); applyAction(rc.r,rc.c,"x"); }
+  });
+
+  // tool toggle
+  document.querySelectorAll("#tools button").forEach(b=>{
+    b.onclick=()=>{ mode=b.dataset.m;
+      document.querySelectorAll("#tools button").forEach(x=>x.classList.toggle("on",x===b));
+    };
+  });
+
+  // keyboard: f = fill tool, x = X tool
+  document.addEventListener("keydown",e=>{
+    if(e.key==="f"||e.key==="F"){ $("btnFill").click(); }
+    if(e.key==="x"||e.key==="X"){ $("btnX").click(); }
+  });
+
+  // ---- Timer ------------------------------------------------------------
+  function startTimer(){
+    stopTimer(); startTime=Date.now(); elapsed=0;
+    timer=setInterval(()=>{
+      elapsed=Math.floor((Date.now()-startTime)/1000);
+      $("time").textContent=fmt(elapsed);
+    },1000);
+  }
+  function stopTimer(){ if(timer){clearInterval(timer);timer=null;} }
+  function fmt(s){ const m=Math.floor(s/60); return m+":"+String(s%60).padStart(2,"0"); }
+
+  // ---- Flow -------------------------------------------------------------
+  function newPuzzle(){
+    N=sizeForLevel(level);
+    sol=makeSolution(N);
+    computeClues();
+    state=[]; for(let r=0;r<N;r++){ state.push(new Array(N).fill(0)); }
+    solved=false;
+    fb.textContent=""; fb.className="feedback";
+    buildBoard();
+    paint();
+    startTimer();
+  }
+
+  function startGame(){
+    score=0; level=1; lives=3;
+    $("overlay").classList.remove("show");
+    newPuzzle();
+  }
+
+  function revealAndWin(pts,timeBonus,livesBonus){
+    // briefly flash the completed picture, then show level-up panel
+    flash("good","🎉 You revealed the picture! +"+pts);
+    gridEl.querySelectorAll(".play").forEach(n=>{
+      const r=+n.dataset.r,c=+n.dataset.c;
+      if(sol[r][c]===1){ n.classList.add("fill"); n.textContent=""; }
+    });
+    setTimeout(()=>{
+      $("ovTitle").textContent="🎉 Puzzle Solved!";
+      $("ovMsg").textContent=`Level ${level} (${N}×${N}) done in ${fmt(elapsed)}. +${timeBonus} time · +${livesBonus} lives bonus.`;
+      buildPicPreview($("ovPic"));
+      $("ovScore").textContent=score+" pts";
+      $("ovBest").textContent="Best score: "+best;
+      $("ovBtn").textContent= level<SIZES.length ? "▶ Next Puzzle" : "▶ Play Again";
+      $("ovBtn")._next=true;
+      $("overlay").classList.add("show");
+    },1100);
+  }
+
+  function buildPicPreview(container){
+    container.innerHTML="";
+    const ps=Math.max(8, Math.round(120/N));
+    container.style.gridTemplateColumns=`repeat(${N},${ps}px)`;
+    for(let r=0;r<N;r++) for(let c=0;c<N;c++){
+      const d=document.createElement("div");
+      d.className="pc"+(sol[r][c]?" on":"");
+      d.style.width=ps+"px"; d.style.height=ps+"px";
+      container.appendChild(d);
+    }
+  }
+
+  function gameOver(){
+    stopTimer(); solved=true;
+    $("ovTitle").textContent = (score>=best && score>0) ? "🏆 New Best!" : "Game Over";
+    $("ovMsg").textContent=`You ran out of lives on Level ${level}.`;
+    buildPicPreview($("ovPic"));
+    $("ovScore").textContent=score+" pts";
+    $("ovBest").textContent="Best score: "+best;
+    $("ovBtn").textContent="▶ Play Again";
+    $("ovBtn")._next=false;
+    $("overlay").classList.add("show");
+  }
+
+  function paint(){
+    $("score").textContent=score; $("best").textContent=best;
+    $("level").textContent=level;
+    $("hearts").textContent="❤️".repeat(Math.max(0,lives))+"🤍".repeat(Math.max(0,3-lives));
+  }
+
+  $("ovBtn").onclick=function(){
+    $("overlay").classList.remove("show");
+    if(this._next && lives>0){ level++; newPuzzle(); }
+    else { startGame(); }
+  };
+
+  // rebuild board on resize so it stays within the viewport
+  let rzT=null;
+  window.addEventListener("resize",()=>{
+    clearTimeout(rzT);
+    rzT=setTimeout(()=>{
+      if(!sol.length) return;
+      buildBoard();
+      for(let r=0;r<N;r++) for(let c=0;c<N;c++) paintCell(r,c);
+      refreshClueDim();
+    },200);
+  });
+
+  startGame();
+</script>
+</body>
+</html>
