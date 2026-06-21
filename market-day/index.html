@@ -85,6 +85,12 @@
   .key.util{background:linear-gradient(180deg,#9aa7b3,#7d8b98); box-shadow:0 5px 0 #5e6b78; font-size:1.15rem}
   .key.enter{background:linear-gradient(180deg,#ffb020,#f59300); box-shadow:0 5px 0 #c97600; font-size:1.15rem}
 
+  /* speech bubble (smart-change scenario) */
+  .speech{background:#fff8e1; border:2px dashed #f0c000; border-radius:14px; padding:11px 14px;
+    font-weight:800; color:#7a5b00; margin:4px 0 14px; font-size:1.02rem; line-height:1.4}
+  .speech b{color:#16a34a}
+  .hint{color:var(--muted); font-weight:700; font-size:.9rem; margin:2px 0 0}
+
   /* change step */
   .change-info{display:flex; flex-direction:column; gap:4px; margin:2px 0 14px; font-weight:800}
   .change-info .row{font-size:1.05rem}
@@ -156,12 +162,13 @@
   <main class="game">
     <div class="customer" id="customer">🧑</div>
 
-    <!-- STEP 1: total the basket -->
-    <section id="step1">
-      <p class="step">STEP 1 · TOTAL THE BASKET</p>
-      <p class="prompt">How much is the basket?</p>
+    <!-- PHASES 1 & 2 share the keypad -->
+    <section id="kpStep">
+      <p class="step" id="stepLabel">STEP 1 · TOTAL THE BASKET</p>
+      <p class="prompt" id="prompt">How much is the basket?</p>
       <div class="basket" id="basket"></div>
-      <div class="total"><span class="cap">Your total</span><span id="entry">₹0</span></div>
+      <div class="speech hide" id="speech"></div>
+      <div class="total"><span class="cap" id="entryCap">Your total</span><span id="entry">₹0</span></div>
       <div class="keypad" id="keypad">
         <button class="key" data-k="1">1</button>
         <button class="key" data-k="2">2</button>
@@ -178,12 +185,12 @@
       </div>
     </section>
 
-    <!-- STEP 2: make change -->
-    <section id="step2" class="hide">
-      <p class="step">STEP 2 · MAKE CHANGE</p>
-      <p class="prompt" id="changePrompt">The customer paid with ₹50.</p>
+    <!-- PHASE 3: give the change -->
+    <section id="step3" class="hide">
+      <p class="step">STEP 3 · GIVE THE CHANGE</p>
+      <p class="prompt" id="assemblePrompt">Give ₹0 back to the customer.</p>
+      <p class="hint hide" id="assembleHint"></p>
       <div class="change-info">
-        <div class="row">Change to give back: <span id="changeOwed">₹0</span></div>
         <div class="row given">Change given: <span id="changeGiven">₹0</span></div>
         <div class="row need" id="changeNeed">Still needed: ₹0</div>
       </div>
@@ -220,40 +227,61 @@
     {e:"🥚",n:"Eggs"},{e:"🧀",n:"Cheese"},{e:"🍅",n:"Tomato"},{e:"🥔",n:"Potato"},
     {e:"🧅",n:"Onion"},{e:"🥕",n:"Carrot"},{e:"🍪",n:"Biscuits"},{e:"🍫",n:"Chocolate"},
     {e:"🧃",n:"Juice"},{e:"🍚",n:"Rice"},{e:"🫖",n:"Tea"},{e:"🧈",n:"Butter"},
-    {e:"🍇",n:"Grapes"},{e:"🥥",n:"Coconut"}
+    {e:"🍇",n:"Grapes"},{e:"🥥",n:"Coconut"},{e:"🥦",n:"Vegetables"},{e:"🐟",n:"Fish"},
+    {e:"🧼",n:"Soap"},{e:"🪥",n:"Toothpaste"},{e:"📒",n:"Notebook"},{e:"✏️",n:"Pencils"}
   ];
   const CUSTOMERS=["🧑","👩","👨","👵","👴","🧒","👧","👦","🧕","👳"];
-  const DENOMS=[1,2,5,10,20,50,100,500];   // standard denominations
-  const NOTES=[10,20,50,100,200,500,1000]; // standard notes the customer pays with
+  const DENOMS=[1,2,5,10,20,50,100,500];   // coins + notes you can hand back
+  const NOTES=[10,20,50,100,200,500];      // notes the customer pays with
+  const SINGLE_NOTES=[10,20,50,100,200,500];
+  const MAX_EXTRA=10;                       // most a customer will add for round change
 
   let score=0, level=1, streak=0, lives=3, served=0;
   let best=load(SK,0);
   let locked=false, phase=1;
   let basketTotal=0, entryStr="";
-  let paidNote=0, changeOwed=0, changeGiven=0;
+  // scenario: paidNote = note handed over; extraAsked = small coins added;
+  // totalPaid = what the customer actually gives; changeOwed = totalPaid - basketTotal
+  let paidNote=0, extraAsked=0, totalPaid=0, changeOwed=0, changeGiven=0, smart=false;
   let timeLeft=0, timeMax=0, timer=null, running=false;
 
   function load(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}}
   function save(k,v){localStorage.setItem(k,JSON.stringify(v))}
   function ri(a,b){return a+Math.floor(Math.random()*(b-a+1))}
+  function isNote(x){ return SINGLE_NOTES.includes(x); }
 
-  // smallest standard note that is >= total
-  function payNote(total){
-    for(const n of NOTES){ if(n>=total) return n; }
-    return NOTES[NOTES.length-1];
+  // pick the note the customer pays with: usually smallest note >= total,
+  // but sometimes a bigger note (e.g. ₹500 for a ₹77 basket) for harder subtraction
+  function pickNote(total){
+    const cands=NOTES.filter(n=>n>=total);
+    if(!cands.length) return NOTES[NOTES.length-1];
+    if(cands.length>1 && Math.random()<0.4){
+      const bigger=cands.slice(1);
+      return bigger[Math.floor(Math.random()*bigger.length)];
+    }
+    return cands[0];
+  }
+
+  // smallest single note just above an awkward change, within +MAX_EXTRA.
+  // e.g. 40 -> 50 (add 10), 90 -> 100 (add 10). Returns null if not worth it.
+  function smartTarget(raw){
+    if(raw<=0 || isNote(raw)) return null;   // 0 or already one neat note
+    for(const r of SINGLE_NOTES){
+      if(r>raw) return (r-raw)<=MAX_EXTRA ? r : null;
+    }
+    return null;
   }
 
   function makeBasket(){
-    // item count and price ceiling grow with level
     const count = Math.min(4, 2 + Math.floor((level-1)/2));      // 2 -> 3 -> 4
-    const maxPrice = Math.min(90, 15 + (level-1)*8);             // price ceiling grows
+    const maxPrice = Math.min(120, 18 + (level-1)*9);            // price ceiling grows
     const pool=[...GOODS];
     const items=[];
     let total=0;
     for(let i=0;i<count;i++){
       const idx=Math.floor(Math.random()*pool.length);
       const g=pool.splice(idx,1)[0];
-      const price=ri(2,maxPrice);
+      const price=ri(3,maxPrice);
       items.push({...g,price});
       total+=price;
     }
@@ -270,8 +298,14 @@
     locked=false;
     const b=makeBasket();
     basketTotal=b.total;
-    paidNote=payNote(basketTotal);
-    changeOwed=paidNote-basketTotal;
+    paidNote=pickNote(basketTotal);
+    const raw=paidNote-basketTotal;
+
+    // decide scenario: smart-change becomes more likely as levels rise
+    const tgt=smartTarget(raw);
+    smart = tgt!==null && level>=2 && Math.random()<Math.min(0.6,0.18+level*0.06);
+    if(smart){ extraAsked=tgt-raw; changeOwed=tgt; totalPaid=paidNote+extraAsked; }
+    else     { extraAsked=0;       changeOwed=raw; totalPaid=paidNote; }
 
     $("customer").textContent=CUSTOMERS[Math.floor(Math.random()*CUSTOMERS.length)];
 
@@ -284,67 +318,82 @@
       wrap.appendChild(row);
     });
 
-    // reset step 1
-    entryStr="";
-    updateEntry();
-    showStep(1);
     fb.textContent=""; fb.className="feedback";
+    goPhase(1);
     popEl($("basket"));
 
-    timeMax=Math.max(12, 26 - (level-1)*1.5);
+    timeMax=Math.max(16, 34 - (level-1)*1.5);   // a little longer — 3 steps now
     timeLeft=timeMax; startTimer();
   }
 
-  function showStep(n){
+  /* ---------- phase switching ---------- */
+  function goPhase(n){
     phase=n;
-    $("step1").classList.toggle("hide",n!==1);
-    $("step2").classList.toggle("hide",n!==2);
+    entryStr=""; updateEntry();
+    const kp = (n===1||n===2);
+    $("kpStep").classList.toggle("hide",!kp);
+    $("step3").classList.toggle("hide",n!==3);
+
+    if(n===1){
+      $("stepLabel").textContent="STEP 1 · TOTAL THE BASKET";
+      $("prompt").textContent="How much is the basket?";
+      $("entryCap").textContent="Your total";
+      $("basket").classList.remove("hide");
+      $("speech").classList.add("hide");
+    } else if(n===2){
+      $("stepLabel").textContent="STEP 2 · COUNT THE CHANGE";
+      $("entryCap").textContent="Change to give";
+      $("basket").classList.add("hide");
+      if(smart){
+        $("prompt").textContent="How much change now?";
+        $("speech").classList.remove("hide");
+        $("speech").innerHTML=`💬 "Here's <b>₹${paidNote}</b> and <b>₹${extraAsked}</b> more — `+
+          `so you can give me one neat note back!" &nbsp;(₹${paidNote} + ₹${extraAsked} = <b>₹${totalPaid}</b>)`;
+      } else {
+        $("prompt").textContent=`The customer pays with ₹${paidNote}. How much change?`;
+        $("speech").classList.add("hide");
+      }
+    } else if(n===3){
+      changeGiven=0;
+      $("assemblePrompt").textContent=`Give ₹${changeOwed} back to the customer.`;
+      const hint=$("assembleHint");
+      if(smart && isNote(changeOwed)){
+        hint.textContent=`✨ Tip: ₹${changeOwed} is just one note — easy!`;
+        hint.classList.remove("hide");
+      } else hint.classList.add("hide");
+      buildDenoms();
+      updateChange();
+    }
   }
 
-  /* ---------- STEP 1: keypad ---------- */
-  function updateEntry(){
-    $("entry").textContent="₹"+(entryStr===""?"0":entryStr);
-  }
+  /* ---------- STEPS 1 & 2: keypad ---------- */
+  function updateEntry(){ $("entry").textContent="₹"+(entryStr===""?"0":entryStr); }
   function keyPress(k){
-    if(locked||phase!==1) return;
+    if(locked||(phase!==1&&phase!==2)) return;
     if(k==="clear"){ entryStr=entryStr.slice(0,-1); updateEntry(); return; }
-    if(k==="enter"){ submitTotal(); return; }
-    // digit
+    if(k==="enter"){ submitEntry(); return; }
     if(entryStr.length>=5) return;            // guard absurd numbers
     if(entryStr===""&&k==="0") return;        // no leading zero
     entryStr+=k; updateEntry();
   }
-  function submitTotal(){
-    if(locked||phase!==1) return;
-    if(entryStr===""){ flash("Type the total first 🙂",false,true); return; }
+  function submitEntry(){
+    if(locked||(phase!==1&&phase!==2)) return;
+    if(entryStr===""){ fb.textContent="Type a number first 🙂"; fb.className="feedback bad"; return; }
     const val=parseInt(entryStr,10);
-    if(val===basketTotal){
-      // correct -> move to change step (timer keeps running for the whole customer)
-      flash("✅ Total correct!",true,true);
-      setTimeout(beginChange,650);
-    } else {
-      locked=true; stopTimer();
-      lives--; streak=0; paint();
-      fb.textContent=`❌ It was ₹${basketTotal}. Try the next one!`; fb.className="feedback bad";
-      if(lives<=0) setTimeout(gameOver,1300); else setTimeout(newCustomer,1300);
+    if(phase===1){
+      if(val===basketTotal){ fb.textContent="✅ Total correct!"; fb.className="feedback good"; setTimeout(()=>goPhase(2),650); }
+      else loseLife(`❌ The basket was ₹${basketTotal}.`);
+    } else { // phase 2
+      if(val===changeOwed){ fb.textContent="✅ Right change!"; fb.className="feedback good"; setTimeout(()=>goPhase(3),650); }
+      else loseLife(`❌ Change was ₹${changeOwed}  (₹${totalPaid} − ₹${basketTotal}).`);
     }
   }
 
-  /* ---------- STEP 2: change ---------- */
-  function beginChange(){
-    changeGiven=0;
-    $("changePrompt").textContent=`The customer paid with ₹${paidNote}.`;
-    $("changeOwed").textContent="₹"+changeOwed;
-    buildDenoms();
-    updateChange();
-    showStep(2);
-    fb.textContent=""; fb.className="feedback";
-  }
+  /* ---------- STEP 3: assemble the change ---------- */
   function buildDenoms(){
     const wrap=$("denoms"); wrap.innerHTML="";
     DENOMS.forEach(d=>{
-      // only offer 500 when it could be useful
-      if(d===500 && changeOwed<500) return;
+      if(d>changeOwed) return;                 // don't offer denominations bigger than the change
       const b=document.createElement("button");
       b.className="denom"+(d>=10?" note":"");
       b.textContent="₹"+d;
@@ -352,46 +401,41 @@
       wrap.appendChild(b);
     });
   }
-  function addCoin(d,btn){
-    if(locked||phase!==2) return;
-    changeGiven+=d;
-    popCoin(btn);
-    updateChange();
-  }
-  function resetChange(){
-    if(locked||phase!==2) return;
-    changeGiven=0; updateChange();
-  }
+  function addCoin(d,btn){ if(locked||phase!==3) return; changeGiven+=d; popCoin(btn); updateChange(); }
+  function resetChange(){ if(locked||phase!==3) return; changeGiven=0; updateChange(); }
   function updateChange(){
     $("changeGiven").textContent="₹"+changeGiven;
     const need=changeOwed-changeGiven;
     const el=$("changeNeed");
-    if(need>0){ el.textContent="Still needed: ₹"+need; el.className="need"; }
-    else if(need===0){ el.textContent="Perfect — ₹0 left! 🎉"; el.className="need zero"; }
-    else { el.textContent="Too much by ₹"+(-need); el.className="need"; el.style.color="var(--bad)"; return; }
-    el.style.color="";
+    if(need>0){ el.textContent="Still needed: ₹"+need; el.className="need"; el.style.color=""; }
+    else if(need===0){ el.textContent="Perfect — ₹0 left! 🎉"; el.className="need zero"; el.style.color=""; }
+    else { el.textContent="Too much by ₹"+(-need); el.className="need"; el.style.color="var(--bad)"; }
   }
   function giveChange(){
-    if(locked||phase!==2) return;
+    if(locked||phase!==3) return;
     if(changeGiven!==changeOwed){
-      // wrong change -> costs a life, reveal correct amount
-      locked=true; stopTimer();
-      lives--; streak=0; paint();
-      fb.textContent=`❌ Correct change was ₹${changeOwed}. You gave ₹${changeGiven}.`; fb.className="feedback bad";
-      if(lives<=0) setTimeout(gameOver,1500); else setTimeout(newCustomer,1500);
-      return;
+      loseLife(`❌ Correct change was ₹${changeOwed}. You gave ₹${changeGiven}.`); return;
     }
-    // success!
     locked=true; stopTimer();
     const timeBonus=Math.round(timeLeft);
-    const pts=15+timeBonus+streak*5;
+    const smartBonus=smart?10:0;
+    const pts=15+timeBonus+streak*5+smartBonus;
     streak++; served++; score+=pts;
     if(best<score){ best=score; save(SK,best); }
     if(served%3===0) level++;
     paint();
-    fb.textContent=`🎉 Customer happy! +${pts} (⏱ +${timeBonus})`; fb.className="feedback good";
+    fb.textContent=`🎉 Customer happy! +${pts} (⏱ +${timeBonus}${smartBonus?` ✨ +${smartBonus}`:""})`;
+    fb.className="feedback good";
     popEl($("customer"));
-    setTimeout(newCustomer,1100);
+    setTimeout(newCustomer,1150);
+  }
+
+  /* ---------- shared: lose a life ---------- */
+  function loseLife(msg){
+    locked=true; stopTimer();
+    lives--; streak=0; paint();
+    fb.textContent=msg; fb.className="feedback bad";
+    if(lives<=0) setTimeout(gameOver,1500); else setTimeout(newCustomer,1500);
   }
 
   /* ---------- timer ---------- */
@@ -409,18 +453,13 @@
     fill.className="timerfill"+(pct<25?" danger":pct<50?" warn":"");
   }
   function timeUp(){
-    if(locked) return; locked=true; stopTimer();
-    lives--; streak=0; paint();
-    if(phase===1) fb.textContent=`⏰ Time! The basket was ₹${basketTotal}.`;
-    else fb.textContent=`⏰ Time! Correct change was ₹${changeOwed}.`;
-    fb.className="feedback bad";
-    if(lives<=0) setTimeout(gameOver,1400); else setTimeout(newCustomer,1400);
+    if(locked) return;
+    if(phase===1) loseLife(`⏰ Time! The basket was ₹${basketTotal}.`);
+    else if(phase===2) loseLife(`⏰ Time! Change was ₹${changeOwed}.`);
+    else loseLife(`⏰ Time! The change was ₹${changeOwed}.`);
   }
 
   /* ---------- helpers ---------- */
-  function flash(msg,good,keepTimer){
-    fb.textContent=msg; fb.className="feedback "+(good?"good":"bad");
-  }
   function popEl(el){ el.classList.remove("pop"); void el.offsetWidth; el.classList.add("pop"); }
   function popCoin(el){ el.classList.remove("coinpop"); void el.offsetWidth; el.classList.add("coinpop"); }
 
@@ -450,11 +489,11 @@
   /* ---------- keyboard ---------- */
   document.addEventListener("keydown",e=>{
     if(!running||locked) return;
-    if(phase===1){
+    if(phase===1||phase===2){
       if(e.key>="0"&&e.key<="9"){ keyPress(e.key); }
       else if(e.key==="Backspace"){ e.preventDefault(); keyPress("clear"); }
       else if(e.key==="Enter"){ keyPress("enter"); }
-    } else if(phase===2){
+    } else if(phase===3){
       if(e.key==="Enter"){ giveChange(); }
       else if(e.key==="Backspace"){ e.preventDefault(); resetChange(); }
     }

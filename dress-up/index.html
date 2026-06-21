@@ -114,16 +114,25 @@
     ctx.restore();
 
     ctx.textAlign="center"; ctx.textBaseline="middle";
+
+    // --- figure anchored to a head model so accessories line up ---
+    const cx=W/2;
+    const baseSize=180;          // base emoji size
+    const baseCY=232;            // base emoji vertical centre
+    // for a person emoji at this size, the head occupies the upper part:
+    const headTop=baseCY-baseSize*0.50;   // ~142
+    const eyeLine=baseCY-baseSize*0.24;    // ~189
+
     // base
-    ctx.font="180px serif"; ctx.fillText(val("base"), W/2, 230);
-    // hat
-    if(val("hat")){ ctx.font="84px serif"; ctx.fillText(val("hat"), W/2, 118); }
-    // glasses
-    if(val("face")){ ctx.font="62px serif"; ctx.fillText(val("face"), W/2, 196); }
-    // item held (lower right)
-    if(val("item")){ ctx.font="74px serif"; ctx.fillText(val("item"), W-66, 300); }
-    // pet (lower left)
-    if(val("pet")){ ctx.font="64px serif"; ctx.fillText(val("pet"), 64, 330); }
+    ctx.font=baseSize+"px serif"; ctx.fillText(val("base"), cx, baseCY);
+    // hat — bottom of the hat rests just over the top of the head
+    if(val("hat")){ ctx.font="80px serif"; ctx.fillText(val("hat"), cx, headTop+4); }
+    // glasses — centred on the eye line
+    if(val("face")){ ctx.font="54px serif"; ctx.fillText(val("face"), cx, eyeLine); }
+    // item held (lower right, by the hand)
+    if(val("item")){ ctx.font="70px serif"; ctx.fillText(val("item"), W-62, baseCY+74); }
+    // pet (lower left, beside the feet)
+    if(val("pet")){ ctx.font="60px serif"; ctx.fillText(val("pet"), 62, baseCY+100); }
   }
 
   function buildPanel(){
