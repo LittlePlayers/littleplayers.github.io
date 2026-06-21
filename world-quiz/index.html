@@ -53,7 +53,7 @@
   .pill{background:var(--card); border-radius:999px; padding:8px 15px; font-weight:800;
     box-shadow:var(--shadow); font-size:.92rem; display:flex; align-items:center; gap:6px}
 
-  .timerwrap{width:min(520px,94vw); margin:8px 0 2px}
+  .timerwrap{width:min(620px,94vw); margin:8px 0 2px}
   .timerbar{height:12px; border-radius:999px; background:#d3eaf2; overflow:hidden}
   .timerfill{height:100%; width:100%; border-radius:999px;
     background:linear-gradient(90deg,#22b07d,#7bd88f); transition:width .25s linear}
@@ -61,23 +61,31 @@
   .timerfill.danger{background:linear-gradient(90deg,#ff5d6c,#ff8aa0)}
 
   .game{background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow);
-    padding:26px 22px; width:min(520px,94vw); margin-top:10px; text-align:center}
-  .qtype{color:var(--muted); font-weight:800; font-size:.85rem; text-transform:uppercase; letter-spacing:1px}
-  .question{font-size:clamp(1.5rem,5.5vw,2.1rem); font-weight:800; margin:6px 0 22px; line-height:1.25}
-  .question .bigflag{display:block; font-size:clamp(3.4rem,16vw,5rem); margin:4px 0 2px; line-height:1}
-  .answers{display:grid; grid-template-columns:1fr 1fr; gap:14px}
-  .answer{border:none; cursor:pointer; font:inherit; font-weight:800; font-size:1.25rem;
-    padding:18px 8px; border-radius:16px; color:#fff; min-height:64px;
-    display:flex; align-items:center; justify-content:center; text-align:center; line-height:1.15;
-    background:linear-gradient(180deg,var(--accent),#06748f);
-    box-shadow:0 5px 0 #05647c; transition:transform .08s,box-shadow .08s,opacity .2s}
-  .answer.flagopt{font-size:clamp(2.6rem,12vw,3.6rem); padding:14px 8px}
-  .answer:active{transform:translateY(4px); box-shadow:0 1px 0 #05647c}
-  .answer.correct{background:linear-gradient(180deg,#2bc98c,#1fa874)!important; box-shadow:0 5px 0 #178a5f!important}
-  .answer.wrong{background:linear-gradient(180deg,#ff6f7c,#e8505f)!important; box-shadow:0 5px 0 #c43d4a!important}
-  .answer:disabled{cursor:default}
+    padding:20px 18px; width:min(620px,94vw); margin-top:10px; text-align:center}
 
-  .feedback{min-height:1.6em; font-weight:800; font-size:1.15rem; margin:16px 0 0}
+  .prompt{font-size:clamp(1.3rem,5vw,1.9rem); font-weight:800; margin:2px 0 14px; line-height:1.25}
+  .prompt .bigflag{display:block; font-size:clamp(3.4rem,15vw,5rem); margin:2px 0 4px; line-height:1}
+
+  .mapwrap{position:relative; width:100%; border-radius:14px; overflow:hidden;
+    box-shadow:inset 0 0 0 2px #cfeaf2}
+  svg.map{display:block; width:100%; height:auto; touch-action:manipulation; user-select:none}
+  .ocean{fill:#bfe6f2}
+  .land{fill:#a9d6a0; stroke:#7bb978; stroke-width:.4; transition:fill .15s}
+  .land.hot{fill:#c4e6ba}
+
+  .hit{fill:transparent; cursor:pointer}
+  .pin{font-size:11px; cursor:pointer; transition:transform .12s; pointer-events:none}
+  .pinhalo{fill:#0891b2; opacity:.85; stroke:#fff; stroke-width:1.1; cursor:pointer; transition:transform .12s,fill .15s}
+  .pinhalo.right{fill:#22b07d}
+  .pinhalo.wrong{fill:#ff5d6c}
+  @keyframes pulseG{0%{transform:scale(1)}40%{transform:scale(1.7)}100%{transform:scale(1)}}
+  @keyframes shakeR{0%,100%{transform:translateX(0)}20%{transform:translateX(-2.5px)}40%{transform:translateX(2.5px)}60%{transform:translateX(-2px)}80%{transform:translateX(2px)}}
+  .pulseG{animation:pulseG .5s ease; transform-box:fill-box; transform-origin:center}
+  .shakeR{animation:shakeR .45s ease; transform-box:fill-box; transform-origin:center}
+  .lbl{font-size:7px; font-weight:800; fill:#16384a; paint-order:stroke; stroke:#fff; stroke-width:2px; pointer-events:none}
+  .floater{font-size:8px; font-weight:800; fill:#22b07d; paint-order:stroke; stroke:#fff; stroke-width:2px; pointer-events:none}
+
+  .feedback{min-height:1.6em; font-weight:800; font-size:1.15rem; margin:14px 0 0}
   .feedback.good{color:var(--good)} .feedback.bad{color:var(--bad)}
   .hearts{font-size:1.1rem; letter-spacing:2px}
 
@@ -100,14 +108,14 @@
   html,body{overflow-x:hidden}
   body>*{max-width:100%}
   @media (max-width:600px){ .sub,.help{font-size:.84rem} }
-  @media (max-width:400px){ .answer{font-size:1.05rem; padding:16px 6px} }
+  @media (max-width:400px){ .prompt{font-size:1.15rem} }
 </style>
 </head>
 <body>
   <header>
     <h1>🗺️ World Quiz</h1>
-    <p class="sub">Flags, capitals &amp; continents — beat the timer!</p>
-    <p class="help">Tap the right answer (or press 1–4). Correct answers earn points + a time bonus. Build a combo streak, but you only have 3 lives!</p>
+    <p class="sub">Find the country on the map — beat the timer!</p>
+    <p class="help">Look at the flag, then tap that country on the map! Faster taps and combo streaks earn more points. You only have 3 lives!</p>
   </header>
 
   <div class="diff" id="diff">
@@ -127,9 +135,39 @@
   <div class="timerwrap"><div class="timerbar"><div class="timerfill" id="timerfill"></div></div></div>
 
   <main class="game">
-    <div class="qtype" id="qtype">Geography</div>
-    <div class="question" id="question">Loading…</div>
-    <div class="answers" id="answers"></div>
+    <div class="prompt" id="prompt"><span class="bigflag">🗺️</span>Loading…</div>
+    <div class="mapwrap">
+      <svg class="map" id="map" viewBox="0 0 360 180" xmlns="http://www.w3.org/2000/svg" aria-label="World map">
+        <rect class="ocean" x="0" y="0" width="360" height="180"></rect>
+        <g id="continents">
+          <!-- Stylized equirectangular continents (viewBox 360x180, lon:0..360 lat top..bottom) -->
+          <!-- North America -->
+          <path class="land" data-k="North America" d="M40,28 L92,24 L104,40 L96,58 L80,72 L70,66 L74,52 L58,58 L52,46 L42,44 Z"></path>
+          <!-- Central America -->
+          <path class="land" data-k="North America" d="M70,72 L84,70 L92,84 L82,92 L74,84 Z"></path>
+          <!-- South America -->
+          <path class="land" data-k="South America" d="M92,94 L112,92 L118,108 L110,134 L98,150 L92,134 L96,114 L88,104 Z"></path>
+          <!-- Europe -->
+          <path class="land" data-k="Europe" d="M168,30 L200,26 L208,40 L196,50 L182,54 L172,46 L166,38 Z"></path>
+          <!-- Africa -->
+          <path class="land" data-k="Africa" d="M170,62 L210,58 L222,80 L214,108 L196,128 L182,112 L176,86 L168,72 Z"></path>
+          <!-- Asia -->
+          <path class="land" data-k="Asia" d="M212,28 L300,22 L322,44 L308,66 L280,74 L252,66 L232,56 L216,46 L210,36 Z"></path>
+          <!-- India peninsula -->
+          <path class="land" data-k="Asia" d="M250,66 L268,66 L264,86 L256,92 L250,80 Z"></path>
+          <!-- SE Asia / Indonesia -->
+          <path class="land" data-k="Asia" d="M286,82 L318,80 L322,94 L300,98 L288,92 Z"></path>
+          <!-- Australia -->
+          <path class="land" data-k="Oceania" d="M300,118 L332,114 L340,132 L324,144 L304,140 L298,126 Z"></path>
+          <!-- New Zealand -->
+          <path class="land" data-k="Oceania" d="M344,144 L352,142 L350,156 L342,154 Z"></path>
+          <!-- Antarctica (optional) -->
+          <path class="land" data-k="Antarctica" d="M40,170 L320,170 L320,178 L40,178 Z"></path>
+        </g>
+        <g id="pins"></g>
+        <g id="fx"></g>
+      </svg>
+    </div>
     <p class="feedback" id="feedback"></p>
   </main>
 
@@ -146,170 +184,148 @@
   </div>
 
 <script>
-  // ---- Country data (verified: name, flag emoji, capital, continent) ----
-  // tier 1 = very well known, 2 = well known, 3 = more obscure. Difficulty ramps use tiers.
+  // ---- Country data: name, flag, latitude, longitude, continent (lat/long verified ~within a few degrees) ----
   const COUNTRIES = [
     // --- Asia ---
-    {n:"India",        f:"🇮🇳", c:"New Delhi",   k:"Asia",   t:1},
-    {n:"China",        f:"🇨🇳", c:"Beijing",     k:"Asia",   t:1},
-    {n:"Japan",        f:"🇯🇵", c:"Tokyo",       k:"Asia",   t:1},
-    {n:"South Korea",  f:"🇰🇷", c:"Seoul",       k:"Asia",   t:2},
-    {n:"Thailand",     f:"🇹🇭", c:"Bangkok",     k:"Asia",   t:2},
-    {n:"Indonesia",    f:"🇮🇩", c:"Jakarta",     k:"Asia",   t:2},
-    {n:"Saudi Arabia", f:"🇸🇦", c:"Riyadh",      k:"Asia",   t:2},
-    {n:"Vietnam",      f:"🇻🇳", c:"Hanoi",       k:"Asia",   t:3},
-    {n:"Pakistan",     f:"🇵🇰", c:"Islamabad",   k:"Asia",   t:3},
-    {n:"Nepal",        f:"🇳🇵", c:"Kathmandu",   k:"Asia",   t:3},
-    {n:"Philippines",  f:"🇵🇭", c:"Manila",      k:"Asia",   t:3},
-    {n:"Turkey",       f:"🇹🇷", c:"Ankara",      k:"Asia",   t:3},
+    {n:"India",        f:"🇮🇳", lat:21,   lon:78,   k:"Asia"},
+    {n:"China",        f:"🇨🇳", lat:35,   lon:104,  k:"Asia"},
+    {n:"Japan",        f:"🇯🇵", lat:36,   lon:138,  k:"Asia"},
+    {n:"South Korea",  f:"🇰🇷", lat:36,   lon:128,  k:"Asia"},
+    {n:"Thailand",     f:"🇹🇭", lat:15,   lon:101,  k:"Asia"},
+    {n:"Indonesia",    f:"🇮🇩", lat:-2,   lon:118,  k:"Asia"},
+    {n:"Saudi Arabia", f:"🇸🇦", lat:24,   lon:45,   k:"Asia"},
+    {n:"Pakistan",     f:"🇵🇰", lat:30,   lon:70,   k:"Asia"},
+    {n:"Nepal",        f:"🇳🇵", lat:28,   lon:84,   k:"Asia"},
+    {n:"Philippines",  f:"🇵🇭", lat:13,   lon:122,  k:"Asia"},
+    {n:"Turkey",       f:"🇹🇷", lat:39,   lon:35,   k:"Asia"},
+    {n:"Vietnam",      f:"🇻🇳", lat:16,   lon:108,  k:"Asia"},
     // --- Europe ---
-    {n:"United Kingdom",f:"🇬🇧",c:"London",      k:"Europe", t:1},
-    {n:"France",       f:"🇫🇷", c:"Paris",       k:"Europe", t:1},
-    {n:"Germany",      f:"🇩🇪", c:"Berlin",      k:"Europe", t:1},
-    {n:"Italy",        f:"🇮🇹", c:"Rome",        k:"Europe", t:1},
-    {n:"Spain",        f:"🇪🇸", c:"Madrid",      k:"Europe", t:1},
-    {n:"Russia",       f:"🇷🇺", c:"Moscow",      k:"Europe", t:2},
-    {n:"Greece",       f:"🇬🇷", c:"Athens",      k:"Europe", t:2},
-    {n:"Portugal",     f:"🇵🇹", c:"Lisbon",      k:"Europe", t:2},
-    {n:"Netherlands",  f:"🇳🇱", c:"Amsterdam",   k:"Europe", t:2},
-    {n:"Switzerland",  f:"🇨🇭", c:"Bern",        k:"Europe", t:3},
-    {n:"Sweden",       f:"🇸🇪", c:"Stockholm",   k:"Europe", t:3},
-    {n:"Norway",       f:"🇳🇴", c:"Oslo",        k:"Europe", t:3},
-    {n:"Ireland",      f:"🇮🇪", c:"Dublin",      k:"Europe", t:3},
-    {n:"Poland",       f:"🇵🇱", c:"Warsaw",      k:"Europe", t:3},
+    {n:"United Kingdom",f:"🇬🇧",lat:54,   lon:-2,   k:"Europe"},
+    {n:"France",       f:"🇫🇷", lat:47,   lon:2,    k:"Europe"},
+    {n:"Germany",      f:"🇩🇪", lat:51,   lon:10,   k:"Europe"},
+    {n:"Italy",        f:"🇮🇹", lat:42,   lon:13,   k:"Europe"},
+    {n:"Spain",        f:"🇪🇸", lat:40,   lon:-4,   k:"Europe"},
+    {n:"Russia",       f:"🇷🇺", lat:60,   lon:90,   k:"Europe"},
+    {n:"Greece",       f:"🇬🇷", lat:39,   lon:22,   k:"Europe"},
+    {n:"Portugal",     f:"🇵🇹", lat:39,   lon:-8,   k:"Europe"},
+    {n:"Netherlands",  f:"🇳🇱", lat:52,   lon:5,    k:"Europe"},
+    {n:"Sweden",       f:"🇸🇪", lat:62,   lon:15,   k:"Europe"},
+    {n:"Norway",       f:"🇳🇴", lat:61,   lon:8,    k:"Europe"},
+    {n:"Poland",       f:"🇵🇱", lat:52,   lon:19,   k:"Europe"},
     // --- Africa ---
-    {n:"Egypt",        f:"🇪🇬", c:"Cairo",       k:"Africa", t:1},
-    {n:"South Africa", f:"🇿🇦", c:"Pretoria",    k:"Africa", t:2},
-    {n:"Nigeria",      f:"🇳🇬", c:"Abuja",       k:"Africa", t:2},
-    {n:"Kenya",        f:"🇰🇪", c:"Nairobi",     k:"Africa", t:2},
-    {n:"Morocco",      f:"🇲🇦", c:"Rabat",       k:"Africa", t:3},
-    {n:"Ethiopia",     f:"🇪🇹", c:"Addis Ababa", k:"Africa", t:3},
-    {n:"Ghana",        f:"🇬🇭", c:"Accra",       k:"Africa", t:3},
-    {n:"Tanzania",     f:"🇹🇿", c:"Dodoma",      k:"Africa", t:3},
+    {n:"Egypt",        f:"🇪🇬", lat:27,   lon:30,   k:"Africa"},
+    {n:"South Africa", f:"🇿🇦", lat:-30,  lon:25,   k:"Africa"},
+    {n:"Nigeria",      f:"🇳🇬", lat:9,    lon:8,    k:"Africa"},
+    {n:"Kenya",        f:"🇰🇪", lat:0,    lon:38,   k:"Africa"},
+    {n:"Morocco",      f:"🇲🇦", lat:32,   lon:-6,   k:"Africa"},
+    {n:"Ethiopia",     f:"🇪🇹", lat:9,    lon:40,   k:"Africa"},
+    {n:"Ghana",        f:"🇬🇭", lat:8,    lon:-1,   k:"Africa"},
+    {n:"Tanzania",     f:"🇹🇿", lat:-6,   lon:35,   k:"Africa"},
     // --- North America ---
-    {n:"United States",f:"🇺🇸", c:"Washington, D.C.", k:"North America", t:1},
-    {n:"Canada",       f:"🇨🇦", c:"Ottawa",      k:"North America", t:1},
-    {n:"Mexico",       f:"🇲🇽", c:"Mexico City", k:"North America", t:1},
-    {n:"Cuba",         f:"🇨🇺", c:"Havana",      k:"North America", t:3},
-    {n:"Jamaica",      f:"🇯🇲", c:"Kingston",    k:"North America", t:3},
+    {n:"United States",f:"🇺🇸", lat:39,   lon:-98,  k:"North America"},
+    {n:"Canada",       f:"🇨🇦", lat:58,   lon:-100, k:"North America"},
+    {n:"Mexico",       f:"🇲🇽", lat:23,   lon:-102, k:"North America"},
+    {n:"Cuba",         f:"🇨🇺", lat:22,   lon:-79,  k:"North America"},
     // --- South America ---
-    {n:"Brazil",       f:"🇧🇷", c:"Brasília",    k:"South America", t:1},
-    {n:"Argentina",    f:"🇦🇷", c:"Buenos Aires",k:"South America", t:1},
-    {n:"Peru",         f:"🇵🇪", c:"Lima",        k:"South America", t:2},
-    {n:"Chile",        f:"🇨🇱", c:"Santiago",    k:"South America", t:2},
-    {n:"Colombia",     f:"🇨🇴", c:"Bogotá",      k:"South America", t:3},
-    {n:"Venezuela",    f:"🇻🇪", c:"Caracas",     k:"South America", t:3},
+    {n:"Brazil",       f:"🇧🇷", lat:-10,  lon:-52,  k:"South America"},
+    {n:"Argentina",    f:"🇦🇷", lat:-35,  lon:-65,  k:"South America"},
+    {n:"Peru",         f:"🇵🇪", lat:-10,  lon:-76,  k:"South America"},
+    {n:"Chile",        f:"🇨🇱", lat:-33,  lon:-71,  k:"South America"},
+    {n:"Colombia",     f:"🇨🇴", lat:4,    lon:-73,  k:"South America"},
     // --- Oceania ---
-    {n:"Australia",    f:"🇦🇺", c:"Canberra",    k:"Oceania", t:1},
-    {n:"New Zealand",  f:"🇳🇿", c:"Wellington",  k:"Oceania", t:2},
-    {n:"Fiji",         f:"🇫🇯", c:"Suva",        k:"Oceania", t:3},
+    {n:"Australia",    f:"🇦🇺", lat:-25,  lon:134,  k:"Oceania"},
+    {n:"New Zealand",  f:"🇳🇿", lat:-41,  lon:174,  k:"Oceania"},
+    {n:"Fiji",         f:"🇫🇯", lat:-17,  lon:178,  k:"Oceania"},
   ];
-  const CONTINENTS = ["Asia","Europe","Africa","North America","South America","Oceania"];
+
+  // Projection: equirectangular into 360x180 viewBox.
+  // x = (lon + 180) / 360 * 360 = lon + 180
+  // y = (90 - lat) / 180 * 180 = 90 - lat
+  function projX(lon){ return (lon + 180) / 360 * 360; }
+  function projY(lat){ return (90 - lat) / 180 * 180; }
 
   const DIFF = {
-    easy:   {maxTier:1, time:14, label:"Easy"},
-    medium: {maxTier:2, time:12, label:"Medium"},
-    hard:   {maxTier:3, time:10, label:"Hard"},
+    easy:   {pins:4, maxPins:6, time:14, sameKeyFrom:4, label:"Easy"},
+    medium: {pins:5, maxPins:7, time:12, sameKeyFrom:3, label:"Medium"},
+    hard:   {pins:6, maxPins:8, time:10, sameKeyFrom:2, label:"Hard"},
   };
+  const SVGNS="http://www.w3.org/2000/svg";
   const SK="wq_best";
   const $=id=>document.getElementById(id);
-  const fill=$("timerfill"), ansEl=$("answers"), fb=$("feedback");
+  const fill=$("timerfill"), pinsEl=$("pins"), fxEl=$("fx"), fb=$("feedback");
 
   let diff="easy", score=0, level=1, streak=0, lives=3, solved=0;
   let best=load(SK,0);
-  let correctVal=null, locked=false;
-  let timeLeft, timeMax, timer=null, running=false;
+  let target=null, locked=false, running=false;
+  let timeLeft, timeMax, timer=null;
 
   function load(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}}
   function save(k,v){localStorage.setItem(k,JSON.stringify(v))}
-  function ri(a,b){return a+Math.floor(Math.random()*(b-a+1))}
   function shuffle(a){const x=[...a];for(let i=x.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[x[i],x[j]]=[x[j],x[i]]}return x}
   function pick(a){return a[Math.floor(Math.random()*a.length)]}
 
-  // pool of countries allowed at the current level (tier grows with level)
-  function pool(){
-    const maxTier = Math.min(3, DIFF[diff].maxTier + Math.floor((level-1)/3));
-    return COUNTRIES.filter(c=>c.t<=maxTier);
+  // how many pins this round (grows with level, capped per difficulty)
+  function pinCount(){
+    const cfg=DIFF[diff];
+    return Math.min(cfg.maxPins, cfg.pins + Math.floor((level-1)/2));
   }
 
-  // pick n distinct "distractor" countries from arr (excluding `not`), prefer same continent
-  function distractors(arr, correct, n, sameKey){
-    let prefer = arr.filter(c=>c!==correct && (!sameKey || c.k===correct.k));
-    let rest   = arr.filter(c=>c!==correct && (!sameKey || c.k!==correct.k));
-    const out=[];
-    for(const c of shuffle(prefer)){ if(out.length<n) out.push(c); }
-    for(const c of shuffle(rest)){ if(out.length<n) out.push(c); }
-    return out;
+  // pick the target + decoys. As level rises, prefer same-continent decoys (harder).
+  function buildRound(){
+    const total=pinCount();
+    target=pick(COUNTRIES);
+    const sameKeyLevel=DIFF[diff].sameKeyFrom;
+    const useSame = level>=sameKeyLevel;
+    let prefer = COUNTRIES.filter(c=>c!==target && (useSame ? c.k===target.k : true));
+    let rest   = COUNTRIES.filter(c=>c!==target && !prefer.includes(c));
+    const decoys=[];
+    for(const c of shuffle(prefer)){ if(decoys.length<total-1) decoys.push(c); }
+    for(const c of shuffle(rest)){ if(decoys.length<total-1) decoys.push(c); }
+    return shuffle([target, ...decoys]);
   }
 
-  // Build a question object: {qtype, html, options:[{label,flag?,correct}], correctLabel}
-  function makeQuestion(){
-    const p = pool();
-    const subject = pick(p);
-    const type = pick([1,2,3,4]);
-    let qtype, html, opts;
+  function clearMap(){ pinsEl.innerHTML=""; fxEl.innerHTML=""; }
 
-    if(type===1){
-      // Which flag is <Country>?
-      qtype="Find the flag";
-      html = `Which flag is <b>${subject.n}</b>?`;
-      const ds = distractors(p, subject, 3, true);
-      opts = shuffle([subject, ...ds]).map(c=>({
-        label:c.f, flag:true, correct:c===subject
-      }));
-    } else if(type===2){
-      // What is the capital of <Country>?
-      qtype="Capital city";
-      html = `<span class="bigflag">${subject.f}</span>What is the capital of <b>${subject.n}</b>?`;
-      const ds = distractors(p, subject, 3, true);
-      opts = shuffle([subject, ...ds]).map(c=>({
-        label:c.c, correct:c===subject
-      }));
-    } else if(type===3){
-      // <Capital> is the capital of which country?
-      qtype="Which country?";
-      html = `<b>${subject.c}</b> is the capital of which country?`;
-      const ds = distractors(p, subject, 3, true);
-      opts = shuffle([subject, ...ds]).map(c=>({
-        label:c.n, correct:c===subject
-      }));
-    } else {
-      // Which continent is <Country> in?
-      qtype="Continent";
-      html = `<span class="bigflag">${subject.f}</span>Which continent is <b>${subject.n}</b> in?`;
-      const wrong = shuffle(CONTINENTS.filter(k=>k!==subject.k)).slice(0,3);
-      opts = shuffle([subject.k, ...wrong]).map(k=>({
-        label:k, correct:k===subject.k
-      }));
-    }
-    // safety: exactly one correct, 4 unique options
-    return {qtype, html, opts};
+  function highlightContinent(k,on){
+    document.querySelectorAll('#continents .land[data-k="'+k+'"]').forEach(p=>p.classList.toggle("hot",on));
+  }
+
+  function makePin(c){
+    const x=projX(c.lon), y=projY(c.lat);
+    const g=document.createElementNS(SVGNS,"g");
+    g.dataset.name=c.n; g.dataset.k=c.k;
+    // big invisible hit area (touch friendly, ~radius 8 in viewBox units ≈ scales up on screen)
+    const hit=document.createElementNS(SVGNS,"circle");
+    hit.setAttribute("class","hit");
+    hit.setAttribute("cx",x); hit.setAttribute("cy",y); hit.setAttribute("r",8);
+    // visible halo dot
+    const halo=document.createElementNS(SVGNS,"circle");
+    halo.setAttribute("class","pinhalo");
+    halo.setAttribute("cx",x); halo.setAttribute("cy",y); halo.setAttribute("r",3.4);
+    g.appendChild(hit); g.appendChild(halo);
+    const act=(ev)=>{ ev.preventDefault(); choose(c,g,halo); };
+    g.addEventListener("click",act);
+    g.style.cursor="pointer";
+    g.addEventListener("mouseenter",()=>{ if(!locked) highlightContinent(c.k,true); });
+    g.addEventListener("mouseleave",()=>{ if(!locked) highlightContinent(c.k,false); });
+    return {g,halo,x,y};
   }
 
   function startGame(){
     score=0; level=1; streak=0; lives=3; solved=0;
     $("overlay").classList.remove("show");
-    paint(); nextQ();
+    paint(); nextRound();
   }
 
-  function nextQ(){
-    const q=makeQuestion(); locked=false;
-    $("qtype").textContent=q.qtype;
-    $("question").innerHTML=q.html;
-    $("question").classList.remove("pop"); void $("question").offsetWidth; $("question").classList.add("pop");
+  function nextRound(){
+    locked=false; clearMap();
+    document.querySelectorAll('#continents .land.hot').forEach(p=>p.classList.remove("hot"));
+    const set=buildRound();
+    $("prompt").innerHTML='<span class="bigflag">'+target.f+'</span>Find <b>'+target.n+'</b>!';
+    const p=$("prompt"); p.classList.remove("pop"); void p.offsetWidth; p.classList.add("pop");
     fb.textContent=""; fb.className="feedback";
-    ansEl.innerHTML="";
-    // find the correct label so feedback/highlight is reliable
-    correctVal = q.opts.find(o=>o.correct).label;
-    q.opts.forEach(o=>{
-      const b=document.createElement("button");
-      b.className="answer"+(o.flag?" flagopt":"");
-      b.textContent=o.label;
-      b.dataset.correct=o.correct?"1":"0";
-      b.onclick=()=>choose(b);
-      ansEl.appendChild(b);
-    });
-    timeMax=Math.max(5, DIFF[diff].time - (level-1)*0.5);
+    set.forEach(c=>{ const {g}=makePin(c); pinsEl.appendChild(g); });
+    timeMax=Math.max(6, DIFF[diff].time - (level-1)*0.4);
     timeLeft=timeMax; startTimer();
   }
 
@@ -327,44 +343,70 @@
     fill.className="timerfill"+(pct<25?" danger":pct<50?" warn":"");
   }
 
-  function revealCorrect(){
-    [...ansEl.children].forEach(b=>{ b.disabled=true; if(b.dataset.correct==="1") b.classList.add("correct"); });
+  function labelAt(c,cls){
+    const x=projX(c.lon), y=projY(c.lat);
+    const t=document.createElementNS(SVGNS,"text");
+    t.setAttribute("class",cls||"lbl");
+    t.setAttribute("x",x); t.setAttribute("y",y-6);
+    t.setAttribute("text-anchor","middle");
+    t.textContent=c.n;
+    fxEl.appendChild(t);
+    return t;
+  }
+  function floaterAt(c,txt){
+    const x=projX(c.lon), y=projY(c.lat);
+    const t=document.createElementNS(SVGNS,"text");
+    t.setAttribute("class","floater");
+    t.setAttribute("x",x); t.setAttribute("y",y-12);
+    t.setAttribute("text-anchor","middle");
+    t.textContent=txt;
+    fxEl.appendChild(t);
   }
 
-  function choose(btn){
+  // reveal the correct pin (used on wrong / timeout)
+  function revealTarget(){
+    const g=[...pinsEl.children].find(g=>g.dataset.name===target.n);
+    if(g){ const halo=g.querySelector(".pinhalo"); halo.classList.add("right"); halo.classList.add("pulseG"); }
+    highlightContinent(target.k,true);
+    labelAt(target);
+  }
+
+  function choose(c,g,halo){
     if(locked) return; locked=true; stopTimer();
-    [...ansEl.children].forEach(b=>b.disabled=true);
-    if(btn.dataset.correct==="1"){
-      btn.classList.add("correct");
+    if(c===target || c.n===target.n){
+      halo.classList.add("right"); halo.classList.add("pulseG");
+      highlightContinent(c.k,true);
+      labelAt(c);
       const timeBonus=Math.round(timeLeft*2);
       const pts=10+timeBonus+streak*3;
       streak++; solved++; score+=pts;
       if(best<score){best=score; save(SK,best);}
       if(solved%5===0) level++;
       paint();
-      fb.textContent=`🎉 +${pts} (⏱ +${timeBonus})`; fb.className="feedback good";
-      setTimeout(nextQ,800);
+      floaterAt(c,"🎉 +"+pts);
+      fb.textContent="🎉 +"+pts+" (⏱ +"+timeBonus+")"; fb.className="feedback good";
+      setTimeout(nextRound,950);
     } else {
-      btn.classList.add("wrong");
-      revealCorrect();
+      halo.classList.add("wrong"); halo.classList.add("shakeR");
+      revealTarget();
       lives--; streak=0; paint();
-      fb.textContent=`❌ It was ${correctVal}`; fb.className="feedback bad";
-      if(lives<=0) setTimeout(gameOver,1300); else setTimeout(nextQ,1300);
+      fb.textContent="❌ It was "+target.n; fb.className="feedback bad";
+      if(lives<=0) setTimeout(gameOver,1500); else setTimeout(nextRound,1500);
     }
   }
 
   function timeUp(){
     if(locked) return; locked=true;
-    revealCorrect();
+    revealTarget();
     lives--; streak=0; paint();
-    fb.textContent=`⏰ Time! It was ${correctVal}`; fb.className="feedback bad";
-    if(lives<=0) setTimeout(gameOver,1400); else setTimeout(nextQ,1400);
+    fb.textContent="⏰ Time! It was "+target.n; fb.className="feedback bad";
+    if(lives<=0) setTimeout(gameOver,1600); else setTimeout(nextRound,1600);
   }
 
   function gameOver(){
     stopTimer();
     $("ovTitle").textContent = (score>=best && score>0) ? "🏆 New Best!" : "Game Over";
-    $("ovMsg").textContent=`You answered ${solved} correct on ${DIFF[diff].label}.`;
+    $("ovMsg").textContent="You found "+solved+" countries on "+DIFF[diff].label+".";
     $("ovScore").textContent=score+" pts";
     $("ovBest").textContent="Best score: "+best;
     $("overlay").classList.add("show");
@@ -380,13 +422,6 @@
     b.onclick=()=>{ diff=b.dataset.d;
       document.querySelectorAll("#diff button").forEach(x=>x.classList.toggle("on",x===b));
       startGame(); };
-  });
-
-  // keyboard 1-4 selects an answer
-  document.addEventListener("keydown",e=>{
-    if(!running||locked) return;
-    const n=parseInt(e.key,10);
-    if(n>=1&&n<=4){ const b=ansEl.children[n-1]; if(b) choose(b); }
   });
 
   $("ovBtn").onclick=startGame;
