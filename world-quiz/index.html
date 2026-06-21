@@ -75,7 +75,7 @@
 
   .hit{fill:transparent; cursor:pointer}
   .pin{font-size:11px; cursor:pointer; transition:transform .12s; pointer-events:none}
-  .pinhalo{fill:#0891b2; opacity:.85; stroke:#fff; stroke-width:1.1; cursor:pointer; transition:transform .12s,fill .15s}
+  .pinhalo{fill:#ffd23f; opacity:1; stroke:#fff; stroke-width:1.4; cursor:pointer; transition:transform .12s,fill .15s; filter:drop-shadow(0 1px 1.5px rgba(0,0,0,.7))}
   .pinhalo.right{fill:#22b07d}
   .pinhalo.wrong{fill:#ff5d6c}
   @keyframes pulseG{0%{transform:scale(1)}40%{transform:scale(1.7)}100%{transform:scale(1)}}
@@ -137,33 +137,12 @@
   <main class="game">
     <div class="prompt" id="prompt"><span class="bigflag">🗺️</span>Loading…</div>
     <div class="mapwrap">
-      <svg class="map" id="map" viewBox="0 0 360 180" xmlns="http://www.w3.org/2000/svg" aria-label="World map">
+      <svg class="map" id="map" viewBox="0 0 360 180" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-label="World map">
         <rect class="ocean" x="0" y="0" width="360" height="180"></rect>
-        <g id="continents">
-          <!-- Stylized equirectangular continents (viewBox 360x180, lon:0..360 lat top..bottom) -->
-          <!-- North America -->
-          <path class="land" data-k="North America" d="M40,28 L92,24 L104,40 L96,58 L80,72 L70,66 L74,52 L58,58 L52,46 L42,44 Z"></path>
-          <!-- Central America -->
-          <path class="land" data-k="North America" d="M70,72 L84,70 L92,84 L82,92 L74,84 Z"></path>
-          <!-- South America -->
-          <path class="land" data-k="South America" d="M92,94 L112,92 L118,108 L110,134 L98,150 L92,134 L96,114 L88,104 Z"></path>
-          <!-- Europe -->
-          <path class="land" data-k="Europe" d="M168,30 L200,26 L208,40 L196,50 L182,54 L172,46 L166,38 Z"></path>
-          <!-- Africa -->
-          <path class="land" data-k="Africa" d="M170,62 L210,58 L222,80 L214,108 L196,128 L182,112 L176,86 L168,72 Z"></path>
-          <!-- Asia -->
-          <path class="land" data-k="Asia" d="M212,28 L300,22 L322,44 L308,66 L280,74 L252,66 L232,56 L216,46 L210,36 Z"></path>
-          <!-- India peninsula -->
-          <path class="land" data-k="Asia" d="M250,66 L268,66 L264,86 L256,92 L250,80 Z"></path>
-          <!-- SE Asia / Indonesia -->
-          <path class="land" data-k="Asia" d="M286,82 L318,80 L322,94 L300,98 L288,92 Z"></path>
-          <!-- Australia -->
-          <path class="land" data-k="Oceania" d="M300,118 L332,114 L340,132 L324,144 L304,140 L298,126 Z"></path>
-          <!-- New Zealand -->
-          <path class="land" data-k="Oceania" d="M344,144 L352,142 L350,156 L342,154 Z"></path>
-          <!-- Antarctica (optional) -->
-          <path class="land" data-k="Antarctica" d="M40,170 L320,170 L320,178 L40,178 Z"></path>
-        </g>
+        <!-- Real equirectangular world map (NASA Blue Marble, public domain).
+             Spans full globe so the lon/lat -> x/y projection lines up. -->
+        <image href="world.jpg" xlink:href="world.jpg" x="0" y="0" width="360" height="180" preserveAspectRatio="none"></image>
+        <g id="continents"><!-- continent hover-highlights removed; real map used instead --></g>
         <g id="pins"></g>
         <g id="fx"></g>
       </svg>
@@ -297,11 +276,11 @@
     // big invisible hit area (touch friendly, ~radius 8 in viewBox units ≈ scales up on screen)
     const hit=document.createElementNS(SVGNS,"circle");
     hit.setAttribute("class","hit");
-    hit.setAttribute("cx",x); hit.setAttribute("cy",y); hit.setAttribute("r",8);
+    hit.setAttribute("cx",x); hit.setAttribute("cy",y); hit.setAttribute("r",11);
     // visible halo dot
     const halo=document.createElementNS(SVGNS,"circle");
     halo.setAttribute("class","pinhalo");
-    halo.setAttribute("cx",x); halo.setAttribute("cy",y); halo.setAttribute("r",3.4);
+    halo.setAttribute("cx",x); halo.setAttribute("cy",y); halo.setAttribute("r",5);
     g.appendChild(hit); g.appendChild(halo);
     const act=(ev)=>{ ev.preventDefault(); choose(c,g,halo); };
     g.addEventListener("click",act);
