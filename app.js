@@ -121,6 +121,31 @@ document.addEventListener("click", (e) => {
   }
 });
 
+// ---- Theme Toggle ----
+const themeToggle = document.getElementById("themeToggle");
+const themeLabel = document.getElementById("themeLabel");
+function applyTheme(dark) {
+  if (dark) {
+    document.documentElement.setAttribute("data-theme", "dark");
+    if (themeToggle) themeToggle.checked = true;
+    if (themeLabel) themeLabel.textContent = "☀️ Light";
+  } else {
+    document.documentElement.removeAttribute("data-theme");
+    if (themeToggle) themeToggle.checked = false;
+    if (themeLabel) themeLabel.textContent = "🌙 Dark";
+  }
+}
+const initialDark = document.documentElement.getAttribute("data-theme") === "dark";
+applyTheme(initialDark);
+
+if (themeToggle) {
+  themeToggle.addEventListener("change", (e) => {
+    const dark = e.target.checked;
+    applyTheme(dark);
+    save("lp_theme", dark ? "dark" : "light");
+  });
+}
+
 document.getElementById("favOnly").addEventListener("change", (e) => {
   state.favOnly = e.target.checked;
   renderGrid();

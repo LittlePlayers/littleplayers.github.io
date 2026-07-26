@@ -13,6 +13,52 @@
   --radius-sm: 12px;
 }
 
+[data-theme="dark"] {
+  --bg-gradient: linear-gradient(135deg, #0b0d1b 0%, #13162d 50%, #0d0f22 100%);
+  --card: #181b36;
+  --ink: #f4f3fd;
+  --muted: #9d94ca;
+  --accent: #8c7ae6;
+  --accent-soft: rgba(140, 122, 230, 0.2);
+  --shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+  --shadow-hover: 0 14px 32px rgba(140, 122, 230, 0.28);
+}
+[data-theme="dark"] .hero {
+  background: #111329;
+  border-bottom: 1px solid rgba(140, 122, 230, 0.15);
+}
+[data-theme="dark"] .controls {
+  background: #151833;
+  border: 1px solid rgba(140, 122, 230, 0.15);
+}
+[data-theme="dark"] .search {
+  background: #1c2042;
+  color: #f4f3fd;
+  border-color: rgba(140, 122, 230, 0.2);
+}
+[data-theme="dark"] .chip {
+  background: #1c2042;
+  color: #f4f3fd;
+  border-color: rgba(140, 122, 230, 0.15);
+}
+[data-theme="dark"] .chip.active {
+  background: #6c5ce7;
+  color: #ffffff;
+}
+[data-theme="dark"] .card {
+  background: #181b36;
+  border: 1px solid rgba(140, 122, 230, 0.12);
+}
+[data-theme="dark"] .fav-btn {
+  background: #202447;
+  color: #f4f3fd;
+  border-color: rgba(255,255,255,0.08);
+}
+[data-theme="dark"] .hero-badge {
+  background: rgba(140, 122, 230, 0.2);
+  color: #a29bfe;
+}
+
 * { box-sizing: border-box; }
 
 body {
