@@ -145,7 +145,15 @@
   html,body{overflow-x:hidden}
   body>*{max-width:100%}
   @media (max-width:600px){ .sub,.help,.explainer{font-size:.84rem} .wheel{width:74px;height:74px} }
+
+/* --- Global Dark Mode Theme Overrides --- */
+[data-theme="dark"] body { background: #0f1123 !important; color: #f4f3fd !important; }
+[data-theme="dark"] .panel, [data-theme="dark"] .scoreboard, [data-theme="dark"] .stage, [data-theme="dark"] .overlay .panel, [data-theme="dark"] header { background: #181b36 !important; color: #f4f3fd !important; border-color: rgba(140,122,230,0.2) !important; }
+[data-theme="dark"] .pill { background: #202448 !important; color: #f4f3fd !important; }
+[data-theme="dark"] p, [data-theme="dark"] .sub, [data-theme="dark"] .note { color: #a098cb !important; }
+[data-theme="dark"] input, [data-theme="dark"] select { background: #1c2042 !important; color: #f4f3fd !important; border-color: rgba(140,122,230,0.3) !important; }
 </style>
+<script>(function(){var s=localStorage.getItem("lp_theme"),d=s==="dark"||(!s&&window.matchMedia("(prefers-color-scheme: dark)").matches);if(d)document.documentElement.setAttribute("data-theme","dark");})();</script>
 </head>
 <body>
   <header>

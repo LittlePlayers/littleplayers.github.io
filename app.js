@@ -122,27 +122,24 @@ document.addEventListener("click", (e) => {
 });
 
 // ---- Theme Toggle ----
-const themeToggle = document.getElementById("themeToggle");
-const themeLabel = document.getElementById("themeLabel");
+const themeToggleBtn = document.getElementById("themeToggleBtn");
 function applyTheme(dark) {
   if (dark) {
     document.documentElement.setAttribute("data-theme", "dark");
-    if (themeToggle) themeToggle.checked = true;
-    if (themeLabel) themeLabel.textContent = "☀️ Light";
+    if (themeToggleBtn) themeToggleBtn.textContent = "☀️ Light";
   } else {
     document.documentElement.removeAttribute("data-theme");
-    if (themeToggle) themeToggle.checked = false;
-    if (themeLabel) themeLabel.textContent = "🌙 Dark";
+    if (themeToggleBtn) themeToggleBtn.textContent = "🌙 Dark";
   }
 }
-const initialDark = document.documentElement.getAttribute("data-theme") === "dark";
-applyTheme(initialDark);
+let isDark = document.documentElement.getAttribute("data-theme") === "dark";
+applyTheme(isDark);
 
-if (themeToggle) {
-  themeToggle.addEventListener("change", (e) => {
-    const dark = e.target.checked;
-    applyTheme(dark);
-    save("lp_theme", dark ? "dark" : "light");
+if (themeToggleBtn) {
+  themeToggleBtn.addEventListener("click", () => {
+    isDark = !isDark;
+    applyTheme(isDark);
+    save("lp_theme", isDark ? "dark" : "light");
   });
 }
 

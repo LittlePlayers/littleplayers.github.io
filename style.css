@@ -54,9 +54,32 @@
   color: #f4f3fd;
   border-color: rgba(255,255,255,0.08);
 }
-[data-theme="dark"] .hero-badge {
-  background: rgba(140, 122, 230, 0.2);
-  color: #a29bfe;
+[data-theme="dark"] .theme-toggle-btn {
+  background: #1c2042;
+  color: #f4f3fd;
+  border-color: rgba(140, 122, 230, 0.3);
+}
+
+.theme-toggle-btn {
+  position: absolute;
+  top: 18px;
+  right: 20px;
+  background: var(--card);
+  color: var(--ink);
+  border: 1px solid rgba(108, 92, 231, 0.2);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 800;
+  font-size: 0.9rem;
+  padding: 8px 16px;
+  border-radius: 999px;
+  box-shadow: var(--shadow);
+  transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.15s ease;
+  z-index: 10;
+  will-change: transform;
+}
+.theme-toggle-btn:hover {
+  transform: translate3d(0, -2px, 0) scale(1.04);
 }
 
 * { box-sizing: border-box; }
