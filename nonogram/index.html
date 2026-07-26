@@ -130,6 +130,8 @@
   <div class="tools" id="tools">
     <button data-m="fill" class="on" id="btnFill">🖌️ Fill</button>
     <button data-m="x" id="btnX">❌ Mark X</button>
+    <button id="hintBtn" style="background:#f59e0b;color:#fff;">💡 Hint</button>
+    <button id="guideBtn" style="background:#8b5cf6;color:#fff;">❓ Guide</button>
   </div>
   <p class="hint">Tap with the chosen tool. On a computer you can right-click a cell to mark X. Wrong fills cost a life!</p>
 
@@ -137,6 +139,19 @@
     <div class="grid" id="grid"></div>
   </div>
   <p class="feedback" id="feedback"></p>
+
+  <div class="overlay" id="guideModal">
+    <div class="panel" style="max-width:480px; text-align:left;">
+      <h2 style="text-align:center;">🧩 How to Solve Nonograms</h2>
+      <p style="color:var(--ink); font-weight:700;">Read the numbers at the top and left to uncover the hidden picture:</p>
+      <ul style="font-weight:700; line-height:1.5; padding-left:20px; font-size:.92rem;">
+        <li>Numbers show groups of consecutive filled blocks (e.g. <b>"2 1"</b> means a block of 2, then at least 1 space, then 1).</li>
+        <li>Use <b>🖌️ Fill</b> to fill cells you are sure of.</li>
+        <li>Use <b>❌ Mark X</b> to mark cells that must be empty!</li>
+      </ul>
+      <div style="text-align:center;"><button id="closeGuideBtn">Got It! 🎨</button></div>
+    </div>
+  </div>
 
   <p class="back"><a href="https://littleplayers.github.io/">← Back to Little Players</a></p>
 
@@ -315,7 +330,52 @@
     }
   }
 
-  // ---- Interaction ------------------------------------------------------
+  const SFX = (function(){
+    let ctx=null;
+    function getCtx(){
+      if(!ctx){
+        const AC=window.AudioContext||window.webkitAudioContext;
+        if(AC) ctx=new AC();
+      }
+      if(ctx&&ctx.state==="suspended") ctx.resume();
+      return ctx;
+    }
+    return {
+      good(){
+        const c=getCtx(); if(!c) return;
+        [523.25, 659.25, 783.99].forEach((freq,i)=>{
+          const o=c.createOscillator(), g=c.createGain();
+          o.type="triangle"; o.frequency.setValueAtTime(freq, c.currentTime+i*0.06);
+          g.gain.setValueAtTime(0.15, c.currentTime+i*0.06);
+          g.gain.exponentialRampToValueAtTime(0.001, c.currentTime+i*0.06+0.15);
+          o.connect(g); g.connect(c.destination);
+          o.start(c.currentTime+i*0.06); o.stop(c.currentTime+i*0.06+0.15);
+        });
+      },
+      bad(){
+        const c=getCtx(); if(!c) return;
+        const o=c.createOscillator(), g=c.createGain();
+        o.type="sawtooth"; o.frequency.setValueAtTime(180, c.currentTime);
+        o.frequency.linearRampToValueAtTime(90, c.currentTime+0.22);
+        g.gain.setValueAtTime(0.15, c.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, c.currentTime+0.22);
+        o.connect(g); g.connect(c.destination);
+        o.start(); o.stop(c.currentTime+0.22);
+      },
+      win(){
+        const c=getCtx(); if(!c) return;
+        [523.25, 659.25, 783.99, 1046.50].forEach((freq,i)=>{
+          const o=c.createOscillator(), g=c.createGain();
+          o.type="sine"; o.frequency.setValueAtTime(freq, c.currentTime+i*0.08);
+          g.gain.setValueAtTime(0.2, c.currentTime+i*0.08);
+          g.gain.exponentialRampToValueAtTime(0.001, c.currentTime+i*0.08+0.3);
+          o.connect(g); g.connect(c.destination);
+          o.start(c.currentTime+i*0.08); o.stop(c.currentTime+i*0.08+0.3);
+        });
+      }
+    };
+  })();
+
   function applyAction(r,c,forced){
     if(solved) return;
     const desired = forced || mode; // "fill" or "x"
@@ -336,12 +396,14 @@
       state[r][c]=0; paintCell(r,c); refreshClueDim(); return;
     }
     if(sol[r][c]===1){
+      SFX.good();
       state[r][c]=1; paintCell(r,c);
       const node=cellNode(r,c); if(node){ void node.offsetWidth; node.classList.add("pop"); }
       flash("good","🎉");
       refreshClueDim(); checkWin();
     } else {
       // mistake: auto-mark X and lose a life
+      SFX.bad();
       state[r][c]=2; paintCell(r,c);
       const node=cellNode(r,c); if(node){ void node.offsetWidth; node.classList.add("shake"); }
       lives--; paint();
@@ -490,6 +552,24 @@
     $("level").textContent=level;
     $("hearts").textContent="❤️".repeat(Math.max(0,lives))+"🤍".repeat(Math.max(0,3-lives));
   }
+
+  $("guideBtn").onclick=()=>$("guideModal").classList.add("show");
+  $("closeGuideBtn").onclick=()=>$("guideModal").classList.remove("show");
+  $("hintBtn").onclick=()=>{
+    if(solved||!sol.length) return;
+    for(let r=0;r<N;r++){
+      for(let c=0;c<N;c++){
+        if(sol[r][c]===1 && state[r][c]!==1){
+          state[r][c]=1;
+          paintCell(r,c);
+          refreshClueDim();
+          checkWin();
+          flash("good",`💡 Hint revealed a cell at Row ${r+1}, Col ${c+1}!`);
+          return;
+        }
+      }
+    }
+  };
 
   $("ovBtn").onclick=function(){
     $("overlay").classList.remove("show");

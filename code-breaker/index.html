@@ -168,6 +168,8 @@
     <div class="palette" id="palette"></div>
 
     <div class="controls">
+      <button class="btn-back" id="guideBtn">❓ Guide</button>
+      <button class="btn-back" id="hintBtn">💡 Hint</button>
       <button class="btn-back" id="btnBack">⌫ Back</button>
       <button class="btn-clear" id="btnClear">✕ Clear</button>
       <button class="btn-submit" id="btnSubmit" disabled>✓ Submit</button>
@@ -175,6 +177,19 @@
 
     <p class="feedback" id="feedback"></p>
   </main>
+
+  <div class="overlay" id="guideModal">
+    <div class="panel" style="max-width:480px; text-align:left;">
+      <h2 style="text-align:center;">🎯 How to Play Code Breaker</h2>
+      <p style="color:var(--ink); font-weight:700;">Deduce the hidden color combination before you run out of tries!</p>
+      <ul style="font-weight:700; line-height:1.5; padding-left:20px; font-size:.92rem;">
+        <li><b>⚫ Black Peg</b>: A color is in the <b>exact correct position</b>.</li>
+        <li><b>⚪ White Peg</b>: A color is in the code, but in the <b>wrong position</b>.</li>
+        <li>Use process of elimination with each guess to narrow down the secret code!</li>
+      </ul>
+      <div style="text-align:center;"><button id="closeGuideBtn">Start Cracking! 🔍</button></div>
+    </div>
+  </div>
 
   <p class="back"><a href="https://littleplayers.github.io/">← Back to Little Players</a></p>
 
@@ -367,6 +382,52 @@
     boardEl.scrollTop=boardEl.scrollHeight;
   }
 
+  const SFX = (function(){
+    let ctx=null;
+    function getCtx(){
+      if(!ctx){
+        const AC=window.AudioContext||window.webkitAudioContext;
+        if(AC) ctx=new AC();
+      }
+      if(ctx&&ctx.state==="suspended") ctx.resume();
+      return ctx;
+    }
+    return {
+      good(){
+        const c=getCtx(); if(!c) return;
+        [523.25, 659.25, 783.99].forEach((freq,i)=>{
+          const o=c.createOscillator(), g=c.createGain();
+          o.type="triangle"; o.frequency.setValueAtTime(freq, c.currentTime+i*0.06);
+          g.gain.setValueAtTime(0.15, c.currentTime+i*0.06);
+          g.gain.exponentialRampToValueAtTime(0.001, c.currentTime+i*0.06+0.15);
+          o.connect(g); g.connect(c.destination);
+          o.start(c.currentTime+i*0.06); o.stop(c.currentTime+i*0.06+0.15);
+        });
+      },
+      bad(){
+        const c=getCtx(); if(!c) return;
+        const o=c.createOscillator(), g=c.createGain();
+        o.type="sawtooth"; o.frequency.setValueAtTime(180, c.currentTime);
+        o.frequency.linearRampToValueAtTime(90, c.currentTime+0.22);
+        g.gain.setValueAtTime(0.15, c.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, c.currentTime+0.22);
+        o.connect(g); g.connect(c.destination);
+        o.start(); o.stop(c.currentTime+0.22);
+      },
+      win(){
+        const c=getCtx(); if(!c) return;
+        [523.25, 659.25, 783.99, 1046.50].forEach((freq,i)=>{
+          const o=c.createOscillator(), g=c.createGain();
+          o.type="sine"; o.frequency.setValueAtTime(freq, c.currentTime+i*0.08);
+          g.gain.setValueAtTime(0.2, c.currentTime+i*0.08);
+          g.gain.exponentialRampToValueAtTime(0.001, c.currentTime+i*0.08+0.3);
+          o.connect(g); g.connect(c.destination);
+          o.start(c.currentTime+i*0.08); o.stop(c.currentTime+i*0.08+0.3);
+        });
+      }
+    };
+  })();
+
   function submitGuess(){
     if(locked || guess.includes(null)) return;
     const res=scoreGuess(secret, guess);
@@ -376,7 +437,7 @@
 
     if(res.black===cfg.slots){
       // WIN
-      locked=true;
+      locked=true; SFX.good();
       const guessesUsed=cfg.tries-rowsLeft;
       const timeSec=Math.round((Date.now()-roundStart)/1000);
       const base=100*cfg.slots;
@@ -392,9 +453,10 @@
       setTimeout(newRound, 1600);
     } else if(rowsLeft<=0){
       // OUT OF TRIES
-      locked=true;
+      locked=true; SFX.bad();
       gameOver();
     } else {
+      SFX.bad();
       fb.textContent=`⚫ ${res.black} • ⚪ ${res.white} — keep going!`; fb.className="feedback";
       guess=Array(cfg.slots).fill(null); selSlot=0; renderCurrent();
     }
@@ -418,6 +480,18 @@
   }
 
   // ----- controls -----
+  $("guideBtn").onclick=()=>$("guideModal").classList.add("show");
+  $("closeGuideBtn").onclick=()=>$("guideModal").classList.remove("show");
+  $("hintBtn").onclick=()=>{
+    if(locked||!secret.length) return;
+    const emptyIdx = guess.findIndex((g,i)=>g!==secret[i]);
+    if(emptyIdx>=0){
+      guess[emptyIdx] = secret[emptyIdx];
+      renderCurrent();
+      fb.textContent = `💡 Hint revealed slot ${emptyIdx+1}: ${COLORS[secret[emptyIdx]].name}!`;
+      fb.className = "feedback good";
+    }
+  };
   $("btnBack").onclick=backspace;
   $("btnClear").onclick=clearGuess;
   $("btnSubmit").onclick=submitGuess;

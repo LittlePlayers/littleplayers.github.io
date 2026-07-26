@@ -120,7 +120,7 @@
   <p class="feedback" id="feedback"></p>
 
   <div class="pad">
-    <button class="ghost">·</button>
+    <button id="guideBtn" class="look" aria-label="Safety Guide">❓</button>
     <button id="bUp" aria-label="Move up">⬆️</button>
     <button class="ghost">·</button>
     <button id="bLeft" class="look" aria-label="Look left">👈</button>
@@ -129,6 +129,20 @@
   </div>
 
   <p class="help">Use ⬆️⬇️ to move and 👈👉 to look both ways. You can also use the Arrow keys or swipe!</p>
+
+  <div class="overlay" id="guideModal">
+    <div class="panel" style="max-width:480px; text-align:left;">
+      <h2 style="text-align:center;">🚦 Road Safety Rules</h2>
+      <p style="color:var(--ink); font-weight:700;">Learn how to cross roads safely every time:</p>
+      <ul style="font-weight:700; line-height:1.5; padding-left:20px; font-size:.92rem;">
+        <li><b>1. Stop at the Curb</b>: Never run straight onto the road!</li>
+        <li><b>2. Look Both Ways</b>: Tap 👈 Left and 👉 Right before crossing.</li>
+        <li><b>3. Wait for Green</b>: Only step out when the walk signal is 🟢 GREEN!</li>
+        <li><b>4. Use Zebra Crossing</b>: Walk straight across on the white stripes 🦓.</li>
+      </ul>
+      <div style="text-align:center;"><button id="closeGuideBtn">Got it! 🚸</button></div>
+    </div>
+  </div>
 
   <p class="back"><a href="https://littleplayers.github.io/">← Back to Little Players</a></p>
 
@@ -335,9 +349,55 @@
     player.row = nextRow; // stepping back toward pavement is always allowed
   }
 
+  const SFX = (function(){
+    let ctx=null;
+    function getCtx(){
+      if(!ctx){
+        const AC=window.AudioContext||window.webkitAudioContext;
+        if(AC) ctx=new AC();
+      }
+      if(ctx&&ctx.state==="suspended") ctx.resume();
+      return ctx;
+    }
+    return {
+      good(){
+        const c=getCtx(); if(!c) return;
+        [523.25, 659.25, 783.99].forEach((freq,i)=>{
+          const o=c.createOscillator(), g=c.createGain();
+          o.type="triangle"; o.frequency.setValueAtTime(freq, c.currentTime+i*0.06);
+          g.gain.setValueAtTime(0.15, c.currentTime+i*0.06);
+          g.gain.exponentialRampToValueAtTime(0.001, c.currentTime+i*0.06+0.15);
+          o.connect(g); g.connect(c.destination);
+          o.start(c.currentTime+i*0.06); o.stop(c.currentTime+i*0.06+0.15);
+        });
+      },
+      bad(){
+        const c=getCtx(); if(!c) return;
+        const o=c.createOscillator(), g=c.createGain();
+        o.type="sawtooth"; o.frequency.setValueAtTime(180, c.currentTime);
+        o.frequency.linearRampToValueAtTime(90, c.currentTime+0.22);
+        g.gain.setValueAtTime(0.15, c.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, c.currentTime+0.22);
+        o.connect(g); g.connect(c.destination);
+        o.start(); o.stop(c.currentTime+0.22);
+      },
+      win(){
+        const c=getCtx(); if(!c) return;
+        [523.25, 659.25, 783.99, 1046.50].forEach((freq,i)=>{
+          const o=c.createOscillator(), g=c.createGain();
+          o.type="sine"; o.frequency.setValueAtTime(freq, c.currentTime+i*0.08);
+          g.gain.setValueAtTime(0.2, c.currentTime+i*0.08);
+          g.gain.exponentialRampToValueAtTime(0.001, c.currentTime+i*0.08+0.3);
+          o.connect(g); g.connect(c.destination);
+          o.start(c.currentTime+i*0.08); o.stop(c.currentTime+i*0.08+0.3);
+        });
+      }
+    };
+  })();
+
   function loseLife(reminder){
     if(phase!=="cross") return;
-    phase="hit";
+    phase="hit"; SFX.bad();
     lives--; paint();
     setMsg(reminder,"bad");
     setTimeout(()=>{
@@ -347,7 +407,7 @@
   }
 
   function winCrossing(){
-    phase="won"; winFx=1;
+    phase="won"; winFx=1; SFX.good();
     const elapsed=(performance.now()-crossingStartTime)/1000;
     const timeBonus=Math.max(0, Math.round((crossTimeLimit-elapsed)*3));
     const lookBonus=25; // earned by looking both ways (required to reach cross phase)
@@ -523,6 +583,8 @@
   }
 
   // ---- Controls wiring ----
+  $("guideBtn").onclick=()=>$("guideModal").classList.add("show");
+  $("closeGuideBtn").onclick=()=>$("guideModal").classList.remove("show");
   $("bUp").onclick=()=>moveUp();
   $("bDown").onclick=()=>moveDown();
   $("bLeft").onclick=()=>look("left");

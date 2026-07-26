@@ -192,12 +192,35 @@
     {emoji:"💊", name:"Medicine"},{emoji:"✏️", name:"Pencil"},
     {emoji:"🥚", name:"Eggs"},   {emoji:"🪥", name:"Toothbrush"},
     {emoji:"🍎", name:"Apples"}, {emoji:"👕", name:"Shirt"},
+    {emoji:"👟", name:"School Shoes"}, {emoji:"🎒", name:"School Bag"},
+    {emoji:"🚰", name:"Clean Water"}, {emoji:"⚡", name:"Electricity Bill"},
+    {emoji:"🏥", name:"Doctor Visit"}, {emoji:"🛏️", name:"Blanket"},
+    {emoji:"🧼", name:"Shampoo"}, {emoji:"🍌", name:"Bananas"},
+    {emoji:"🌽", name:"Corn"}, {emoji:"🍅", name:"Tomatoes"},
+    {emoji:"🥔", name:"Potatoes"}, {emoji:"🧅", name:"Onions"},
+    {emoji:"🌾", name:"Wheat Flour"}, {emoji:"🧀", name:"Cheese"},
+    {emoji:"🫘", name:"Lentils & Beans"}, {emoji:"🐟", name:"Fish"},
+    {emoji:"🍗", name:"Chicken"}, {emoji:"🧃", name:"Healthy Juice"},
+    {emoji:"📙", name:"Textbook"}, {emoji:"📐", name:"Geometry Box"},
+    {emoji:"🚌", name:"Bus Pass"}, {emoji:"🚴", name:"Bicycle Repair"},
+    {emoji:"🧦", name:"Warm Socks"}, {emoji:"🧥", name:"Winter Coat"},
+    {emoji:"🕯️", name:"Emergency Light"}, {emoji:"🩹", name:"First Aid Kit"},
   ];
   const WANTS = [
-    {emoji:"🍭", name:"Candy"},   {emoji:"🧸", name:"Toy"},
-    {emoji:"🥤", name:"Soda"},    {emoji:"🎈", name:"Balloon"},
-    {emoji:"🍫", name:"Chocolate"},{emoji:"🎮", name:"Game"},
+    {emoji:"🍭", name:"Candy"},   {emoji:"🧸", name:"Toy Bear"},
+    {emoji:"🥤", name:"Soda"},    {emoji:"🎈", name:"Party Balloon"},
+    {emoji:"🍫", name:"Chocolate"},{emoji:"🎮", name:"Video Game"},
     {emoji:"🍦", name:"Ice Cream"},{emoji:"🪀", name:"Yo-yo"},
+    {emoji:"🍿", name:"Movie Popcorn"}, {emoji:"🍩", name:"Glazed Donut"},
+    {emoji:"🧁", name:"Cupcake"}, {emoji:"🕶️", name:"Fancy Sunglasses"},
+    {emoji:"🎧", name:"Headphones"}, {emoji:"🤖", name:"Robot Toy"},
+    {emoji:"🪁", name:"Kite"}, {emoji:"🎨", name:"Sticker Pack"},
+    {emoji:"📱", name:"Phone Case"}, {emoji:"🍰", name:"Cake"},
+    {emoji:"🛹", name:"Skateboard"}, {emoji:"🏎️", name:"Remote Car"},
+    {emoji:"🍿", name:"Cinema Ticket"}, {emoji:"🍟", name:"French Fries"},
+    {emoji:"🍕", name:"Extra Pizza"}, {emoji:"🍔", name:"Fast Food Burger"},
+    {emoji:"🍧", name:"Shaved Ice"}, {emoji:"🍬", name:"Gummy Bears"},
+    {emoji:"🎡", name:"Rides Ticket"}, {emoji:"🎮", name:"Arcade Token"}
   ];
 
   const SK="bh_best";
@@ -328,6 +351,52 @@
     $("leftWrap").classList.toggle("over", left<0);
   }
 
+  const SFX = (function(){
+    let ctx=null;
+    function getCtx(){
+      if(!ctx){
+        const AC=window.AudioContext||window.webkitAudioContext;
+        if(AC) ctx=new AC();
+      }
+      if(ctx&&ctx.state==="suspended") ctx.resume();
+      return ctx;
+    }
+    return {
+      good(){
+        const c=getCtx(); if(!c) return;
+        [523.25, 659.25, 783.99].forEach((freq,i)=>{
+          const o=c.createOscillator(), g=c.createGain();
+          o.type="triangle"; o.frequency.setValueAtTime(freq, c.currentTime+i*0.06);
+          g.gain.setValueAtTime(0.15, c.currentTime+i*0.06);
+          g.gain.exponentialRampToValueAtTime(0.001, c.currentTime+i*0.06+0.15);
+          o.connect(g); g.connect(c.destination);
+          o.start(c.currentTime+i*0.06); o.stop(c.currentTime+i*0.06+0.15);
+        });
+      },
+      bad(){
+        const c=getCtx(); if(!c) return;
+        const o=c.createOscillator(), g=c.createGain();
+        o.type="sawtooth"; o.frequency.setValueAtTime(180, c.currentTime);
+        o.frequency.linearRampToValueAtTime(90, c.currentTime+0.22);
+        g.gain.setValueAtTime(0.15, c.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, c.currentTime+0.22);
+        o.connect(g); g.connect(c.destination);
+        o.start(); o.stop(c.currentTime+0.22);
+      },
+      win(){
+        const c=getCtx(); if(!c) return;
+        [523.25, 659.25, 783.99, 1046.50].forEach((freq,i)=>{
+          const o=c.createOscillator(), g=c.createGain();
+          o.type="sine"; o.frequency.setValueAtTime(freq, c.currentTime+i*0.08);
+          g.gain.setValueAtTime(0.2, c.currentTime+i*0.08);
+          g.gain.exponentialRampToValueAtTime(0.001, c.currentTime+i*0.08+0.3);
+          o.connect(g); g.connect(c.destination);
+          o.start(c.currentTime+i*0.08); o.stop(c.currentTime+i*0.08+0.3);
+        });
+      }
+    };
+  })();
+
   // ----- checkout / win / fail -----
   function checkout(){
     if(locked) return;
@@ -337,18 +406,18 @@
 
     if(missing.length>0){
       const m=missing[0];
-      lives--; paint();
+      lives--; paint(); SFX.bad();
       fail(`Oops! You forgot the ${m.name.toLowerCase()} ${m.emoji}`);
       return;
     }
     if(left<0){
-      lives--; paint();
+      lives--; paint(); SFX.bad();
       fail(`Too expensive — you're ₹${-left} over! Put a want back. 😅`);
       return;
     }
 
     // WIN
-    locked=true;
+    locked=true; SFX.good();
     const base=50;
     const saveBonus=left;                       // ₹ left over = saving points
     const smart = wantsBought===0 ? 40 : 0;     // smart-shopper bonus

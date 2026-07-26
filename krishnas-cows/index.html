@@ -70,12 +70,26 @@
   <div class="diffbar" id="diffbar">
     <button data-d="easy" class="on">😀 Easy</button>
     <button data-d="hard">🔥 Hard</button>
+    <button id="guideBtn" style="background:#2a6cf0; color:#fff;">❓ Guide &amp; Lore</button>
   </div>
 
   <div class="frame"><canvas id="cv" width="820" height="470"></canvas></div>
 
   <div class="touch">
     <button id="btnFlute">🪈 Flute</button>
+  </div>
+
+  <div class="overlay" id="guideModal" style="position:fixed; inset:0; background:rgba(0,0,0,.7); display:none; align-items:center; justify-content:center; padding:20px; z-index:99;">
+    <div class="panel" style="background:#0e2a14; border:3px solid var(--gold); border-radius:20px; padding:24px; max-width:480px; text-align:left; color:#cdebd2;">
+      <h2 style="text-align:center; color:var(--gold); margin-top:0;">🪈 Krishna &amp; The Cows of Vrindavan</h2>
+      <p style="font-weight:700;">Herding Controls &amp; Tips:</p>
+      <ul style="font-weight:700; line-height:1.5; padding-left:20px; font-size:.9rem;">
+        <li><b>Walk Close</b>: Walk near cows to gently push/nudge them toward the 🏠 Goshala.</li>
+        <li><b>🪈 Flute (Space)</b>: Play Krishna's divine Bansuri flute to charm nearby cows to follow you!</li>
+        <li><b>🌊 Watch out for Yamuna</b>: Keep cows away from deep water!</li>
+      </ul>
+      <div style="text-align:center; margin-top:14px;"><button id="closeGuideBtn" style="background:var(--gold); color:#0e2a14; border:none; font-weight:800; padding:10px 24px; border-radius:999px; cursor:pointer;">Radhe Radhe! 🪈</button></div>
+    </div>
   </div>
 
   <p class="help">
@@ -142,9 +156,16 @@
   bf.addEventListener("mousedown",flute);
   if(("ontouchstart" in window)||navigator.maxTouchPoints>0) document.body.classList.add("touch-on");
 
-  document.querySelectorAll("#diffbar button").forEach(b=>{
+  document.getElementById("guideBtn").onclick=()=>{
+    document.getElementById("guideModal").style.display="flex";
+  };
+  document.getElementById("closeGuideBtn").onclick=()=>{
+    document.getElementById("guideModal").style.display="none";
+  };
+
+  document.querySelectorAll("#diffbar button[data-d]").forEach(b=>{
     b.onclick=()=>{ diff=b.dataset.d;
-      document.querySelectorAll("#diffbar button").forEach(x=>x.classList.toggle("on",x===b)); startGame(); };
+      document.querySelectorAll("#diffbar button[data-d]").forEach(x=>x.classList.toggle("on",x===b)); startGame(); };
   });
 
   // ---------- setup ----------
@@ -174,14 +195,72 @@
     banner=L.name; bannerT=130;
     makeCows(total);
   }
+  const SFX = (function(){
+    let ctx=null;
+    function getCtx(){
+      if(!ctx){
+        const AC=window.AudioContext||window.webkitAudioContext;
+        if(AC) ctx=new AC();
+      }
+      if(ctx&&ctx.state==="suspended") ctx.resume();
+      return ctx;
+    }
+    return {
+      flute(){
+        const c=getCtx(); if(!c) return;
+        [587.33, 659.25, 783.99, 880.00].forEach((freq,i)=>{
+          const o=c.createOscillator(), g=c.createGain();
+          o.type="sine"; o.frequency.setValueAtTime(freq, c.currentTime+i*0.08);
+          g.gain.setValueAtTime(0.12, c.currentTime+i*0.08);
+          g.gain.exponentialRampToValueAtTime(0.001, c.currentTime+i*0.08+0.2);
+          o.connect(g); g.connect(c.destination);
+          o.start(c.currentTime+i*0.08); o.stop(c.currentTime+i*0.08+0.2);
+        });
+      },
+      good(){
+        const c=getCtx(); if(!c) return;
+        [523.25, 659.25, 783.99].forEach((freq,i)=>{
+          const o=c.createOscillator(), g=c.createGain();
+          o.type="triangle"; o.frequency.setValueAtTime(freq, c.currentTime+i*0.06);
+          g.gain.setValueAtTime(0.15, c.currentTime+i*0.06);
+          g.gain.exponentialRampToValueAtTime(0.001, c.currentTime+i*0.06+0.15);
+          o.connect(g); g.connect(c.destination);
+          o.start(c.currentTime+i*0.06); o.stop(c.currentTime+i*0.06+0.15);
+        });
+      },
+      bad(){
+        const c=getCtx(); if(!c) return;
+        const o=c.createOscillator(), g=c.createGain();
+        o.type="sawtooth"; o.frequency.setValueAtTime(180, c.currentTime);
+        o.frequency.linearRampToValueAtTime(90, c.currentTime+0.22);
+        g.gain.setValueAtTime(0.15, c.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, c.currentTime+0.22);
+        o.connect(g); g.connect(c.destination);
+        o.start(); o.stop(c.currentTime+0.22);
+      },
+      win(){
+        const c=getCtx(); if(!c) return;
+        [523.25, 659.25, 783.99, 1046.50].forEach((freq,i)=>{
+          const o=c.createOscillator(), g=c.createGain();
+          o.type="sine"; o.frequency.setValueAtTime(freq, c.currentTime+i*0.08);
+          g.gain.setValueAtTime(0.2, c.currentTime+i*0.08);
+          g.gain.exponentialRampToValueAtTime(0.001, c.currentTime+i*0.08+0.3);
+          o.connect(g); g.connect(c.destination);
+          o.start(c.currentTime+i*0.08); o.stop(c.currentTime+i*0.08+0.3);
+        });
+      }
+    };
+  })();
+
   function completeLevel(){
+    SFX.good();
     score+=Math.round(timeLeft*4)+(level+1)*50;
     if(hi<score){ hi=score; localStorage.setItem("krishnaCowsHi",hi); }
     if(level<LEVELS.length-1){ state="clear"; setTimeout(()=>{ level++; beginLevel(); state="playing"; },1400); }
     else win();
   }
-  function win(){ state="win"; if(hi<score){ hi=score; localStorage.setItem("krishnaCowsHi",hi);} }
-  function fail(){ state="fail"; }
+  function win(){ state="win"; SFX.win(); if(hi<score){ hi=score; localStorage.setItem("krishnaCowsHi",hi);} }
+  function fail(){ state="fail"; SFX.bad(); }
 
   // ---------- update ----------
   function update(dt){

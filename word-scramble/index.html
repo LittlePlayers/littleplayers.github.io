@@ -178,41 +178,117 @@
 
 <script>
   const WORDS = [
-    // EASY (4-5)
+    // EASY (4-5 letters) - 35 words
     {cat:"Animals",w:"FROG",h:"A green animal that hops and says ribbit."},
     {cat:"Animals",w:"BEAR",h:"A big furry animal that loves honey."},
+    {cat:"Animals",w:"LION",h:"The king of the jungle with a big mane."},
+    {cat:"Animals",w:"DUCK",h:"A water bird that quacks and swims."},
+    {cat:"Animals",w:"DEER",h:"A graceful forest animal with antlers."},
+    {cat:"Animals",w:"PANDA",h:"A cute black and white bear that eats bamboo."},
+    {cat:"Animals",w:"KOALA",h:"An Australian tree climber that loves eucalyptus."},
+    {cat:"Animals",w:"TIGER",h:"A big orange cat with black stripes."},
+    {cat:"Animals",w:"SHARK",h:"A sea swimmer with sharp teeth and a dorsal fin."},
+    {cat:"Animals",w:"EAGLE",h:"A majestic bird of prey with sharp eyesight."},
     {cat:"Fruits",w:"PEAR",h:"A sweet fruit shaped like a teardrop."},
     {cat:"Fruits",w:"APPLE",h:"A round fruit, often red or green."},
-    {cat:"Colors",w:"GREEN",h:"The color of grass and leaves."},
-    {cat:"Animals",w:"TIGER",h:"A big orange cat with black stripes."},
-    {cat:"Things",w:"TRAIN",h:"It runs on tracks and goes choo-choo."},
+    {cat:"Fruits",w:"GRAPE",h:"A small juicy fruit that grows in bunches."},
     {cat:"Fruits",w:"MANGO",h:"A sweet tropical fruit with a big seed."},
+    {cat:"Fruits",w:"PEACH",h:"A fuzzy sweet fruit with a hard pit."},
+    {cat:"Fruits",w:"LEMON",h:"A sour yellow citrus fruit."},
+    {cat:"Fruits",w:"MELON",h:"A large juicy fruit with a thick rind."},
+    {cat:"Colors",w:"GREEN",h:"The color of grass and leaves."},
+    {cat:"Colors",w:"BLACK",h:"The color of the night sky without stars."},
+    {cat:"Colors",w:"WHITE",h:"The color of fresh snow."},
+    {cat:"Colors",w:"BROWN",h:"The color of soil and tree trunks."},
     {cat:"Nature",w:"CLOUD",h:"Fluffy white thing in the sky."},
+    {cat:"Nature",w:"BEACH",h:"Sandy shore beside the ocean waves."},
+    {cat:"Nature",w:"RIVER",h:"A flowing body of fresh water."},
+    {cat:"Nature",w:"OCEAN",h:"A vast body of salty sea water."},
+    {cat:"Nature",w:"PLANT",h:"A living green organism in the garden."},
+    {cat:"Things",w:"TRAIN",h:"It runs on tracks and goes choo-choo."},
     {cat:"Things",w:"ROBOT",h:"A machine that can move and beep."},
-    // MEDIUM (6-7)
+    {cat:"Things",w:"CLOCK",h:"Tells you what time it is with ticking hands."},
+    {cat:"Things",w:"HOUSE",h:"A building where a family lives."},
+    {cat:"Things",w:"CROWN",h:"Worn on the head by kings and queens."},
+    {cat:"Space",w:"MOON",h:"Glows bright in the night sky."},
+    {cat:"Space",w:"STAR",h:"A twinkling light far away in space."},
+    {cat:"Food",w:"PIZZA",h:"A baked flatbread topped with cheese and sauce."},
+    {cat:"Food",w:"BREAD",h:"Baked dough used to make sandwiches."},
+
+    // MEDIUM (6-7 letters) - 35 words
     {cat:"Animals",w:"RABBIT",h:"A fluffy animal with long ears that hops."},
     {cat:"Animals",w:"PENGUIN",h:"A black-and-white bird that loves ice."},
     {cat:"Animals",w:"DOLPHIN",h:"A smart sea animal that jumps from the water."},
+    {cat:"Animals",w:"MONKEY",h:"A playful animal that swings in trees."},
+    {cat:"Animals",w:"MONSTER",h:"A friendly creature in storybooks."},
+    {cat:"Animals",w:"GIRAFFE",h:"The tallest land animal with a long neck."},
+    {cat:"Animals",w:"FALCON",h:"A super fast diving bird of prey."},
+    {cat:"Animals",w:"TURTLE",h:"A slow reptile that carries its house on its back."},
+    {cat:"Animals",w:"BEAVER",h:"A rodent that builds wooden dams in rivers."},
     {cat:"Fruits",w:"ORANGE",h:"A round juicy fruit and also a color."},
     {cat:"Fruits",w:"CHERRY",h:"A tiny red fruit that grows in pairs."},
+    {cat:"Fruits",w:"BANANA",h:"A long yellow fruit monkeys love."},
+    {cat:"Fruits",w:"PAPAYA",h:"A tropical orange fruit with black seeds."},
     {cat:"Colors",w:"PURPLE",h:"Mix red and blue to get this color."},
+    {cat:"Colors",w:"YELLOW",h:"The bright color of the sun."},
+    {cat:"Colors",w:"SILVER",h:"A shiny metallic grey color."},
     {cat:"Nature",w:"RAINBOW",h:"Colorful arc in the sky after rain."},
     {cat:"Nature",w:"FLOWER",h:"A pretty plant that smells nice."},
+    {cat:"Nature",w:"FOREST",h:"A large area covered with trees."},
+    {cat:"Nature",w:"VALLEY",h:"Low land between mountains."},
+    {cat:"Nature",w:"ISLAND",h:"Land surrounded completely by water."},
     {cat:"School",w:"PENCIL",h:"You write and draw with it."},
+    {cat:"School",w:"ERASER",h:"Used to rub away pencil mistakes."},
+    {cat:"School",w:"CRAYON",h:"A wax stick used for coloring pictures."},
+    {cat:"School",w:"SCHOOL",h:"A place where children learn new things."},
     {cat:"Things",w:"ROCKET",h:"It blasts off into space."},
     {cat:"Things",w:"GUITAR",h:"A musical instrument with strings."},
     {cat:"Things",w:"CASTLE",h:"A big stone home for kings and queens."},
-    // HARD (8+)
+    {cat:"Things",w:"WHISTLE",h:"Blow into it to make a high-pitched sound."},
+    {cat:"Space",w:"PLANET",h:"A large body orbiting a star, like Earth."},
+    {cat:"Space",w:"GALAXY",h:"A huge collection of billions of stars."},
+    {cat:"Food",w:"CHEESE",h:"A tasty dairy food made from milk."},
+    {cat:"Food",w:"BURGER",h:"A grilled patty inside a soft bun."},
+    {cat:"Sports",w:"SOCCER",h:"A popular game played by kicking a ball."},
+    {cat:"Sports",w:"TENNIS",h:"Played with rackets and a yellow ball over a net."},
+
+    // HARD (8+ letters) - 35 words
     {cat:"Animals",w:"ELEPHANT",h:"A big grey animal with a long trunk."},
     {cat:"Animals",w:"BUTTERFLY",h:"A colorful insect that was once a caterpillar."},
     {cat:"Animals",w:"CROCODILE",h:"A scaly reptile with big snapping jaws."},
     {cat:"Animals",w:"KANGAROO",h:"An animal that hops and carries babies in a pouch."},
+    {cat:"Animals",w:"FLAMINGO",h:"A pink wading bird that stands on one leg."},
+    {cat:"Animals",w:"CHAMELEON",h:"A lizard that changes colors to hide."},
+    {cat:"Animals",w:"PORCUPINE",h:"An animal covered in sharp protective quills."},
+    {cat:"Animals",w:"RHINOCEROS",h:"A heavy horn-nosed herbivore from Africa."},
     {cat:"Nature",w:"VOLCANO",h:"A mountain that can erupt with lava."},
     {cat:"Nature",w:"WATERFALL",h:"Where a river falls down a cliff."},
+    {cat:"Nature",w:"MOUNTAIN",h:"A very tall, rocky part of the land."},
+    {cat:"Nature",w:"LIGHTNING",h:"A flash of electricity in a thunderstorm."},
+    {cat:"Nature",w:"AVALANCHE",h:"A large mass of snow falling down a slope."},
     {cat:"Things",w:"DINOSAUR",h:"A giant reptile from long, long ago."},
     {cat:"Things",w:"AIRPLANE",h:"It has wings and flies in the sky."},
+    {cat:"Things",w:"TELESCOPE",h:"An optical tool used to view distant stars."},
+    {cat:"Things",w:"SUBMARINE",h:"A vessel designed to navigate underwater."},
+    {cat:"Things",w:"HELICOPTER",h:"An aircraft with spinning rotor blades."},
+    {cat:"Things",w:"SPACESHIP",h:"A vehicle built for travelling through space."},
     {cat:"School",w:"COMPUTER",h:"A machine you can type and play games on."},
-    {cat:"Nature",w:"MOUNTAIN",h:"A very tall, rocky part of the land."},
+    {cat:"School",w:"NOTEBOOK",h:"A book of blank paper for taking notes."},
+    {cat:"School",w:"BACKPACK",h:"A bag worn on your back to carry supplies."},
+    {cat:"Space",w:"ASTRONAUT",h:"A person trained to travel into space."},
+    {cat:"Space",w:"ASTEROID",h:"A rocky body orbiting in the solar system."},
+    {cat:"Space",w:"SUPERNOVA",h:"A powerful explosion of a dying giant star."},
+    {cat:"Food",w:"SPAGHETTI",h:"Long thin Italian pasta noodles."},
+    {cat:"Food",w:"CHOCOLATE",h:"A sweet brown treat made from cocoa beans."},
+    {cat:"Food",w:"WATERMELON",h:"A huge green melon with juicy red flesh inside."},
+    {cat:"Mythology",w:"DRAGON",h:"A mythical fire-breathing winged creature."},
+    {cat:"Mythology",w:"PHOENIX",h:"A legendary bird that rises from its own ashes."},
+    {cat:"Mythology",w:"UNICORN",h:"A mythical horse with a single spiral horn."},
+    {cat:"Mythology",w:"PEGASUS",h:"A mythical winged horse that flies through clouds."},
+    {cat:"Science",w:"MAGNETIC",h:"Attracting iron or metal with magnetic force."},
+    {cat:"Science",w:"EXPERIMENT",h:"A test done to discover or prove something science."},
+    {cat:"Science",w:"GRAVITY",h:"The force pulling objects towards Earth."}
+  ];:"Nature",w:"MOUNTAIN",h:"A very tall, rocky part of the land."},
   ];
 
   const LEVELS = {
@@ -301,9 +377,65 @@
     slotsEl.children[s].classList.add("pop");
     if(filled.every(Boolean)) check();
   }
+  const SFX = (function(){
+    let ctx=null;
+    function getCtx(){
+      if(!ctx){
+        const AC=window.AudioContext||window.webkitAudioContext;
+        if(AC) ctx=new AC();
+      }
+      if(ctx&&ctx.state==="suspended") ctx.resume();
+      return ctx;
+    }
+    return {
+      tap(){
+        const c=getCtx(); if(!c) return;
+        const o=c.createOscillator(), g=c.createGain();
+        o.type="sine"; o.frequency.setValueAtTime(520, c.currentTime);
+        g.gain.setValueAtTime(0.06, c.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, c.currentTime+0.04);
+        o.connect(g); g.connect(c.destination);
+        o.start(); o.stop(c.currentTime+0.04);
+      },
+      good(){
+        const c=getCtx(); if(!c) return;
+        [523.25, 659.25, 783.99].forEach((freq,i)=>{
+          const o=c.createOscillator(), g=c.createGain();
+          o.type="triangle"; o.frequency.setValueAtTime(freq, c.currentTime+i*0.06);
+          g.gain.setValueAtTime(0.15, c.currentTime+i*0.06);
+          g.gain.exponentialRampToValueAtTime(0.001, c.currentTime+i*0.06+0.15);
+          o.connect(g); g.connect(c.destination);
+          o.start(c.currentTime+i*0.06); o.stop(c.currentTime+i*0.06+0.15);
+        });
+      },
+      bad(){
+        const c=getCtx(); if(!c) return;
+        const o=c.createOscillator(), g=c.createGain();
+        o.type="sawtooth"; o.frequency.setValueAtTime(180, c.currentTime);
+        o.frequency.linearRampToValueAtTime(90, c.currentTime+0.22);
+        g.gain.setValueAtTime(0.15, c.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, c.currentTime+0.22);
+        o.connect(g); g.connect(c.destination);
+        o.start(); o.stop(c.currentTime+0.22);
+      },
+      win(){
+        const c=getCtx(); if(!c) return;
+        [523.25, 659.25, 783.99, 1046.50].forEach((freq,i)=>{
+          const o=c.createOscillator(), g=c.createGain();
+          o.type="sine"; o.frequency.setValueAtTime(freq, c.currentTime+i*0.08);
+          g.gain.setValueAtTime(0.2, c.currentTime+i*0.08);
+          g.gain.exponentialRampToValueAtTime(0.001, c.currentTime+i*0.08+0.3);
+          o.connect(g); g.connect(c.destination);
+          o.start(c.currentTime+i*0.08); o.stop(c.currentTime+i*0.08+0.3);
+        });
+      }
+    };
+  })();
+
   function removeAt(i){
     if(!running) return;
     const f=filled[i]; if(!f) return;
+    SFX.tap();
     used[f.tileIdx]=false; filled[i]=null;
     fb.textContent=""; fb.className="feedback"; render();
   }
@@ -312,6 +444,7 @@
     const guess=filled.map(f=>f.char).join("");
     if(guess===current.w){
       stopTimer();
+      SFX.good();
       const timeBonus=Math.round(timeLeft*2);
       const pts=10 + timeBonus + streak*3;
       streak++; solved++; score+=pts;
@@ -321,6 +454,7 @@
       fb.textContent=`🎉 Correct! +${pts} (⏱ +${timeBonus})`; fb.className="feedback good";
       setTimeout(newWord,1100);
     } else {
+      SFX.bad();
       streak=0; paint();
       fb.textContent="❌ Not quite!"; fb.className="feedback bad";
       slotsEl.classList.add("shake"); setTimeout(()=>slotsEl.classList.remove("shake"),320);
@@ -328,7 +462,7 @@
   }
 
   function timeUp(){
-    stopTimer(); lives--; streak=0; paint();
+    stopTimer(); SFX.bad(); lives--; streak=0; paint();
     fb.textContent=`⏰ Time! The word was ${current.w}`; fb.className="feedback bad";
     if(lives<=0){ setTimeout(gameOver,1300); }
     else setTimeout(newWord,1500);
@@ -336,6 +470,7 @@
 
   function gameOver(){
     stopTimer();
+    if(score>=best && score>0) SFX.win(); else SFX.bad();
     $("ovTitle").textContent= score>=best && score>0 ? "🏆 New Best!" : "Game Over";
     $("ovMsg").textContent=`You solved ${solved} word${solved===1?"":"s"} on ${LEVELS[diff].label}.`;
     $("ovScore").textContent=score+" pts";

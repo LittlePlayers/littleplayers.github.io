@@ -159,14 +159,14 @@
 
   // Food-group definitions. Each group has a target proportion on the plate.
   const GROUPS=[
-    {key:"veg",   emoji:"🥦", name:"Vegetables", target:3, foods:["🥦","🥕","🌽","🥬","🫑","🍅","🥒","🍆"]},
-    {key:"fruit", emoji:"🍎", name:"Fruits",     target:2, foods:["🍎","🍌","🍇","🍓","🍊","🍉","🍐","🥝"]},
-    {key:"grain", emoji:"🍚", name:"Grains",     target:2, foods:["🍚","🍞","🍝","🥖","🥯","🌾"]},
-    {key:"protein",emoji:"🍗",name:"Protein",    target:2, foods:["🍗","🥚","🐟","🫘","🥩","🍤"]},
-    {key:"dairy", emoji:"🥛", name:"Dairy",      target:1, foods:["🥛","🧀","🧈"]},
+    {key:"veg",   emoji:"🥦", name:"Vegetables", target:3, foods:["🥦","🥕","🌽","🥬","🫑","🍅","🥒","🍆","🥑","🧄","🧅","🥔","🍠","🍄","🫛","🫜","🥗","🥦","🥕","🌽","🥬","🫑","🍅","🥒"]},
+    {key:"fruit", emoji:"🍎", name:"Fruits",     target:2, foods:["🍎","🍏","🍐","🍊","🍋","🍌","🍉","🍇","🍓","🫐","🍈","🍒","🍑","🥭","🍍","🥥","🥝","🍐","🍌","🍉","🍇","🍓","🍊","🍑"]},
+    {key:"grain", emoji:"🍚", name:"Grains",     target:2, foods:["🍚","🍞","🥖","🥐","🥨","🥯","🥞","🧇","🍝","🍜","🍲","🌾","🍿","🍚","🍞","🍝","🥖","🥯","🌾","🥐","🥨","🥞","🧇","🍜"]},
+    {key:"protein",emoji:"🍗",name:"Protein",    target:2, foods:["🍗","🥩","🍖","🌭","🍳","🥚","🐟","🍣","🍤","🦪","🦞","🦀","🦑","🫘","🫛","🥜","🌰","🍗","🥚","🐟","🫘","🥩","🍤","🍣"]},
+    {key:"dairy", emoji:"🥛", name:"Dairy",      target:1, foods:["🥛","🧀","🧈","🍦","🍨","🥛","🧀","🧈","🥛","🧀","🧈","🍦","🍨","🥛","🧀","🧈","🥛","🧀"]},
   ];
   // Junk / "sometimes" foods belong in the bin, never the plate.
-  const JUNK=["🍭","🍟","🥤","🍩","🎂","🍪","🍫","🧁","🍰","🍬"];
+  const JUNK=["🍭","🍟","🥤","🍩","🎂","🍪","🍫","🧁","🍰","🍬","🍔","🍕","🌭","🍧","🍨","🥧","🧃","🍫","🍿","🍪","🍩","🍮","🍬","🍭"];
   const BIN_KEY="bin";
 
   // Map every food emoji -> its correct group key (built once).
@@ -268,6 +268,52 @@
     armed=btn; btn.classList.add("armed");
   }
 
+  const SFX = (function(){
+    let ctx=null;
+    function getCtx(){
+      if(!ctx){
+        const AC=window.AudioContext||window.webkitAudioContext;
+        if(AC) ctx=new AC();
+      }
+      if(ctx&&ctx.state==="suspended") ctx.resume();
+      return ctx;
+    }
+    return {
+      good(){
+        const c=getCtx(); if(!c) return;
+        [523.25, 659.25, 783.99].forEach((freq,i)=>{
+          const o=c.createOscillator(), g=c.createGain();
+          o.type="triangle"; o.frequency.setValueAtTime(freq, c.currentTime+i*0.06);
+          g.gain.setValueAtTime(0.15, c.currentTime+i*0.06);
+          g.gain.exponentialRampToValueAtTime(0.001, c.currentTime+i*0.06+0.15);
+          o.connect(g); g.connect(c.destination);
+          o.start(c.currentTime+i*0.06); o.stop(c.currentTime+i*0.06+0.15);
+        });
+      },
+      bad(){
+        const c=getCtx(); if(!c) return;
+        const o=c.createOscillator(), g=c.createGain();
+        o.type="sawtooth"; o.frequency.setValueAtTime(180, c.currentTime);
+        o.frequency.linearRampToValueAtTime(90, c.currentTime+0.22);
+        g.gain.setValueAtTime(0.15, c.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, c.currentTime+0.22);
+        o.connect(g); g.connect(c.destination);
+        o.start(); o.stop(c.currentTime+0.22);
+      },
+      win(){
+        const c=getCtx(); if(!c) return;
+        [523.25, 659.25, 783.99, 1046.50].forEach((freq,i)=>{
+          const o=c.createOscillator(), g=c.createGain();
+          o.type="sine"; o.frequency.setValueAtTime(freq, c.currentTime+i*0.08);
+          g.gain.setValueAtTime(0.2, c.currentTime+i*0.08);
+          g.gain.exponentialRampToValueAtTime(0.001, c.currentTime+i*0.08+0.3);
+          o.connect(g); g.connect(c.destination);
+          o.start(c.currentTime+i*0.08); o.stop(c.currentTime+i*0.08+0.3);
+        });
+      }
+    };
+  })();
+
   function placeInto(key,sec){
     if(locked||!armed) {
       if(!armed && running) flash(fb,"👆 Tap a food first, then a plate section!","");
@@ -282,6 +328,7 @@
 
     // CASE 1: correct group AND section not yet full -> good placement.
     if(correctKey===key && have<target){
+      SFX.good();
       if(key===BIN_KEY) binDone++; else counts[key]++;
       addSlot(sec,food);
       consumeArmed();

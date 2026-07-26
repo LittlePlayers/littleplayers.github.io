@@ -165,7 +165,7 @@
 <script>
   // ---- Country data: name, flag, latitude, longitude, continent (lat/long verified ~within a few degrees) ----
   const COUNTRIES = [
-    // --- Asia ---
+    // --- Asia (25) ---
     {n:"India",        f:"🇮🇳", lat:21,   lon:78,   k:"Asia"},
     {n:"China",        f:"🇨🇳", lat:35,   lon:104,  k:"Asia"},
     {n:"Japan",        f:"🇯🇵", lat:36,   lon:138,  k:"Asia"},
@@ -178,7 +178,21 @@
     {n:"Philippines",  f:"🇵🇭", lat:13,   lon:122,  k:"Asia"},
     {n:"Turkey",       f:"🇹🇷", lat:39,   lon:35,   k:"Asia"},
     {n:"Vietnam",      f:"🇻🇳", lat:16,   lon:108,  k:"Asia"},
-    // --- Europe ---
+    {n:"Sri Lanka",    f:"🇱🇰", lat:7,    lon:81,   k:"Asia"},
+    {n:"Bangladesh",   f:"🇧🇩", lat:24,   lon:90,   k:"Asia"},
+    {n:"Malaysia",     f:"🇲🇾", lat:4,    lon:102,  k:"Asia"},
+    {n:"Singapore",    f:"🇸🇬", lat:1,    lon:104,  k:"Asia"},
+    {n:"United Arab Emirates", f:"🇦🇪", lat:24, lon:54, k:"Asia"},
+    {n:"Iran",         f:"🇮🇷", lat:32,   lon:53,   k:"Asia"},
+    {n:"Iraq",         f:"🇮🇶", lat:33,   lon:44,   k:"Asia"},
+    {n:"Israel",       f:"🇮🇱", lat:31,   lon:35,   k:"Asia"},
+    {n:"Mongolia",     f:"🇲🇳", lat:46,   lon:104,  k:"Asia"},
+    {n:"Kazakhstan",   f:"🇰🇿", lat:48,   lon:68,   k:"Asia"},
+    {n:"Myanmar",      f:"🇲🇲", lat:21,   lon:96,   k:"Asia"},
+    {n:"Uzbekistan",   f:"🇺🇿", lat:41,   lon:64,   k:"Asia"},
+    {n:"Oman",         f:"🇴🇲", lat:21,   lon:57,   k:"Asia"},
+
+    // --- Europe (25) ---
     {n:"United Kingdom",f:"🇬🇧",lat:54,   lon:-2,   k:"Europe"},
     {n:"France",       f:"🇫🇷", lat:47,   lon:2,    k:"Europe"},
     {n:"Germany",      f:"🇩🇪", lat:51,   lon:10,   k:"Europe"},
@@ -191,7 +205,21 @@
     {n:"Sweden",       f:"🇸🇪", lat:62,   lon:15,   k:"Europe"},
     {n:"Norway",       f:"🇳🇴", lat:61,   lon:8,    k:"Europe"},
     {n:"Poland",       f:"🇵🇱", lat:52,   lon:19,   k:"Europe"},
-    // --- Africa ---
+    {n:"Switzerland",  f:"🇨🇭", lat:47,   lon:8,    k:"Europe"},
+    {n:"Austria",      f:"🇦🇹", lat:47,   lon:14,   k:"Europe"},
+    {n:"Belgium",      f:"🇧🇪", lat:51,   lon:4,    k:"Europe"},
+    {n:"Denmark",      f:"🇩🇰", lat:56,   lon:10,   k:"Europe"},
+    {n:"Finland",      f:"🇫🇮", lat:64,   lon:26,   k:"Europe"},
+    {n:"Ireland",      f:"🇮🇪", lat:53,   lon:-8,   k:"Europe"},
+    {n:"Czechia",      f:"🇨🇿", lat:50,   lon:15,   k:"Europe"},
+    {n:"Hungary",      f:"🇭🇺", lat:47,   lon:19,   k:"Europe"},
+    {n:"Romania",      f:"🇷🇴", lat:46,   lon:25,   k:"Europe"},
+    {n:"Ukraine",      f:"🇺🇦", lat:49,   lon:31,   k:"Europe"},
+    {n:"Iceland",      f:"🇮🇸", lat:65,   lon:-18,  k:"Europe"},
+    {n:"Croatia",      f:"🇭🇷", lat:45,   lon:16,   k:"Europe"},
+    {n:"Serbia",       f:"🇷🇸", lat:44,   lon:21,   k:"Europe"},
+
+    // --- Africa (22) ---
     {n:"Egypt",        f:"🇪🇬", lat:27,   lon:30,   k:"Africa"},
     {n:"South Africa", f:"🇿🇦", lat:-30,  lon:25,   k:"Africa"},
     {n:"Nigeria",      f:"🇳🇬", lat:9,    lon:8,    k:"Africa"},
@@ -200,21 +228,59 @@
     {n:"Ethiopia",     f:"🇪🇹", lat:9,    lon:40,   k:"Africa"},
     {n:"Ghana",        f:"🇬🇭", lat:8,    lon:-1,   k:"Africa"},
     {n:"Tanzania",     f:"🇹🇿", lat:-6,   lon:35,   k:"Africa"},
-    // --- North America ---
+    {n:"Algeria",      f:"🇩🇿", lat:28,   lon:3,    k:"Africa"},
+    {n:"Tunisia",      f:"🇹🇳", lat:34,   lon:9,    k:"Africa"},
+    {n:"Uganda",       f:"🇺🇬", lat:1,    lon:32,   k:"Africa"},
+    {n:"Madagascar",   f:"🇲🇬", lat:-19,  lon:47,   k:"Africa"},
+    {n:"Senegal",      f:"🇸🇳", lat:14,   lon:-14,  k:"Africa"},
+    {n:"Cameroon",     f:"🇨🇲", lat:4,    lon:12,   k:"Africa"},
+    {n:"Ivory Coast",  f:"🇨🇮", lat:7,    lon:-5,   k:"Africa"},
+    {n:"Sudan",        f:"🇸🇩", lat:16,   lon:30,   k:"Africa"},
+    {n:"Zimbabwe",     f:"🇿🇼", lat:-19,  lon:29,   k:"Africa"},
+    {n:"Zambia",       f:"🇿🇲", lat:-14,  lon:28,   k:"Africa"},
+    {n:"Angola",       f:"🇦🇴", lat:-12,  lon:18,   k:"Africa"},
+    {n:"Mozambique",   f:"🇲🇿", lat:-18,  lon:35,   k:"Africa"},
+    {n:"Rwanda",       f:"🇷🇼", lat:-2,   lon:30,   k:"Africa"},
+    {n:"Namibia",      f:"🇳🇦", lat:-22,  lon:17,   k:"Africa"},
+
+    // --- North America (12) ---
     {n:"United States",f:"🇺🇸", lat:39,   lon:-98,  k:"North America"},
     {n:"Canada",       f:"🇨🇦", lat:58,   lon:-100, k:"North America"},
     {n:"Mexico",       f:"🇲🇽", lat:23,   lon:-102, k:"North America"},
     {n:"Cuba",         f:"🇨🇺", lat:22,   lon:-79,  k:"North America"},
-    // --- South America ---
+    {n:"Jamaica",      f:"🇯🇲", lat:18,   lon:-77,  k:"North America"},
+    {n:"Costa Rica",   f:"🇨🇷", lat:10,   lon:-84,  k:"North America"},
+    {n:"Panama",       f:"🇵🇦", lat:9,    lon:-80,  k:"North America"},
+    {n:"Guatemala",    f:"🇬🇹", lat:15,   lon:-90,  k:"North America"},
+    {n:"Dominican Rep",f:"🇩🇴", lat:19,   lon:-70,  k:"North America"},
+    {n:"Honduras",     f:"🇭🇳", lat:15,   lon:-86,  k:"North America"},
+    {n:"Haiti",        f:"🇭🇹", lat:19,   lon:-72,  k:"North America"},
+    {n:"El Salvador",  f:"🇸🇻", lat:14,   lon:-89,  k:"North America"},
+
+    // --- South America (12) ---
     {n:"Brazil",       f:"🇧🇷", lat:-10,  lon:-52,  k:"South America"},
     {n:"Argentina",    f:"🇦🇷", lat:-35,  lon:-65,  k:"South America"},
     {n:"Peru",         f:"🇵🇪", lat:-10,  lon:-76,  k:"South America"},
     {n:"Chile",        f:"🇨🇱", lat:-33,  lon:-71,  k:"South America"},
     {n:"Colombia",     f:"🇨🇴", lat:4,    lon:-73,  k:"South America"},
-    // --- Oceania ---
+    {n:"Venezuela",    f:"🇻🇪", lat:7,    lon:-66,  k:"South America"},
+    {n:"Ecuador",      f:"🇪🇨", lat:-2,   lon:-78,  k:"South America"},
+    {n:"Bolivia",      f:"🇧🇴", lat:-17,  lon:-64,  k:"South America"},
+    {n:"Uruguay",      f:"🇺🇾", lat:-33,  lon:-56,  k:"South America"},
+    {n:"Paraguay",     f:"🇵🇾", lat:-23,  lon:-58,  k:"South America"},
+    {n:"Guyana",       f:"🇬🇾", lat:5,    lon:-59,  k:"South America"},
+    {n:"Suriname",     f:"🇸🇷", lat:4,    lon:-56,  k:"South America"},
+
+    // --- Oceania (9) ---
     {n:"Australia",    f:"🇦🇺", lat:-25,  lon:134,  k:"Oceania"},
     {n:"New Zealand",  f:"🇳🇿", lat:-41,  lon:174,  k:"Oceania"},
     {n:"Fiji",         f:"🇫🇯", lat:-17,  lon:178,  k:"Oceania"},
+    {n:"Papua New Guinea",f:"🇵🇬",lat:-6, lon:147,  k:"Oceania"},
+    {n:"Samoa",        f:"🇼🇸", lat:-14,  lon:-172, k:"Oceania"},
+    {n:"Tonga",        f:"🇹🇴", lat:-21,  lon:-175, k:"Oceania"},
+    {n:"Vanuatu",      f:"🇻🇺", lat:-17,  lon:168,  k:"Oceania"},
+    {n:"Solomon Islands",f:"🇸🇧",lat:-9,  lon:160,  k:"Oceania"},
+    {n:"Palau",        f:"🇵🇼", lat:7,    lon:134,  k:"Oceania"}
   ];
 
   // Projection: equirectangular into 360x180 viewBox.
@@ -332,6 +398,53 @@
     fxEl.appendChild(t);
     return t;
   }
+  
+  const SFX = (function(){
+    let ctx=null;
+    function getCtx(){
+      if(!ctx){
+        const AC=window.AudioContext||window.webkitAudioContext;
+        if(AC) ctx=new AC();
+      }
+      if(ctx&&ctx.state==="suspended") ctx.resume();
+      return ctx;
+    }
+    return {
+      good(){
+        const c=getCtx(); if(!c) return;
+        [523.25, 659.25, 783.99].forEach((freq,i)=>{
+          const o=c.createOscillator(), g=c.createGain();
+          o.type="triangle"; o.frequency.setValueAtTime(freq, c.currentTime+i*0.06);
+          g.gain.setValueAtTime(0.15, c.currentTime+i*0.06);
+          g.gain.exponentialRampToValueAtTime(0.001, c.currentTime+i*0.06+0.15);
+          o.connect(g); g.connect(c.destination);
+          o.start(c.currentTime+i*0.06); o.stop(c.currentTime+i*0.06+0.15);
+        });
+      },
+      bad(){
+        const c=getCtx(); if(!c) return;
+        const o=c.createOscillator(), g=c.createGain();
+        o.type="sawtooth"; o.frequency.setValueAtTime(180, c.currentTime);
+        o.frequency.linearRampToValueAtTime(90, c.currentTime+0.22);
+        g.gain.setValueAtTime(0.15, c.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, c.currentTime+0.22);
+        o.connect(g); g.connect(c.destination);
+        o.start(); o.stop(c.currentTime+0.22);
+      },
+      win(){
+        const c=getCtx(); if(!c) return;
+        [523.25, 659.25, 783.99, 1046.50].forEach((freq,i)=>{
+          const o=c.createOscillator(), g=c.createGain();
+          o.type="sine"; o.frequency.setValueAtTime(freq, c.currentTime+i*0.08);
+          g.gain.setValueAtTime(0.2, c.currentTime+i*0.08);
+          g.gain.exponentialRampToValueAtTime(0.001, c.currentTime+i*0.08+0.3);
+          o.connect(g); g.connect(c.destination);
+          o.start(c.currentTime+i*0.08); o.stop(c.currentTime+i*0.08+0.3);
+        });
+      }
+    };
+  })();
+
   function floaterAt(c,txt){
     const x=projX(c.lon), y=projY(c.lat);
     const t=document.createElementNS(SVGNS,"text");
@@ -353,6 +466,7 @@
   function choose(c,g,halo){
     if(locked) return; locked=true; stopTimer();
     if(c===target || c.n===target.n){
+      SFX.good();
       halo.classList.add("right"); halo.classList.add("pulseG");
       highlightContinent(c.k,true);
       labelAt(c);
@@ -366,6 +480,7 @@
       fb.textContent="🎉 +"+pts+" (⏱ +"+timeBonus+")"; fb.className="feedback good";
       setTimeout(nextRound,950);
     } else {
+      SFX.bad();
       halo.classList.add("wrong"); halo.classList.add("shakeR");
       revealTarget();
       lives--; streak=0; paint();
@@ -376,6 +491,7 @@
 
   function timeUp(){
     if(locked) return; locked=true;
+    SFX.bad();
     revealTarget();
     lives--; streak=0; paint();
     fb.textContent="⏰ Time! It was "+target.n; fb.className="feedback bad";
