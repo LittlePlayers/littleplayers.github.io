@@ -232,11 +232,6 @@
     fill.className="timerfill"+(pct<25?" danger":pct<50?" warn":"");
   }
 
-  function draw(){
-    ctx.clearRect(0,0,cv.width,cv.height);
-    // goal cell highlight
-    ctx.fillStyle="#d6fff1";
-    ctx.fillRect(pad+(N-1)*cell, pad+(N-1)*cell, cell, cell);
   let showHintPath = false, hintPath = [];
 
   const SFX = (function(){
