@@ -107,6 +107,7 @@
     <button data-d="easy" class="on">😀 Easy</button>
     <button data-d="medium">😎 Medium</button>
     <button data-d="hard">🤓 Hard</button>
+    <button id="guideBtn" style="background:#22a0ff;color:#fff;">❓ Guide</button>
   </div>
 
   <div class="scoreboard">
@@ -124,6 +125,19 @@
     <div class="answers" id="answers"></div>
     <p class="feedback" id="feedback"></p>
   </main>
+
+  <div class="overlay" id="guideModal">
+    <div class="panel" style="max-width:480px; text-align:left;">
+      <h2 style="text-align:center;">➗ How to Play Math Blast</h2>
+      <p style="color:var(--ink); font-weight:700;">Boost your mental math speed:</p>
+      <ul style="font-weight:700; line-height:1.5; padding-left:20px; font-size:.92rem;">
+        <li><b>😀 Easy</b>: Addition (+) and Subtraction (−) up to 10.</li>
+        <li><b>😎 Medium</b>: Adds Multiplication (×) up to 20.</li>
+        <li><b>🤓 Hard</b>: Includes Division (÷) and faster timers!</li>
+      </ul>
+      <div style="text-align:center;"><button id="closeGuideBtn">Blast Off! 🚀</button></div>
+    </div>
+  </div>
 
   <p class="back"><a href="https://littleplayers.github.io/">← Back to Little Players</a></p>
 
@@ -216,11 +230,58 @@
     fill.className="timerfill"+(pct<25?" danger":pct<50?" warn":"");
   }
 
+  const SFX = (function(){
+    let ctx=null;
+    function getCtx(){
+      if(!ctx){
+        const AC=window.AudioContext||window.webkitAudioContext;
+        if(AC) ctx=new AC();
+      }
+      if(ctx&&ctx.state==="suspended") ctx.resume();
+      return ctx;
+    }
+    return {
+      good(){
+        const c=getCtx(); if(!c) return;
+        [523.25, 659.25, 783.99].forEach((freq,i)=>{
+          const o=c.createOscillator(), g=c.createGain();
+          o.type="triangle"; o.frequency.setValueAtTime(freq, c.currentTime+i*0.06);
+          g.gain.setValueAtTime(0.15, c.currentTime+i*0.06);
+          g.gain.exponentialRampToValueAtTime(0.001, c.currentTime+i*0.06+0.15);
+          o.connect(g); g.connect(c.destination);
+          o.start(c.currentTime+i*0.06); o.stop(c.currentTime+i*0.06+0.15);
+        });
+      },
+      bad(){
+        const c=getCtx(); if(!c) return;
+        const o=c.createOscillator(), g=c.createGain();
+        o.type="sawtooth"; o.frequency.setValueAtTime(180, c.currentTime);
+        o.frequency.linearRampToValueAtTime(90, c.currentTime+0.22);
+        g.gain.setValueAtTime(0.15, c.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, c.currentTime+0.22);
+        o.connect(g); g.connect(c.destination);
+        o.start(); o.stop(c.currentTime+0.22);
+      },
+      win(){
+        const c=getCtx(); if(!c) return;
+        [523.25, 659.25, 783.99, 1046.50].forEach((freq,i)=>{
+          const o=c.createOscillator(), g=c.createGain();
+          o.type="sine"; o.frequency.setValueAtTime(freq, c.currentTime+i*0.08);
+          g.gain.setValueAtTime(0.2, c.currentTime+i*0.08);
+          g.gain.exponentialRampToValueAtTime(0.001, c.currentTime+i*0.08+0.3);
+          o.connect(g); g.connect(c.destination);
+          o.start(c.currentTime+i*0.08); o.stop(c.currentTime+i*0.08+0.3);
+        });
+      }
+    };
+  })();
+
   function choose(val,btn){
     if(locked) return; locked=true; stopTimer();
     [...ansEl.children].forEach(b=>b.disabled=true);
     if(val===answer){
       btn.classList.add("correct");
+      SFX.good();
       const timeBonus=Math.round(timeLeft*2);
       const pts=10+timeBonus+streak*3;
       streak++; solved++; score+=pts;
@@ -231,6 +292,7 @@
       setTimeout(nextQ,800);
     } else {
       btn.classList.add("wrong");
+      SFX.bad();
       [...ansEl.children].forEach(b=>{ if(+b.textContent===answer) b.classList.add("correct"); });
       lives--; streak=0; paint();
       fb.textContent=`❌ It was ${answer}`; fb.className="feedback bad";
@@ -240,6 +302,7 @@
 
   function timeUp(){
     if(locked) return; locked=true;
+    SFX.bad();
     [...ansEl.children].forEach(b=>{ b.disabled=true; if(+b.textContent===answer) b.classList.add("correct"); });
     lives--; streak=0; paint();
     fb.textContent=`⏰ Time! It was ${answer}`; fb.className="feedback bad";
@@ -248,6 +311,7 @@
 
   function gameOver(){
     stopTimer();
+    if(score>=best && score>0) SFX.win(); else SFX.bad();
     $("ovTitle").textContent = (score>=best && score>0) ? "🏆 New Best!" : "Game Over";
     $("ovMsg").textContent=`You answered ${solved} correct on ${DIFF[diff].label}.`;
     $("ovScore").textContent=score+" pts";
@@ -261,9 +325,12 @@
     $("hearts").textContent="❤️".repeat(Math.max(0,lives))+"🤍".repeat(Math.max(0,3-lives));
   }
 
-  document.querySelectorAll("#diff button").forEach(b=>{
+  $("guideBtn").onclick=()=>$("guideModal").classList.add("show");
+  $("closeGuideBtn").onclick=()=>$("guideModal").classList.remove("show");
+
+  document.querySelectorAll("#diff button[data-d]").forEach(b=>{
     b.onclick=()=>{ diff=b.dataset.d;
-      document.querySelectorAll("#diff button").forEach(x=>x.classList.toggle("on",x===b));
+      document.querySelectorAll("#diff button[data-d]").forEach(x=>x.classList.toggle("on",x===b));
       startGame(); };
   });
 

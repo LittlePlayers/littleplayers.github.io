@@ -179,6 +179,7 @@
     <div class="preview" id="preview">···</div>
 
     <div class="actionrow">
+      <button class="btn ghost" id="guideBtn">❓ Guide</button>
       <button class="btn ghost" id="hintBtn">💡 Hint</button>
       <button class="btn" id="submitBtn">✅ Submit</button>
     </div>
@@ -186,6 +187,19 @@
     <p class="feedback" id="feedback"></p>
     <p class="help" id="help"></p>
   </main>
+
+  <div class="overlay" id="guideModal">
+    <div class="panel" style="max-width:480px; text-align:left;">
+      <h2 style="text-align:center;">🔐 How Secret Ciphers Work</h2>
+      <p style="color:var(--ink); font-weight:700;">Secret codes hide real messages by replacing or shifting letters:</p>
+      <ul style="font-weight:700; line-height:1.5; padding-left:20px; font-size:.92rem;">
+        <li><b>Caesar Cipher</b>: Every letter in the alphabet is shifted by a fixed number (e.g. shift 3 turns A ➔ D, B ➔ E).</li>
+        <li><b>Substitution Cipher</b>: Every letter is mapped to a random different letter (e.g. E ➔ X, T ➔ Q).</li>
+        <li><b>Frequency Tip</b>: The letter <b>E</b> is the most common letter in English words!</li>
+      </ul>
+      <div style="text-align:center;"><button id="closeGuideBtn">Start Cracking! 🔍</button></div>
+    </div>
+  </div>
 
   <p class="back"><a href="https://littleplayers.github.io/">← Back to Little Players</a></p>
 
@@ -253,6 +267,7 @@
 
   // ---------- phrase bank (kid-friendly, positive, simple) ----------
   const PHRASES=[
+    // Kid-friendly positive & motivational
     "BE KIND ALWAYS",
     "DREAM BIG TODAY",
     "YOU CAN DO IT",
@@ -268,11 +283,106 @@
     "BRAVE HEARTS WIN",
     "SHARING IS CARING",
     "LEARN SOMETHING NEW",
-    "OCTOPUS HAVE EIGHT ARMS",
     "WATER IS GOOD FOR YOU",
     "EVERY DAY IS A GIFT",
     "MISTAKES HELP US LEARN",
-    "KEEP TRYING YOUR BEST"
+    "KEEP TRYING YOUR BEST",
+    "CHASE YOUR DREAMS",
+    "KINDNESS IS A SUPERPOWER",
+    "EXPLORE THE WORLD",
+    "GREAT THINGS TAKE TIME",
+    "BELIEVE IN YOURSELF",
+    "LAUGHTER IS THE BEST MEDICINE",
+
+    // Science & Nature facts
+    "OCTOPUS HAVE EIGHT ARMS",
+    "LIGHTNING IS SUPER HOT",
+    "TREES PRODUCE FRESH OXYGEN",
+    "CHEETAH IS FASTEST ON LAND",
+    "BLUE WHALES ARE HUGE",
+    "DIAMONDS ARE VERY HARD",
+    "WATER BOILS AT ONE HUNDRED",
+    "EARTH ORBITS THE SUN",
+    "THE MOON CREATES TIDES",
+    "PENGUINS CANNOT FLY",
+    "DOLPHINS ARE VERY SMART",
+    "VOLCANOES SPEW LAVA",
+    "RAINBOWS HAVE SEVEN COLORS",
+    "SPIDERS HAVE EIGHT LEGS",
+    "FROGS METAMORPHOSE FROM TADPOLES",
+    "BEARS HIBERNATE IN WINTER",
+    "ANTS ARE SUPER STRONG",
+    "GRAVITY PULLS US DOWN",
+    "VENUS IS HOTTER THAN MERCURY",
+    "SATURN HAS BEAUTIFUL RINGS",
+
+    // Space & Exploration
+    "ASTRONAUTS FLOAT IN SPACE",
+    "MARS IS THE RED PLANET",
+    "MILKY WAY HAS BILLIONS OF STARS",
+    "ROSETTA COMET MISSION",
+    "TELESCOPES SEE FARAWAY GALAXIES",
+    "NEIL ARMSTRONG WALKED ON MOON",
+    "BLACK HOLES HAVE IMMENSE GRAVITY",
+    "JUPITER IS THE GIANT PLANET",
+    "LIGHT TRAVELS SUPER FAST",
+    "COMETS ARE ICY DUST BALLS",
+
+    // Mythology & Legends
+    "HANUMAN LEAPED TO THE SUN",
+    "KRISHNA PLAYED HIS FLUTE",
+    "ARJUNA HAD PERFECT AIM",
+    "DRAGONS BREATHED FIRE IN TALES",
+    "UNICORNS HAVE A SPIRAL HORN",
+    "PHOENIX RISES FROM ASHES",
+    "PEGASUS FLIES IN THE CLOUDS",
+    "SHIVA DANCES THE TANDAVA",
+    "GANESHA WRITES WITH HIS TUSK",
+    "HERCULES HAD GREAT STRENGTH",
+
+    // Words & Coding
+    "BINARY IS ZEROES AND ONES",
+    "CIPHERS KEEP MESSAGES SECRET",
+    "CAESAR USED SHIFT CODES",
+    "ALGORITHM IS A SET OF STEPS",
+    "LOOPS REPEAT CODE AUTOMATICALLY",
+    "VARIABLES STORE DATA IN RAM",
+    "FUNCTIONS ARE REUSABLE CODE",
+    "BOOLEAN MEANS TRUE OR FALSE",
+    "CRYPTOGRAPHY SECURES DATA",
+    "DEBUGGING FIXES CODE ERRORS",
+
+    // Fun Riddles & General Knowledge
+    "KNOWLEDGE IS TRUE POWER",
+    "COWS SLEEP STANDING UP",
+    "BANANAS ARE BERRIES",
+    "HONEY NEVER EXPIRES",
+    "EVEREST IS THE TALLEST MOONTAIN",
+    "PACIFIC IS THE LARGEST OCEAN",
+    "GIRAFFES HAVE BLUE TONGS",
+    "FLAMINGOS ARE PINK FROM FOOD",
+    "SEA OTTERS HOLD HANDS",
+    "ELEPHANTS NEVER FORGET",
+    "CATS CAN JUMP SIX TIMES HIGH",
+    "SNAILS CAN SLEEP THREE YEARS",
+    "BUTTERFLIES TASTE WITH FEET",
+    "KOALAS SLEEP TWENTY HOURS",
+    "OWLS TURN HEADS THREE QUARTERS",
+    "PARROTS IMITATE HUMAN SPEECH",
+    "ZEBRAS HAVE UNIQUE STRIPES",
+    "KANGAROOS CANNOT WALK BACKWARDS",
+    "PEACOCKS HAVE COLORFUL FEATHERS",
+    "PANDAS EAT MOSTLY BAMBOO",
+    "CHAMELEONS CHANGE COLOR TO HIDE",
+    "BEAVERS BUILD WOODEN DAMS",
+    "SLOTHS MOVE VERY SLOWLY",
+    "SEAHORSES SWIM VERTICALLY",
+    "HUMMINGBIRDS FLY BACKWARDS",
+    "POLAR BEARS HAVE BLACK SKIN",
+    "PENGUINS MATES FOR LIFE",
+    "WOLVES HOWL TO COMMUNICATE",
+    "DOLPHINS SLEEP WITH ONE EYE OPEN",
+    "TURTLES HAVE HARD SHELLS"
   ];
 
   // ---------- state ----------
@@ -466,6 +576,52 @@
   }
 
   // ---------- submit / check ----------
+  const SFX = (function(){
+    let ctx=null;
+    function getCtx(){
+      if(!ctx){
+        const AC=window.AudioContext||window.webkitAudioContext;
+        if(AC) ctx=new AC();
+      }
+      if(ctx&&ctx.state==="suspended") ctx.resume();
+      return ctx;
+    }
+    return {
+      good(){
+        const c=getCtx(); if(!c) return;
+        [523.25, 659.25, 783.99].forEach((freq,i)=>{
+          const o=c.createOscillator(), g=c.createGain();
+          o.type="triangle"; o.frequency.setValueAtTime(freq, c.currentTime+i*0.06);
+          g.gain.setValueAtTime(0.15, c.currentTime+i*0.06);
+          g.gain.exponentialRampToValueAtTime(0.001, c.currentTime+i*0.06+0.15);
+          o.connect(g); g.connect(c.destination);
+          o.start(c.currentTime+i*0.06); o.stop(c.currentTime+i*0.06+0.15);
+        });
+      },
+      bad(){
+        const c=getCtx(); if(!c) return;
+        const o=c.createOscillator(), g=c.createGain();
+        o.type="sawtooth"; o.frequency.setValueAtTime(180, c.currentTime);
+        o.frequency.linearRampToValueAtTime(90, c.currentTime+0.22);
+        g.gain.setValueAtTime(0.15, c.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, c.currentTime+0.22);
+        o.connect(g); g.connect(c.destination);
+        o.start(); o.stop(c.currentTime+0.22);
+      },
+      win(){
+        const c=getCtx(); if(!c) return;
+        [523.25, 659.25, 783.99, 1046.50].forEach((freq,i)=>{
+          const o=c.createOscillator(), g=c.createGain();
+          o.type="sine"; o.frequency.setValueAtTime(freq, c.currentTime+i*0.08);
+          g.gain.setValueAtTime(0.2, c.currentTime+i*0.08);
+          g.gain.exponentialRampToValueAtTime(0.001, c.currentTime+i*0.08+0.3);
+          o.connect(g); g.connect(c.destination);
+          o.start(c.currentTime+i*0.08); o.stop(c.currentTime+i*0.08+0.3);
+        });
+      }
+    };
+  })();
+
   function submit(){
     if(locked) return;
     let correct=false, decoded="";
@@ -491,6 +647,7 @@
 
     locked=true;
     if(correct){
+      SFX.good();
       const secs=(Date.now()-startTime)/1000;
       const timeBonus=Math.max(0,Math.round(40-secs));      // generous time bonus
       const hintBonus=Math.max(0,20-hintsUsed*8);
@@ -504,6 +661,7 @@
       paint();
       setTimeout(()=>{ msgNum++; newRound(); },1600);
     } else {
+      SFX.bad();
       lives--; paint();
       const reveal = tier==="t2" ? ' The shift was '+curShift+'.' : '';
       fb.textContent="❌ Not quite — keep trying!"+reveal;
@@ -543,6 +701,8 @@
     };
   });
 
+  $("guideBtn").onclick=()=>$("guideModal").classList.add("show");
+  $("closeGuideBtn").onclick=()=>$("guideModal").classList.remove("show");
   $("submitBtn").onclick=submit;
   $("hintBtn").onclick=useHint;
   $("ovBtn").onclick=startGame;

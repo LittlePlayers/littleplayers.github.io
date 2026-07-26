@@ -132,12 +132,29 @@
     <canvas class="stage" id="stage" width="520" height="240"></canvas>
     <div class="gatepick" id="gatepick"></div>
     <div class="controls">
+      <button class="btn ghost" id="guideBtn">❓ How to Play</button>
       <button class="btn ghost" id="hintBtn">🔎 Gate hint</button>
       <button class="btn" id="checkBtn">✅ Check</button>
     </div>
     <div class="hintbox" id="hintbox"></div>
     <p class="feedback" id="feedback"></p>
   </main>
+
+  <div class="overlay" id="guideModal">
+    <div class="panel" style="max-width:500px; text-align:left;">
+      <h2 style="text-align:center;">⚡ How to Play & Gate Guide</h2>
+      <p style="color:var(--ink); font-weight:700;">Logic gates process inputs (0 = OFF, 1 = ON) to produce an output signal:</p>
+      <ul style="font-weight:700; line-height:1.5; padding-left:20px; font-size:.95rem;">
+        <li><b>AND</b>: Output is 1 ONLY if <b>both</b> inputs are 1.</li>
+        <li><b>OR</b>: Output is 1 if <b>at least one</b> input is 1.</li>
+        <li><b>NOT</b>: Flips the signal (0 ➔ 1, 1 ➔ 0).</li>
+        <li><b>XOR</b>: Output is 1 if inputs are <b>different</b> (0+1 or 1+0).</li>
+        <li><b>NAND</b>: Opposite of AND (0 if both are 1, else 1).</li>
+      </ul>
+      <p style="font-weight:700; color:var(--muted); text-align:center;">Flip switches or pick gates to light up the bulb when requested!</p>
+      <div style="text-align:center;"><button id="closeGuideBtn">Got it! 👍</button></div>
+    </div>
+  </div>
 
   <div class="help">
     <div><b>How to play:</b> Tap the input switches to flip them 1/0. In "Choose the gate" rounds, tap a gate. Then press <b>Check</b> to see if the bulb matches the target! 3 wrong = game over.</div>
@@ -549,8 +566,63 @@
     }
   }
 
+  const SFX = (function(){
+    let ctx=null;
+    function getCtx(){
+      if(!ctx){
+        const AC=window.AudioContext||window.webkitAudioContext;
+        if(AC) ctx=new AC();
+      }
+      if(ctx&&ctx.state==="suspended") ctx.resume();
+      return ctx;
+    }
+    return {
+      toggle(){
+        const c=getCtx(); if(!c) return;
+        const o=c.createOscillator(), g=c.createGain();
+        o.type="sine"; o.frequency.setValueAtTime(480, c.currentTime);
+        g.gain.setValueAtTime(0.05, c.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, c.currentTime+0.04);
+        o.connect(g); g.connect(c.destination);
+        o.start(); o.stop(c.currentTime+0.04);
+      },
+      good(){
+        const c=getCtx(); if(!c) return;
+        [523.25, 659.25, 783.99].forEach((freq,i)=>{
+          const o=c.createOscillator(), g=c.createGain();
+          o.type="triangle"; o.frequency.setValueAtTime(freq, c.currentTime+i*0.06);
+          g.gain.setValueAtTime(0.15, c.currentTime+i*0.06);
+          g.gain.exponentialRampToValueAtTime(0.001, c.currentTime+i*0.06+0.15);
+          o.connect(g); g.connect(c.destination);
+          o.start(c.currentTime+i*0.06); o.stop(c.currentTime+i*0.06+0.15);
+        });
+      },
+      bad(){
+        const c=getCtx(); if(!c) return;
+        const o=c.createOscillator(), g=c.createGain();
+        o.type="sawtooth"; o.frequency.setValueAtTime(180, c.currentTime);
+        o.frequency.linearRampToValueAtTime(90, c.currentTime+0.22);
+        g.gain.setValueAtTime(0.15, c.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, c.currentTime+0.22);
+        o.connect(g); g.connect(c.destination);
+        o.start(); o.stop(c.currentTime+0.22);
+      },
+      win(){
+        const c=getCtx(); if(!c) return;
+        [523.25, 659.25, 783.99, 1046.50].forEach((freq,i)=>{
+          const o=c.createOscillator(), g=c.createGain();
+          o.type="sine"; o.frequency.setValueAtTime(freq, c.currentTime+i*0.08);
+          g.gain.setValueAtTime(0.2, c.currentTime+i*0.08);
+          g.gain.exponentialRampToValueAtTime(0.001, c.currentTime+i*0.08+0.3);
+          o.connect(g); g.connect(c.destination);
+          o.start(c.currentTime+i*0.08); o.stop(c.currentTime+i*0.08+0.3);
+        });
+      }
+    };
+  })();
+
   function win(){
-    locked=true;
+    locked=true; SFX.good();
     const secs=(Date.now()-pStart)/1000;
     const timeBonus=Math.max(0, Math.round(20 - secs*1.5));
     const ftBonus= firstTry? 15:0;
@@ -564,7 +636,7 @@
   }
 
   function lose(){
-    firstTry=false;
+    firstTry=false; SFX.bad();
     lives--;
     paint();
     if(lives<=0){
@@ -628,6 +700,8 @@
     }
   }
 
+  $("guideBtn").onclick=()=>$("guideModal").classList.add("show");
+  $("closeGuideBtn").onclick=()=>$("guideModal").classList.remove("show");
   $("hintBtn").onclick=()=>{
     const hb=$("hintbox");
     if(hb.classList.contains("show")){ hb.classList.remove("show"); return; }

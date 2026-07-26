@@ -223,12 +223,44 @@
 
   // grocery catalog (emoji + name). Prices are assigned per-round.
   const GOODS=[
-    {e:"🍎",n:"Apple"},{e:"🍞",n:"Bread"},{e:"🥛",n:"Milk"},{e:"🍌",n:"Banana"},
-    {e:"🥚",n:"Eggs"},{e:"🧀",n:"Cheese"},{e:"🍅",n:"Tomato"},{e:"🥔",n:"Potato"},
-    {e:"🧅",n:"Onion"},{e:"🥕",n:"Carrot"},{e:"🍪",n:"Biscuits"},{e:"🍫",n:"Chocolate"},
-    {e:"🧃",n:"Juice"},{e:"🍚",n:"Rice"},{e:"🫖",n:"Tea"},{e:"🧈",n:"Butter"},
-    {e:"🍇",n:"Grapes"},{e:"🥥",n:"Coconut"},{e:"🥦",n:"Vegetables"},{e:"🐟",n:"Fish"},
-    {e:"🧼",n:"Soap"},{e:"🪥",n:"Toothpaste"},{e:"📒",n:"Notebook"},{e:"✏️",n:"Pencils"}
+    // Produce (Fruits & Veggies)
+    {e:"🍎",n:"Apple"},{e:"🍏",n:"Green Apple"},{e:"🍌",n:"Banana"},{e:"🍇",n:"Grapes"},
+    {e:"🍊",n:"Orange"},{e:"🍋",n:"Lemon"},{e:"🍉",n:"Watermelon"},{e:"🍓",n:"Strawberry"},
+    {e:"🫐",n:"Blueberries"},{e:"🍒",n:"Cherry"},{e:"🍑",n:"Peach"},{e:"🥭",n:"Mango"},
+    {e:"🍍",n:"Pineapple"},{e:"🥥",n:"Coconut"},{e:"🥝",n:"Kiwi"},{e:"🥑",n:"Avocado"},
+    {e:"🍅",n:"Tomato"},{e:"🍆",n:"Eggplant"},{e:"🥒",n:"Cucumber"},{e:"🥕",n:"Carrot"},
+    {e:"🌽",n:"Corn"},{e:"🫑",n:"Bell Pepper"},{e:"🥦",n:"Broccoli"},{e:"🥬",n:"Lettuce"},
+    {e:"🧄",n:"Garlic"},{e:"🧅",n:"Onion"},{e:"🥔",n:"Potato"},{e:"🍠",n:"Sweet Potato"},
+    {e:"🍄",n:"Mushroom"},
+
+    // Bakery & Grains
+    {e:"🍞",n:"Bread"},{e:"🥖",n:"Baguette"},{e:"🥨",n:"Pretzel"},{e:"🥯",n:"Bagel"},
+    {e:"🥐",n:"Croissant"},{e:"🥞",n:"Pancakes"},{e:"🧇",n:"Waffles"},{e:"🍰",n:"Cake Slice"},
+    {e:"🧁",n:"Cupcake"},{e:"🥧",n:"Pie"},{e:"🍩",n:"Donut"},{e:"🍪",n:"Cookies"},
+    {e:"🍚",n:"Rice"},{e:"🍝",n:"Pasta"},{e:"🍜",n:"Noodles"},
+
+    // Dairy & Cold Foods
+    {e:"🥛",n:"Milk"},{e:"🧀",n:"Cheese"},{e:"🧈",n:"Butter"},{e:"🍦",n:"Ice Cream Cone"},
+    {e:"🍨",n:"Ice Cream Bowl"},{e:"🍧",n:"Shaved Ice"},{e:"🥚",n:"Eggs"},
+
+    // Pantry & Snacks
+    {e:"🍫",n:"Chocolate"},{e:"🍬",n:"Candy"},{e:"🍭",n:"Lollipop"},{e:"🍿",n:"Popcorn"},
+    {e:"🍯",n:"Honey Jar"},{e:"🥜",n:"Peanuts"},{e:"🫘",n:"Beans"},{e:"🥫",n:"Canned Soup"},
+
+    // Drinks & Beverages
+    {e:"🧃",n:"Juice Box"},{e:"🥤",n:"Soda Cup"},{e:"🫖",n:"Tea"},{e:"☕",n:"Hot Coffee"},
+    {e:"🥛",n:"Soy Milk"},{e:"🧋",n:"Boba Tea"},
+
+    // Meat, Fish & Protein
+    {e:"🍗",n:"Chicken Drumstick"},{e:"🥩",n:"Steak"},{e:"🍖",n:"Meat Ribs"},{e:"🌭",n:"Hotdog"},
+    {e:"🍔",n:"Burger"},{e:"🍕",n:"Pizza Slice"},{e:"🐟",n:"Fresh Fish"},{e:"🍣",n:"Sushi Roll"},
+    {e:"🍤",n:"Fried Shrimp"},
+
+    // School Supplies & Toys
+    {e:"📒",n:"Notebook"},{e:"✏️",n:"Pencils"},{e:"🖊️",n:"Pen"},{e:"🎨",n:"Paint Set"},
+    {e:"🖍️",n:"Crayons"},{e:"📐",n:"Ruler"},{e:"✂️",n:"Scissors"},{e:"🎒",n:"Backpack"},
+    {e:"🧸",n:"Teddy Bear"},{e:"🪀",n:"Yo-Yo"},{e:"🪁",n:"Kite"},{e:"🧩",n:"Puzzle"},
+    {e:"⚽",n:"Soccer Ball"},{e:"🏀",n:"Basketball"},{e:"🚗",n:"Toy Car"},{e:"🚀",n:"Toy Rocket"}
   ];
   const CUSTOMERS=["🧑","👩","👨","👵","👴","🧒","👧","👦","🧕","👳"];
   const DENOMS=[1,2,5,10,20,50,100,500];   // coins + notes you can hand back
@@ -366,6 +398,52 @@
     }
   }
 
+  const SFX = (function(){
+    let ctx=null;
+    function getCtx(){
+      if(!ctx){
+        const AC=window.AudioContext||window.webkitAudioContext;
+        if(AC) ctx=new AC();
+      }
+      if(ctx&&ctx.state==="suspended") ctx.resume();
+      return ctx;
+    }
+    return {
+      good(){
+        const c=getCtx(); if(!c) return;
+        [523.25, 659.25, 783.99].forEach((freq,i)=>{
+          const o=c.createOscillator(), g=c.createGain();
+          o.type="triangle"; o.frequency.setValueAtTime(freq, c.currentTime+i*0.06);
+          g.gain.setValueAtTime(0.15, c.currentTime+i*0.06);
+          g.gain.exponentialRampToValueAtTime(0.001, c.currentTime+i*0.06+0.15);
+          o.connect(g); g.connect(c.destination);
+          o.start(c.currentTime+i*0.06); o.stop(c.currentTime+i*0.06+0.15);
+        });
+      },
+      bad(){
+        const c=getCtx(); if(!c) return;
+        const o=c.createOscillator(), g=c.createGain();
+        o.type="sawtooth"; o.frequency.setValueAtTime(180, c.currentTime);
+        o.frequency.linearRampToValueAtTime(90, c.currentTime+0.22);
+        g.gain.setValueAtTime(0.15, c.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, c.currentTime+0.22);
+        o.connect(g); g.connect(c.destination);
+        o.start(); o.stop(c.currentTime+0.22);
+      },
+      win(){
+        const c=getCtx(); if(!c) return;
+        [523.25, 659.25, 783.99, 1046.50].forEach((freq,i)=>{
+          const o=c.createOscillator(), g=c.createGain();
+          o.type="sine"; o.frequency.setValueAtTime(freq, c.currentTime+i*0.08);
+          g.gain.setValueAtTime(0.2, c.currentTime+i*0.08);
+          g.gain.exponentialRampToValueAtTime(0.001, c.currentTime+i*0.08+0.3);
+          o.connect(g); g.connect(c.destination);
+          o.start(c.currentTime+i*0.08); o.stop(c.currentTime+i*0.08+0.3);
+        });
+      }
+    };
+  })();
+
   /* ---------- STEPS 1 & 2: keypad ---------- */
   function updateEntry(){ $("entry").textContent="₹"+(entryStr===""?"0":entryStr); }
   function keyPress(k){
@@ -381,10 +459,10 @@
     if(entryStr===""){ fb.textContent="Type a number first 🙂"; fb.className="feedback bad"; return; }
     const val=parseInt(entryStr,10);
     if(phase===1){
-      if(val===basketTotal){ fb.textContent="✅ Total correct!"; fb.className="feedback good"; setTimeout(()=>goPhase(2),650); }
+      if(val===basketTotal){ SFX.good(); fb.textContent="✅ Total correct!"; fb.className="feedback good"; setTimeout(()=>goPhase(2),650); }
       else loseLife(`❌ The basket was ₹${basketTotal}.`);
     } else { // phase 2
-      if(val===changeOwed){ fb.textContent="✅ Right change!"; fb.className="feedback good"; setTimeout(()=>goPhase(3),650); }
+      if(val===changeOwed){ SFX.good(); fb.textContent="✅ Right change!"; fb.className="feedback good"; setTimeout(()=>goPhase(3),650); }
       else loseLife(`❌ Change was ₹${changeOwed}  (₹${totalPaid} − ₹${basketTotal}).`);
     }
   }
