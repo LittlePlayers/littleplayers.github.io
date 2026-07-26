@@ -134,9 +134,11 @@ document.getElementById("favOnly").addEventListener("change", (e) => {
   renderGrid();
 });
 
+let searchRaf = null;
 document.getElementById("searchInput").addEventListener("input", (e) => {
   state.query = e.target.value;
-  renderGrid();
+  if (searchRaf) cancelAnimationFrame(searchRaf);
+  searchRaf = requestAnimationFrame(renderGrid);
 });
 
 // ---- boot ----
