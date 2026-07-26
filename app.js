@@ -52,12 +52,6 @@ function cardHTML(game) {
   const fav = isFav(game.slug);
   const color = game.color || "#6c5ce7";
   const glow = hexToRgba(color, 0.35);
-  
-  // Feature tags based on game capabilities
-  let featureTag = "✨ 100+ Items";
-  if (game.slug === "maze-runner" || game.slug === "math-blast") featureTag = "⚡ Endless Levels";
-  else if (game.slug === "circuit-logic" || game.slug === "logic-bot") featureTag = "🧠 STEM Logic";
-  else if (game.slug === "hanuman-run" || game.slug === "krishnas-cows" || game.slug === "arjunas-aim") featureTag = "🏹 Mythology";
 
   return `
     <a class="card" href="${game.url}" data-slug="${game.slug}"
@@ -69,8 +63,6 @@ function cardHTML(game) {
       <p>${game.description || ""}</p>
       <div class="meta">
         <span class="tag">${catMeta(game.category).label}</span>
-        <span class="tag feature-tag">${featureTag}</span>
-        <span class="tag" style="background:#e0f2fe; color:#0284c7;">🔊 SFX</span>
       </div>
     </a>`;
 }
