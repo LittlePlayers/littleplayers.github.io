@@ -3,6 +3,15 @@
 // and remembers favorites in localStorage.
 
 const STORE = { favs: "lp_favorites" };
+const FEATURED_SLUGS = [
+  "hanuman-run",
+  "rhythm-garden",
+  "rocket-launch-lab",
+  "treasure-weigh-in",
+  "color-chemistry",
+  "mini-architect",
+];
+const DEFAULT_LIBRARY_LIMIT = 12;
 
 // ---- localStorage helpers ----
 function load(key, fallback) {
@@ -24,11 +33,20 @@ const state = {
   activeCategory: "all",
   favOnly: false,
   query: "",
+  expanded: false,
 };
 
 const els = {
   categoryFilters: document.getElementById("categoryFilters"),
   sections: document.getElementById("sections"),
+  featuredRail: document.getElementById("featuredRail"),
+  featuredTitle: document.getElementById("featuredTitle"),
+  featuredSummary: document.getElementById("featuredSummary"),
+  categoryOverview: document.getElementById("categoryOverview"),
+  bottomCategoryNav: document.getElementById("bottomCategoryNav"),
+  totalGamesStat: document.getElementById("totalGamesStat"),
+  libraryTitle: document.getElementById("libraryTitle"),
+  showAllBtn: document.getElementById("showAllBtn"),
   emptyMsg: document.getElementById("emptyMsg"),
   resultsSummary: document.getElementById("resultsSummary"),
   favOnly: document.getElementById("favOnly"),
@@ -47,6 +65,20 @@ function toggleFav(slug) {
   save(STORE.favs, [...state.favs]);
 }
 
+function categoryShortLabel(category) {
+  const labels = {
+    "life-skills": "Skills",
+    mythology: "Story",
+    words: "Words",
+    brain: "Brain",
+    creativity: "Create",
+    logic: "Logic",
+    stem: "STEM",
+    explore: "Explore",
+  };
+  return labels[category.id] || category.label;
+}
+
 // ---- helpers ----
 function escapeHtml(value) {
   return String(value ?? "").replace(/[&<>"']/g, (char) => ({
@@ -60,6 +92,10 @@ function escapeHtml(value) {
 
 function escapeAttr(value) {
   return escapeHtml(value).replace(/`/g, "&#96;");
+}
+
+function gameHref(game) {
+  return game.slug ? `${game.slug}/` : game.url;
 }
 
 function matchesFilters(game) {
@@ -78,7 +114,7 @@ function hexToRgba(hex, alpha) {
   return `rgba(${(num >> 16) & 255}, ${(num >> 8) & 255}, ${num & 255}, ${alpha})`;
 }
 
-function cardHTML(game, index) {
+function cardHTML(game, index, extraClass = "") {
   const fav = isFav(game.slug);
   const color = game.color || "#6c5ce7";
   const glow = hexToRgba(color, 0.35);
@@ -86,7 +122,7 @@ function cardHTML(game, index) {
   const category = state.categoryLabels.get(game.category) || game.category;
 
   return `
-    <a class="card" href="${escapeAttr(game.url)}" data-slug="${slug}"
+    <a class="card ${escapeAttr(extraClass)}" href="${escapeAttr(gameHref(game))}" data-slug="${slug}"
        style="--card-color:${escapeAttr(color)}; --card-color-glow:${escapeAttr(glow)}; --card-index:${index};">
       <button class="fav-btn ${fav ? "active" : ""}" data-fav="${slug}" title="Favorite"
               aria-label="${fav ? "Remove from favorites" : "Add to favorites"}">${fav ? "&#11088;" : "&#9734;"}</button>
@@ -102,7 +138,7 @@ function cardHTML(game, index) {
 
 function renderCategories() {
   const chips = [{ id: "all", label: "All", icon: "&#127752;" }, ...state.categories];
-  els.categoryFilters.innerHTML = chips
+  const chipHtml = chips
     .map((c) => {
       const icon = c.icon === "&#127752;" ? c.icon : escapeHtml(c.icon || "");
       const active = c.id === state.activeCategory;
@@ -111,6 +147,18 @@ function renderCategories() {
                  aria-pressed="${String(active)}">${icon} ${escapeHtml(c.label)}</button>`;
     })
     .join("");
+  els.categoryFilters.innerHTML = chipHtml;
+  if (els.bottomCategoryNav) {
+    els.bottomCategoryNav.innerHTML = chips
+      .map((c) => {
+        const icon = c.icon === "&#127752;" ? c.icon : escapeHtml(c.icon || "");
+        const label = c.id === "all" ? "All" : categoryShortLabel(c);
+        const active = c.id === state.activeCategory;
+        return `<button class="tab-btn ${active ? "active" : ""}" data-cat="${escapeAttr(c.id)}"
+                  aria-pressed="${String(active)}"><span>${icon}</span><b>${escapeHtml(label)}</b></button>`;
+      })
+      .join("");
+  }
 }
 
 function visibleGames() {
@@ -128,16 +176,50 @@ function renderGrid() {
   const activeLabel = state.activeCategory === "all"
     ? "All games"
     : state.categoryLabels.get(state.activeCategory) || state.activeCategory;
+  const condensed = !state.expanded && !state.query.trim() && !state.favOnly;
+  const shown = condensed ? games.slice(0, DEFAULT_LIBRARY_LIMIT) : games;
   els.sections.innerHTML = games.length
-    ? `<div class="grid">${games.map((game, index) => cardHTML(game, index)).join("")}</div>`
+    ? `<div class="grid">${shown.map((game, index) => cardHTML(game, index)).join("")}</div>`
     : "";
   els.emptyMsg.classList.toggle("hidden", games.length > 0);
-  els.resultsSummary.textContent = `${games.length} ${games.length === 1 ? "game" : "games"} \u00B7 ${activeLabel}`;
+  if (els.libraryTitle) els.libraryTitle.textContent = activeLabel;
+  els.resultsSummary.textContent = condensed && shown.length < games.length
+    ? `Showing ${shown.length} of ${games.length} games`
+    : `${games.length} ${games.length === 1 ? "game" : "games"}`;
   els.searchClear.classList.toggle("hidden", !state.query.trim());
+  if (els.showAllBtn) {
+    els.showAllBtn.classList.toggle("hidden", !condensed || shown.length >= games.length);
+    els.showAllBtn.textContent = `Show all ${games.length} games`;
+  }
+}
+
+function renderFeatured() {
+  const favs = state.games.filter((game) => isFav(game.slug));
+  const categoryGames = state.activeCategory === "all"
+    ? []
+    : state.games.filter((game) => game.category === state.activeCategory);
+  const featured = (favs.length ? favs : categoryGames.length ? categoryGames : FEATURED_SLUGS.map((slug) => state.games.find((game) => game.slug === slug)).filter(Boolean)).slice(0, 8);
+  if (els.featuredTitle) els.featuredTitle.textContent = favs.length ? "Your favorites" : state.activeCategory === "all" ? "Featured games" : `${state.categoryLabels.get(state.activeCategory)} picks`;
+  if (els.featuredSummary) els.featuredSummary.textContent = `${featured.length} quick-start ${featured.length === 1 ? "game" : "games"}`;
+  if (els.featuredRail) els.featuredRail.innerHTML = featured.map((game, index) => cardHTML(game, index, "rail-card")).join("");
+}
+
+function renderCategoryOverview() {
+  if (!els.categoryOverview) return;
+  els.categoryOverview.innerHTML = state.categories.map((category) => {
+    const count = state.games.filter((game) => game.category === category.id).length;
+    const active = category.id === state.activeCategory;
+    return `<button class="category-tile ${active ? "active" : ""}" data-cat="${escapeAttr(category.id)}">
+      <span class="category-icon">${escapeHtml(category.icon || "")}</span>
+      <span><b>${escapeHtml(category.label)}</b><small>${count} ${count === 1 ? "game" : "games"}</small></span>
+    </button>`;
+  }).join("");
 }
 
 function renderAll() {
   renderCategories();
+  renderFeatured();
+  renderCategoryOverview();
   renderGrid();
 }
 
@@ -147,14 +229,18 @@ document.addEventListener("click", (e) => {
   if (fav) {
     e.preventDefault();
     toggleFav(fav.dataset.fav);
-    renderGrid();
+    renderAll();
     return;
   }
 
-  const chip = e.target.closest(".chip[data-cat]");
+  const chip = e.target.closest("[data-cat]");
   if (chip) {
     state.activeCategory = chip.dataset.cat;
+    state.expanded = false;
     renderAll();
+    if (chip.classList.contains("category-tile")) {
+      document.querySelector(".library-block")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   }
 });
 
@@ -182,22 +268,32 @@ if (els.themeToggleBtn) {
 
 els.favOnly.addEventListener("change", (e) => {
   state.favOnly = e.target.checked;
-  renderGrid();
+  state.expanded = false;
+  renderAll();
 });
 
 let searchRaf = null;
 els.searchInput.addEventListener("input", (e) => {
   state.query = e.target.value;
+  state.expanded = false;
   if (searchRaf) cancelAnimationFrame(searchRaf);
-  searchRaf = requestAnimationFrame(renderGrid);
+  searchRaf = requestAnimationFrame(renderAll);
 });
 
 els.searchClear.addEventListener("click", () => {
   els.searchInput.value = "";
   state.query = "";
   els.searchInput.focus();
-  renderGrid();
+  state.expanded = false;
+  renderAll();
 });
+
+if (els.showAllBtn) {
+  els.showAllBtn.addEventListener("click", () => {
+    state.expanded = true;
+    renderGrid();
+  });
+}
 
 // ---- boot ----
 fetch("games.json")
@@ -223,6 +319,7 @@ fetch("games.json")
       ...game,
       searchText: `${game.title || ""} ${game.description || ""} ${state.categoryLabels.get(game.category) || ""}`.toLowerCase(),
     }));
+    if (els.totalGamesStat) els.totalGamesStat.textContent = `${state.games.length} games`;
 
     renderAll();
   })

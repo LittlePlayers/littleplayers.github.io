@@ -46,13 +46,12 @@
     box-shadow:0 12px 36px rgba(0,0,0,.5); border:4px solid var(--gold)}
   canvas{display:block; width:100%; height:auto; background:#87CEEB; touch-action:none}
 
-  .touch{display:none; gap:12px; margin-top:12px; flex-wrap:wrap; justify-content:center}
+  .touch{display:flex; gap:12px; margin-top:12px; flex-wrap:wrap; justify-content:center}
   .touch button{border:none; cursor:pointer; font:inherit; font-weight:900; font-size:1.1rem;
     padding:14px 22px; border-radius:16px; color:#fff; box-shadow:0 6px 0 #9a4d00;
     background:linear-gradient(180deg,#ff9a33,#ff7a00)}
   .touch button.strike{background:linear-gradient(180deg,#ffd24a,#ffae00); box-shadow:0 6px 0 #b37700; color:#5a2d00}
   .touch button:active{transform:translateY(4px); box-shadow:0 2px 0 #9a4d00}
-  body.touch-on .touch{display:flex}
 
   .help{margin-top:10px; color:#ffd9a8; font-weight:700; font-size:.9rem; text-align:center; line-height:1.6}
   .help b{color:var(--gold)}
@@ -100,7 +99,7 @@
   </div>
 
   <p class="help">
-    <b>SPACE / ↑</b> Jump &nbsp;·&nbsp; <b>↓</b> Duck &nbsp;·&nbsp; <b>X / →</b> Mace Strike<br/>
+    Tap the on-screen buttons: Jump, Duck, or Strike<br/>
     Smash 👹 rakshasas & flying asuras · jump rocks & fire · duck under arrows
   </p>
   <p class="back"><a href="https://littleplayers.github.io/">← Back to Little Players</a></p>
@@ -161,7 +160,6 @@
     el.addEventListener("touchend",e=>{e.preventDefault();off&&off();},{passive:false});
     el.addEventListener("mousedown",on); el.addEventListener("mouseup",()=>off&&off()); };
   press(bj,jump); press(bd,duckOn,duckOff); press(bh,attack);
-  if(("ontouchstart" in window)||navigator.maxTouchPoints>0) document.body.classList.add("touch-on");
 
   document.getElementById("guideBtn").onclick=()=>{
     document.getElementById("guideModal").style.display="flex";
@@ -625,11 +623,11 @@
     ctx.fillText("🌾 ➜ 🌳 ➜ ⛰️ ➜ 🏖️ ➜ 🌊 ➜ 🔥 Lanka",W/2,y+10);
 
     ctx.font="bold 14px 'Baloo 2',sans-serif"; ctx.fillStyle="#ffcf40";
-    ctx.fillText("⬆ / SPACE  Jump      ⬇  Duck      🔱 / X  Mace Strike",W/2,y+38);
+    ctx.fillText("Tap Jump, Duck, or Strike to play",W/2,y+38);
 
     const a=0.55+0.45*Math.sin(tick*0.12);
     ctx.globalAlpha=a; ctx.fillStyle="#fff"; ctx.font="bold 18px 'Baloo 2',sans-serif";
-    ctx.fillText("▶ Press SPACE / Tap to begin",W/2,y+66); ctx.globalAlpha=1;
+    ctx.fillText("▶ Tap to begin",W/2,y+66); ctx.globalAlpha=1;
   }
 
   function overlay(title,sub,color){
@@ -656,7 +654,7 @@
     if(state!=="idle") drawHUD();
     if(state==="playing") drawBanner();
     if(state==="idle") drawIntro();
-    if(state==="dead") overlay("Oh no! 😵","Press SPACE / tap to try again","#ff7a55");
+    if(state==="dead") overlay("Oh no! 😵","Tap to try again","#ff7a55");
     if(state==="win"){ confetti.forEach(c=>{ c.x+=c.vx; c.y+=c.vy; c.vy+=0.25; ctx.fillStyle=c.c; ctx.fillRect(c.x,c.y,c.r,c.r); });
       confetti=confetti.filter(c=>c.y<H+10); overlay("विजय! Victory! 🎉","You reached Lanka! Tap to play again","#ffcf40"); }
     requestAnimationFrame(frame);
@@ -664,6 +662,6 @@
   requestAnimationFrame(frame);
 })();
 </script>
-  <script src="../game-shell.js"></script>
+  <script src="../game-shell.js?v=20260825-help5"></script>
 </body>
 </html>

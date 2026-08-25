@@ -91,7 +91,7 @@
   </div>
 
   <p class="help">
-    <b>Drag back</b> from Arjuna & release to shoot &nbsp;·&nbsp; or <b>↑ ↓</b> angle, <b>← →</b> power, <b>Space</b> fire<br/>
+    <b>Drag back</b> from Arjuna and release to shoot<br/>
     🪶 Light arrows fly far but drift in wind · 🪨 Heavy arrows resist wind but drop faster
   </p>
   <p class="back"><a href="https://littleplayers.github.io/">← Back to Little Players</a></p>
@@ -450,10 +450,10 @@
     let y=96; story.forEach(t=>{ ctx.fillText(t,W/2,y); y+=20; });
     ctx.font="18px 'Baloo 2',sans-serif"; ctx.fillStyle="#ffe0a8"; ctx.fillText("🎯 ➜ 🌬️ ➜ 🐟",W/2,y+8);
     ctx.font="bold 14px 'Baloo 2',sans-serif"; ctx.fillStyle="#ffcf40";
-    ctx.fillText("Drag back & release · or ↑↓ angle, ←→ power, Space fire",W/2,y+34);
+    ctx.fillText("Drag back from Arjuna and release to shoot",W/2,y+34);
     const a=0.55+0.45*Math.sin(tick*0.12);
     ctx.globalAlpha=a; ctx.fillStyle="#fff"; ctx.font="bold 18px 'Baloo 2',sans-serif";
-    ctx.fillText("▶ Press SPACE / Tap to begin",W/2,y+62); ctx.globalAlpha=1;
+    ctx.fillText("▶ Tap to begin",W/2,y+62); ctx.globalAlpha=1;
   }
 
   // ---------- loop ----------
@@ -467,13 +467,13 @@
     if(state==="playing"){ drawTrajectory(); drawArrow(); hud(); }
     else if(state==="clear"){ drawArrow(); hud(); center("Range Cleared! 🎯","Score "+levelScore+" / "+goal,"#ffcf40"); }
     if(state==="idle") intro();
-    if(state==="fail") center("Not enough points 😅","Press SPACE / Tap to try again","#ff9a6b");
+    if(state==="fail") center("Not enough points 😅","Tap to try again","#ff9a6b");
     if(state==="win") center("🎉 Vijaya, Arjuna!","You struck the fish's eye! Tap to play again","#ffcf40");
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
 })();
 </script>
-  <script src="../game-shell.js"></script>
+  <script src="../game-shell.js?v=20260825-help5"></script>
 </body>
 </html>
