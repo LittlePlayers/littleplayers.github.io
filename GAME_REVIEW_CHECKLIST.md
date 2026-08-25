@@ -17,7 +17,8 @@ Use this checklist before publishing new games or changing shared UX. The goal i
 - First action: player can understand the next action within 5 seconds.
 - Feedback: every tap/click has visible response; success and failure explain what changed.
 - Journey: stage/level/round progress is visible and next/restart are available.
-- Controls: buttons are large enough for touch, keyboard focus is visible, and sliders/buttons do not overlap on mobile.
+- Controls: every core action has a touch-first control; keyboard support is optional and never required.
+- Mobile copy: visible instructions must lead with tap, swipe, drag, sliders, or on-screen buttons; keyboard shortcuts belong only as optional helpers.
 - Accessibility: game is playable without color alone; audio games have visible pattern feedback; drag-heavy games have click/tap alternatives.
 - Performance: no console errors, no blank canvas/SVG, no horizontal overflow at 390px mobile and 1280px desktop.
 - Theme: dark mode does not create low-contrast text, invisible borders, or mismatched white panels.
@@ -29,7 +30,7 @@ Use this checklist before publishing new games or changing shared UX. The goal i
 | --- | --- | --- | --- |
 | Market Day | `/market-day/` | Money loop, cart clarity, change feedback, old-shell consistency | Pending manual play |
 | Budget Hero | `/budget-hero/` | Need/want clarity, budget status, error prevention | Pending manual play |
-| Cross the Road Smart | `/cross-the-road/` | Timing, safety feedback, keyboard/touch controls | Pending manual play |
+| Cross the Road Smart | `/cross-the-road/` | Timing, safety feedback, tap/swipe controls | Pending manual play |
 | Healthy Plate | `/healthy-plate/` | Food group recognition, balanced meal scoring | Pending manual play |
 | Hanuman Run | `/hanuman-run/` | Runner responsiveness, obstacle readability, myth tone | Pending manual play |
 | Krishna's Cows | `/krishnas-cows/` | Herding controls, goal clarity, stage pacing | Pending manual play |
@@ -37,8 +38,8 @@ Use this checklist before publishing new games or changing shared UX. The goal i
 | Word Scramble | `/word-scramble/` | Letter controls, hints, timer stress, spelling feedback | Pending manual play |
 | Spelling Bee | `/spelling-bee/` | Audio fallback, repeat word, input affordance | Pending manual play |
 | Brain Quest | `/brain-quest/` | Question clarity, answer feedback, difficulty ramp | Pending manual play |
-| Math Blast | `/math-blast/` | Math input speed, difficulty, keyboard support | Pending manual play |
-| Maze Runner | `/maze-runner/` | Arrow/touch navigation, collision clarity, restart | Pending manual play |
+| Math Blast | `/math-blast/` | Math input speed, difficulty, large answer buttons | Pending manual play |
+| Maze Runner | `/maze-runner/` | D-pad/swipe navigation, collision clarity, restart | Pending manual play |
 | Spirograph | `/spirograph/` | Slider feedback, save art, canvas visibility | Pending manual play |
 | Doodle Pad | `/doodle-pad/` | Drawing tools, erase/clear, mobile canvas behavior | Pending manual play |
 | Kaleidoscope Draw | `/kaleidoscope-draw/` | Mirrored drawing clarity, controls, save/reset | Pending manual play |
@@ -58,7 +59,7 @@ Use this checklist before publishing new games or changing shared UX. The goal i
 | Treasure Weigh-In | `/treasure-weigh-in/` | Weighing UX, prompt replacement risk, strategy clarity | Pending manual play |
 | Mirror Maze | `/mirror-maze/` | Beam trace, mirror rotation, level ramp | Pending manual play |
 | Mini Architect | `/mini-architect/` | Stability rules, material clarity, stage depth | Pending manual play |
-| Star Map Navigator | `/star-map-navigator/` | Coordinates, keyboard/touch controls, goal state | Pending manual play |
+| Star Map Navigator | `/star-map-navigator/` | Coordinates, compass buttons, goal state | Pending manual play |
 | Color Chemistry | `/color-chemistry/` | Color mixing, hints, medals, stage ramp | Smoke passed |
 
 ## Manual Play Script Per Game
@@ -74,6 +75,7 @@ Use this checklist before publishing new games or changing shared UX. The goal i
 
 - A game has no stage, round, level, score, medal, or journey state.
 - A game uses a one-off layout that ignores shared shell controls.
+- A game asks children to use keyboard controls before offering a visible touch control.
 - Audio, canvas, SVG, or images fail silently.
 - Mobile layout requires horizontal scrolling.
 - Instructions are long, hidden, or inconsistent with the homepage promise.

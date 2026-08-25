@@ -21,6 +21,7 @@ Date: 2026-08-25
 
 - `word-scramble/index.html`: removed a duplicated malformed word-list fragment that caused `Unexpected token ':'`.
 - `maze-runner/index.html`: removed a partial duplicate `draw()` block that caused `Unexpected end of input`.
+- Follow-up mobile pass: changed visible player instructions to touch-first language and added a visible D-pad to `krishnas-cows/index.html`.
 
 ## Final Automated Results
 
@@ -64,6 +65,7 @@ Date: 2026-08-25
 
 - Play each game for at least one complete level or intentional failure.
 - Confirm each game has a satisfying reason to continue after the first win.
+- Confirm every mobile session can be played with visible buttons, taps, swipes, drags, or sliders before relying on keyboard shortcuts.
 - Check dark mode visually, not just by DOM smoke test.
 - Confirm sound games feel good with audio on and remain understandable with audio muted.
 - Replace any remaining prompt-based interactions with in-page choices during future polish passes.
