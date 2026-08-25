@@ -355,6 +355,24 @@
       "icon": "🧪",
       "color": "#ec4899",
       "description": "Mix color drops, tints and shades to match each target potion."
+    },
+    {
+      "title": "Bat Sonar",
+      "slug": "bat-sonar",
+      "url": "https://littleplayers.github.io/bat-sonar/",
+      "category": "brain",
+      "icon": "🦇",
+      "color": "#6d28d9",
+      "description": "Use your sonar pings to memorize the walls and find the bug in the dark cave!"
+    },
+    {
+      "title": "Symmetry Butterfly",
+      "slug": "symmetry-butterfly",
+      "url": "https://littleplayers.github.io/symmetry-butterfly/",
+      "category": "brain",
+      "icon": "🦋",
+      "color": "#d946ef",
+      "description": "Paint the right wing to match the left exactly. Create a perfect mirror image!"
     }
   ]
 }

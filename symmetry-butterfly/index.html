@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+<meta name="description" content="Symmetry Butterfly — paint the missing wing to make a perfect mirror image and help the butterfly fly!" />
+<title>🦋 Symmetry Butterfly — Little Players</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦋</text></svg>" />
+<style>
+  :root {
+    --bg: #fdf4ff; --card: #fff; --ink: #4a044e; --muted: #a21caf;
+    --accent: #d946ef; --accent2: #c026d3; --good: #22c55e; --bad: #ef4444;
+    --shadow: 0 10px 28px rgba(192, 38, 211, 0.16); --radius: 18px;
+  }
+  * { box-sizing: border-box; }
+  html, body { overscroll-behavior: none; }
+  body {
+    margin: 0; min-height: 100vh; color: var(--ink);
+    font-family: "Baloo 2", "Comic Sans MS", "Trebuchet MS", system-ui, sans-serif;
+    background: radial-gradient(circle at 12% 10%, #fae8ff 0, transparent 42%),
+                radial-gradient(circle at 88% 8%, #fce7f3 0, transparent 44%), var(--bg);
+    display: flex; flex-direction: column; align-items: center; padding: 16px;
+  }
+  header { text-align: center; margin: 10px 0 4px; }
+  h1 { margin: 0; font-size: clamp(1.7rem, 6vw, 2.6rem); color: var(--accent2); }
+  .sub { margin: 5px 0 0; color: var(--muted); font-weight: 700; }
+  
+  .scoreboard { display: flex; gap: 9px; margin: 14px 0 6px; flex-wrap: wrap; justify-content: center; }
+  .pill { background: var(--card); border-radius: 999px; padding: 7px 14px; font-weight: 800;
+    box-shadow: var(--shadow); font-size: .9rem; display: flex; align-items: center; gap: 5px; }
+
+  .stage { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
+    padding: 24px; margin-top: 10px; touch-action: none; position: relative; }
+  
+  .butterfly-container {
+    display: flex; gap: 4px; justify-content: center;
+    background: #fdf4ff; padding: 16px; border-radius: 12px; border: 2px dashed #f5d0fe;
+    position: relative;
+  }
+
+  /* Butterfly body */
+  .butterfly-body {
+    width: 20px; background: #4a044e; border-radius: 999px;
+    z-index: 2; margin: 0 4px; position: relative;
+  }
+  .butterfly-body::before, .butterfly-body::after {
+    content: ""; position: absolute; top: -15px; width: 4px; height: 20px;
+    background: #4a044e; border-radius: 999px;
+  }
+  .butterfly-body::before { left: -4px; transform: rotate(-30deg); }
+  .butterfly-body::after { right: -4px; transform: rotate(30deg); }
+
+  .wing {
+    display: grid; grid-template-columns: repeat(4, 50px); grid-template-rows: repeat(4, 50px);
+    gap: 4px;
+  }
+  /* Shape the wings a bit */
+  .wing-left { border-radius: 60px 10px 10px 60px; overflow: hidden; background: #fae8ff; padding: 8px;}
+  .wing-right { border-radius: 10px 60px 60px 10px; overflow: hidden; background: #fae8ff; padding: 8px;}
+
+  .cell {
+    width: 50px; height: 50px; background: #fff; border: 2px solid #f0abfc;
+    border-radius: 8px; transition: transform 0.1s, background-color 0.2s;
+  }
+  .wing-right .cell { cursor: pointer; }
+  .wing-right .cell:active { transform: scale(0.9); }
+
+  .palette { display: flex; gap: 12px; justify-content: center; margin-top: 24px; }
+  .swatch {
+    width: 54px; height: 54px; border-radius: 50%; border: 4px solid #fff;
+    box-shadow: var(--shadow); cursor: pointer; transition: transform 0.1s;
+  }
+  .swatch.selected { transform: scale(1.15) translateY(-4px); border-color: var(--ink); }
+
+  .actions { display: flex; gap: 12px; justify-content: center; margin-top: 20px; }
+  .btn { border: none; cursor: pointer; font: inherit; font-weight: 800; font-size: 1.1rem;
+    padding: 12px 24px; border-radius: 999px; color: #fff;
+    background: linear-gradient(180deg, var(--accent), var(--accent2)); box-shadow: 0 5px 0 #701a75;
+    transition: transform .08s, box-shadow .08s; }
+  .btn:active { transform: translateY(4px); box-shadow: 0 1px 0 #701a75; }
+  .btn.ghost { background: linear-gradient(180deg, #d8b4fe, #c084fc); box-shadow: 0 5px 0 #7e22ce; }
+
+  .feedback { text-align: center; min-height: 1.5em; font-weight: 800; font-size: 1.1rem; margin: 10px 0 0; }
+  .feedback.good { color: var(--good); } .feedback.bad { color: var(--bad); }
+
+  .overlay { position: fixed; inset: 0; background: rgba(74, 4, 78, 0.6); display: none;
+    align-items: center; justify-content: center; padding: 20px; z-index: 9; }
+  .overlay.show { display: flex; }
+  .panel { background: var(--card); border-radius: 22px; padding: 30px 26px; text-align: center;
+    box-shadow: var(--shadow); width: min(420px, 92vw); }
+  .panel h2 { margin: 0 0 6px; font-size: 1.8rem; color: var(--accent2); }
+  .panel p { margin: 6px 0; color: var(--muted); font-weight: 700; }
+  .panel .big { font-size: 2.4rem; font-weight: 800; color: var(--accent); margin: 8px 0; }
+  .panel button { margin-top: 14px; border: none; cursor: pointer; font: inherit; font-weight: 800;
+    padding: 13px 26px; border-radius: 999px; background: var(--accent); color: #fff; font-size: 1.1rem; }
+
+  .back { margin-top: 14px; }
+  .back a { color: var(--accent2); font-weight: 800; text-decoration: none; }
+  
+  /* Fly animation */
+  @keyframes flyAway {
+    0% { transform: translateY(0) scale(1); opacity: 1; }
+    20% { transform: translateY(-20px) scale(1.1); }
+    100% { transform: translateY(-200px) scale(0.5); opacity: 0; }
+  }
+  .fly-away { animation: flyAway 1s ease-in forwards; }
+  
+  @media (max-width: 500px) {
+    .wing { grid-template-columns: repeat(4, 38px); grid-template-rows: repeat(4, 38px); gap: 2px;}
+    .cell { width: 38px; height: 38px; }
+    .swatch { width: 44px; height: 44px; }
+  }
+</style>
+</head>
+<body>
+  <header>
+    <h1>🦋 Symmetry Butterfly</h1>
+    <p class="sub">Paint the right wing to match the left exactly!</p>
+  </header>
+
+  <div class="scoreboard">
+    <div class="pill">⭐ <span id="score">0</span></div>
+    <div class="pill">📈 Lvl <span id="level">1</span></div>
+  </div>
+
+  <div class="stage">
+    <div class="butterfly-container" id="butterfly">
+      <div class="wing wing-left" id="wingLeft"></div>
+      <div class="butterfly-body"></div>
+      <div class="wing wing-right" id="wingRight"></div>
+    </div>
+    
+    <div class="palette" id="palette">
+      <!-- Swatches injected via JS -->
+    </div>
+
+    <div class="actions">
+      <button class="btn ghost" id="clearBtn">↺ Clear</button>
+      <button class="btn" id="checkBtn">✨ Fly!</button>
+    </div>
+  </div>
+  <p class="feedback" id="feedback"></p>
+
+  <p class="back"><a href="https://littleplayers.github.io/">← Back to Little Players</a></p>
+
+  <div class="overlay" id="overlay">
+    <div class="panel">
+      <h2 id="ovTitle">Game Over</h2>
+      <p id="ovMsg"></p>
+      <div class="big" id="ovScore">0</div>
+      <button id="ovBtn">▶ Play Again</button>
+    </div>
+  </div>
+
+<script>
+  const $=id=>document.getElementById(id);
+  const fb=$("feedback");
+  const WING_SIZE = 4;
+  
+  const COLORS = [
+    {id: 0, hex: "#fff"},        // Empty/White
+    {id: 1, hex: "#ef4444"},     // Red
+    {id: 2, hex: "#3b82f6"},     // Blue
+    {id: 3, hex: "#eab308"},     // Yellow
+    {id: 4, hex: "#22c55e"},     // Green
+    {id: 5, hex: "#a855f7"}      // Purple
+  ];
+  
+  let score=0, level=1;
+  let activeColor = 1;
+  let leftGrid = [];
+  let rightGrid = [];
+
+  function initGame() {
+    buildPalette();
+    newLevel();
+  }
+
+  function buildPalette() {
+    const wrap = $("palette");
+    wrap.innerHTML = "";
+    // Skip white in palette
+    for(let i=1; i<COLORS.length; i++) {
+      const btn = document.createElement("button");
+      btn.className = "swatch" + (activeColor === i ? " selected" : "");
+      btn.style.background = COLORS[i].hex;
+      btn.onclick = () => {
+        activeColor = i;
+        document.querySelectorAll(".swatch").forEach(s => s.classList.remove("selected"));
+        btn.classList.add("selected");
+      };
+      wrap.appendChild(btn);
+    }
+  }
+
+  function generatePattern() {
+    leftGrid = [];
+    const numColors = Math.min(2 + Math.floor(level/3), COLORS.length - 1);
+    
+    for(let y=0; y<WING_SIZE; y++) {
+      const row = [];
+      for(let x=0; x<WING_SIZE; x++) {
+        // Leave some empty space (color 0)
+        if(Math.random() > 0.6) {
+          row.push(0);
+        } else {
+          // Pick a random color up to difficulty limit
+          const c = 1 + Math.floor(Math.random() * numColors);
+          row.push(c);
+        }
+      }
+      leftGrid.push(row);
+    }
+    
+    // Always clear the right grid
+    rightGrid = [];
+    for(let y=0; y<WING_SIZE; y++) {
+      rightGrid.push(new Array(WING_SIZE).fill(0));
+    }
+  }
+
+  function renderWings() {
+    const lWrap = $("wingLeft");
+    const rWrap = $("wingRight");
+    lWrap.innerHTML = "";
+    rWrap.innerHTML = "";
+
+    for(let y=0; y<WING_SIZE; y++) {
+      for(let x=0; x<WING_SIZE; x++) {
+        // Left Wing Cell
+        const lCell = document.createElement("div");
+        lCell.className = "cell";
+        lCell.style.background = COLORS[leftGrid[y][x]].hex;
+        lWrap.appendChild(lCell);
+
+        // Right Wing Cell
+        const rCell = document.createElement("div");
+        rCell.className = "cell";
+        rCell.style.background = COLORS[rightGrid[y][x]].hex;
+        
+        // Interaction
+        rCell.onpointerdown = (e) => {
+          e.preventDefault(); // prevent scroll
+          paintCell(x, y, rCell);
+        };
+        rCell.onpointerenter = (e) => {
+          if (e.buttons > 0) paintCell(x, y, rCell);
+        };
+        
+        rWrap.appendChild(rCell);
+      }
+    }
+  }
+
+  function paintCell(x, y, el) {
+    // If painting same color, erase it (set to 0)
+    if(rightGrid[y][x] === activeColor) {
+      rightGrid[y][x] = 0;
+    } else {
+      rightGrid[y][x] = activeColor;
+    }
+    el.style.background = COLORS[rightGrid[y][x]].hex;
+    SFX.pop();
+  }
+
+  function newLevel() {
+    $("butterfly").classList.remove("fly-away");
+    generatePattern();
+    renderWings();
+    fb.textContent = ""; fb.className = "feedback";
+    paintStats();
+  }
+
+  function checkSymmetry() {
+    let perfect = true;
+    for(let y=0; y<WING_SIZE; y++) {
+      for(let x=0; x<WING_SIZE; x++) {
+        // To mirror, left[x] matches right[WING_SIZE - 1 - x]
+        const leftVal = leftGrid[y][x];
+        const rightVal = rightGrid[y][WING_SIZE - 1 - x];
+        if (leftVal !== rightVal) {
+          perfect = false;
+          break;
+        }
+      }
+      if(!perfect) break;
+    }
+
+    if(perfect) {
+      SFX.win();
+      fb.textContent = "✨ Perfect match!"; fb.className = "feedback good";
+      score += (10 + level * 2);
+      level++;
+      paintStats();
+      $("butterfly").classList.add("fly-away");
+      setTimeout(newLevel, 1200);
+    } else {
+      SFX.bad();
+      fb.textContent = "❌ Not quite a mirror image yet. Check carefully!"; fb.className = "feedback bad";
+    }
+  }
+
+  function clearRight() {
+    for(let y=0; y<WING_SIZE; y++) {
+      rightGrid[y].fill(0);
+    }
+    renderWings();
+    SFX.pop();
+  }
+
+  $("checkBtn").onclick = checkSymmetry;
+  $("clearBtn").onclick = clearRight;
+  
+  function paintStats() {
+    $("score").textContent = score;
+    $("level").textContent = level;
+  }
+
+  const SFX = (function(){
+    let ctx=null;
+    function getCtx(){
+      if(!ctx){ const AC=window.AudioContext||window.webkitAudioContext; if(AC) ctx=new AC(); }
+      if(ctx&&ctx.state==="suspended") ctx.resume(); return ctx;
+    }
+    return {
+      pop(){
+        const c=getCtx(); if(!c) return;
+        const o=c.createOscillator(), g=c.createGain();
+        o.type="sine"; o.frequency.setValueAtTime(600, c.currentTime);
+        o.frequency.exponentialRampToValueAtTime(800, c.currentTime+0.05);
+        g.gain.setValueAtTime(0.1, c.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, c.currentTime+0.05);
+        o.connect(g); g.connect(c.destination); o.start(); o.stop(c.currentTime+0.05);
+      },
+      win(){
+        const c=getCtx(); if(!c) return;
+        [523.25, 659.25, 783.99, 1046.50].forEach((freq,i)=>{
+          const o=c.createOscillator(), g=c.createGain();
+          o.type="sine"; o.frequency.setValueAtTime(freq, c.currentTime+i*0.08);
+          g.gain.setValueAtTime(0.2, c.currentTime+i*0.08);
+          g.gain.exponentialRampToValueAtTime(0.001, c.currentTime+i*0.08+0.3);
+          o.connect(g); g.connect(c.destination); o.start(c.currentTime+i*0.08); o.stop(c.currentTime+i*0.08+0.3);
+        });
+      },
+      bad(){
+        const c=getCtx(); if(!c) return;
+        const o=c.createOscillator(), g=c.createGain();
+        o.type="sawtooth"; o.frequency.setValueAtTime(180, c.currentTime);
+        o.frequency.linearRampToValueAtTime(90, c.currentTime+0.22);
+        g.gain.setValueAtTime(0.15, c.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, c.currentTime+0.22);
+        o.connect(g); g.connect(c.destination); o.start(); o.stop(c.currentTime+0.22);
+      }
+    };
+  })();
+
+  initGame();
+</script>
+  <script src="../game-shell.js?v=20260825"></script>
+</body>
+</html>
