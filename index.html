@@ -32,7 +32,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" />
-  <link rel="stylesheet" href="style.css?v=20260815-play" />
+  <link rel="stylesheet" href="style.css?v=20260825-hub" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎮</text></svg>" />
 
   <!-- Structured data: the site -->
@@ -65,6 +65,19 @@
   </header>
 
   <main class="container">
+    <section class="hub-overview" aria-label="Game hub overview">
+      <div>
+        <p class="section-eyebrow">Game hub</p>
+        <h2>Pick a quick adventure</h2>
+        <p>Jump into a favorite, browse by world, or search the whole collection.</p>
+      </div>
+      <div class="hub-stats" aria-label="Little Players stats">
+        <span id="totalGamesStat">Games loading</span>
+        <span>No ads</span>
+        <span>Touch first</span>
+      </div>
+    </section>
+
     <section class="controls">
       <div class="search-wrap">
         <input id="searchInput" class="search" type="search" placeholder="🔍 Search games…"
@@ -82,10 +95,44 @@
       </div>
     </section>
 
-    <p id="resultsSummary" class="results-summary" aria-live="polite"></p>
-    <div id="sections"><!-- grouped category sections injected here --></div>
+    <section class="hub-shelf" aria-label="Recommended games">
+      <div class="shelf-title-row">
+        <div>
+          <p class="section-eyebrow">Start here</p>
+          <h2 id="featuredTitle">Featured games</h2>
+        </div>
+        <p id="featuredSummary">A shorter row for quick play.</p>
+      </div>
+      <div id="featuredRail" class="rail"><!-- featured cards injected here --></div>
+    </section>
+
+    <section class="hub-shelf" aria-label="Browse by category">
+      <div class="shelf-title-row">
+        <div>
+          <p class="section-eyebrow">Worlds</p>
+          <h2>Browse by mood</h2>
+        </div>
+      </div>
+      <div id="categoryOverview" class="category-overview"><!-- category tiles injected here --></div>
+    </section>
+
+    <section class="library-block" aria-label="Game library">
+      <div class="library-head">
+        <div>
+          <p class="section-eyebrow">Library</p>
+          <h2 id="libraryTitle">All games</h2>
+        </div>
+        <p id="resultsSummary" class="results-summary" aria-live="polite"></p>
+      </div>
+      <div id="sections"><!-- grouped category sections injected here --></div>
+      <button id="showAllBtn" class="show-more-btn hidden" type="button">Show all games</button>
+    </section>
     <p id="emptyMsg" class="empty hidden">No games here yet — try another type! 🧩</p>
   </main>
+
+  <nav id="bottomCategoryNav" class="app-tabbar" aria-label="Game categories">
+    <!-- bottom app navigation injected here -->
+  </nav>
 
   <!-- Crawlable list of all games (also a fallback if JavaScript is off).
        Auto-generated from games.json by build.js — run `node build.js` after editing. -->
@@ -353,10 +400,14 @@
         if(navigator.share){ navigator.share(data).catch(function(){}); }
         else if(navigator.clipboard){ navigator.clipboard.writeText(data.url).then(function(){
           var t=btn.textContent; btn.textContent="✅ Link copied!"; setTimeout(function(){btn.textContent=t;},1600); }); }
-        else { prompt("Copy this link:", data.url); }
+        else {
+          var t=btn.textContent;
+          btn.textContent=data.url;
+          setTimeout(function(){btn.textContent=t;},2400);
+        }
       });
     })();
   </script>
-  <script src="app.js"></script>
+  <script src="app.js?v=20260825-hub"></script>
 </body>
 </html>

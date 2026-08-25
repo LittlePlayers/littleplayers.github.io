@@ -13,6 +13,7 @@ Use this checklist before publishing new games or changing shared UX. The goal i
 
 - Route: page returns `200` locally and from the intended deployed path.
 - Identity: title, game goal, category, and icon match the homepage card.
+- Hub: homepage keeps an app-like first screen with quick-start games, category options, search, and fixed bottom navigation.
 - Page ownership: each game keeps its mechanics in its own page; avoid shared game runtimes that make games feel templated.
 - Shell: dark toggle, one visible `Game hub` return, and Journey drawer appear consistently.
 - First action: player can understand the next action within 5 seconds.

@@ -24,6 +24,7 @@ Date: 2026-08-25
 - Follow-up mobile pass: changed visible player instructions to touch-first language and added a visible D-pad to `krishnas-cows/index.html`.
 - Shell polish pass: standardized the visible return label to `Game hub`, hid legacy per-game back links when the shared shell loads, moved Journey away from bottom touch controls, and added optional widescreen playfield support for canvas games.
 - Standalone games pass: converted the 10 new lab-runtime games into separate self-contained pages, removed the shared `little-game-lab.js` runtime, replaced Treasure Weigh-In text prompts with tap controls, expanded Rhythm Garden to 20 songs, and added smoother animated motion to Rocket, Catapult, and Pendulum.
+- Homepage app-hub pass: reduced the default library to a 12-game view with `Show all`, added a featured rail, category overview tiles, local-friendly card links, fixed bottom category navigation, and cache-busted shared shell assets.
 
 ## Final Automated Results
 
