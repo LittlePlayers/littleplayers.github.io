@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bubble Pop Calm - Little Players</title>
+  <meta name="description" content="Pop soft bubbles, layer calming sounds and grow a peaceful ASMR soundscape with unlimited taps." />
+  <meta name="theme-color" content="#14b8a6" />
+  <link rel="canonical" href="https://littleplayers.github.io/bubble-pop-calm/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Little Players" />
+  <meta property="og:title" content="Bubble Pop Calm - Little Players" />
+  <meta property="og:description" content="Pop soft bubbles, layer calming sounds and grow a peaceful ASMR soundscape with unlimited taps." />
+  <meta property="og:url" content="https://littleplayers.github.io/bubble-pop-calm/" />
+  <meta property="og:image" content="https://littleplayers.github.io/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"VideoGame","name":"Bubble Pop Calm","url":"https://littleplayers.github.io/bubble-pop-calm/","image":"https://littleplayers.github.io/og-image.png","description":"Pop soft bubbles, layer calming sounds and grow a peaceful ASMR soundscape with unlimited taps.","applicationCategory":"Game","operatingSystem":"Web Browser","author":{"@type":"Organization","name":"Little Players"},"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isPartOf":{"@type":"WebSite","name":"Little Players","url":"https://littleplayers.github.io/"}}</script>
+  <script>(function(){var s=localStorage.getItem("lp_theme"),d=s==="dark"||(!s&&window.matchMedia("(prefers-color-scheme: dark)").matches);if(d)document.documentElement.setAttribute("data-theme","dark");})();</script>
+  <style>
+    :root {
+      --bg: #f5fbff;
+      --card: #ffffff;
+      --ink: #182235;
+      --muted: #627084;
+      --line: rgba(24, 34, 53, .13);
+      --teal: #14b8a6;
+      --coral: #fb7185;
+      --gold: #f59e0b;
+      --indigo: #6366f1;
+      --shadow: 0 18px 44px rgba(28, 44, 78, .15);
+    }
+
+    [data-theme="dark"] {
+      --bg: #0f1117;
+      --card: #1a1d2a;
+      --ink: #f7f4ff;
+      --muted: #c3bed7;
+      --line: rgba(226, 232, 240, .14);
+      --shadow: 0 20px 48px rgba(0, 0, 0, .36);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 20% 12%, rgba(20, 184, 166, .18), transparent 26%),
+        radial-gradient(circle at 82% 18%, rgba(251, 113, 133, .16), transparent 24%),
+        linear-gradient(135deg, var(--bg), #eef8ff);
+      color: var(--ink);
+      font-family: "Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    [data-theme="dark"] body {
+      background:
+        radial-gradient(circle at 20% 12%, rgba(20, 184, 166, .2), transparent 28%),
+        radial-gradient(circle at 82% 18%, rgba(99, 102, 241, .18), transparent 26%),
+        linear-gradient(135deg, #0f1117, #151824 56%, #10151a) !important;
+    }
+
+    .app {
+      width: min(1120px, 94vw);
+      margin: 0 auto;
+      padding: 28px 0 78px;
+    }
+
+    .hero {
+      display: grid;
+      gap: 10px;
+      text-align: center;
+      margin: 0 auto 18px;
+    }
+
+    .kicker {
+      color: var(--teal);
+      font-weight: 950;
+      font-size: .8rem;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font: 950 clamp(2rem, 6vw, 3.6rem)/1 Fredoka, "Plus Jakarta Sans", system-ui, sans-serif;
+    }
+
+    .hero p {
+      margin: 0 auto;
+      max-width: 680px;
+      color: var(--muted);
+      font-weight: 760;
+      line-height: 1.55;
+    }
+
+    .shell {
+      display: grid;
+      grid-template-columns: minmax(0, 1.08fr) minmax(280px, .72fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .panel {
+      background: color-mix(in srgb, var(--card) 94%, transparent);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 16px;
+    }
+
+    .play-panel {
+      display: grid;
+      gap: 14px;
+    }
+
+    .stats,
+    .actions,
+    .modes {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .stats {
+      justify-content: space-between;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 38px;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(20, 184, 166, .09);
+      color: var(--ink);
+      font-weight: 900;
+    }
+
+    .scene {
+      position: relative;
+      min-height: clamp(390px, 58vh, 560px);
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background:
+        radial-gradient(circle at 30% 20%, rgba(255,255,255,.92), transparent 16%),
+        linear-gradient(180deg, #dff8ff 0%, #effdf8 58%, #dcfce7 100%);
+      touch-action: manipulation;
+      isolation: isolate;
+    }
+
+    [data-theme="dark"] .scene {
+      background:
+        radial-gradient(circle at 28% 18%, rgba(255,255,255,.2), transparent 17%),
+        linear-gradient(180deg, #182033 0%, #132827 58%, #172033 100%);
+    }
+
+    .scene::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, transparent, rgba(255,255,255,.28), transparent),
+        radial-gradient(circle at 50% 110%, rgba(20, 184, 166, .26), transparent 32%);
+      opacity: .72;
+      pointer-events: none;
+    }
+
+    .bubble {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: var(--size);
+      height: var(--size);
+      border: 0;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 32% 25%, rgba(255,255,255,.96) 0 13%, transparent 14%),
+        radial-gradient(circle at 66% 72%, rgba(255,255,255,.38) 0 11%, transparent 12%),
+        color-mix(in srgb, var(--tone) 58%, rgba(255,255,255,.62));
+      box-shadow:
+        inset -10px -12px 22px rgba(255,255,255,.36),
+        inset 10px 12px 28px color-mix(in srgb, var(--tone) 52%, transparent),
+        0 12px 28px color-mix(in srgb, var(--tone) 25%, transparent);
+      color: var(--ink);
+      cursor: pointer;
+      transform: translate3d(var(--x), var(--y), 0) scale(1);
+      transition: transform .18s ease, opacity .18s ease, filter .18s ease;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .bubble:focus-visible {
+      outline: 3px solid var(--gold);
+      outline-offset: 4px;
+    }
+
+    .bubble.pop {
+      opacity: 0;
+      filter: blur(1px);
+      transform: translate3d(var(--x), var(--y), 0) scale(1.4);
+    }
+
+    .ripple {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border: 2px solid color-mix(in srgb, var(--tone) 72%, white);
+      border-radius: 50%;
+      opacity: .75;
+      transform: translate(-50%, -50%) scale(.7);
+      animation: ripple .7s ease-out forwards;
+      pointer-events: none;
+    }
+
+    @keyframes ripple {
+      to { opacity: 0; transform: translate(-50%, -50%) scale(5); }
+    }
+
+    .meter {
+      height: 12px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(99, 102, 241, .12);
+    }
+
+    .meter span {
+      display: block;
+      width: var(--calm);
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--teal), var(--gold), var(--coral));
+      transition: width .25s ease;
+    }
+
+    button {
+      min-height: 44px;
+      border: 0;
+      border-radius: 999px;
+      padding: 11px 16px;
+      color: #fff;
+      background: var(--indigo);
+      font: 900 .96rem/1 system-ui, sans-serif;
+      cursor: pointer;
+      box-shadow: 0 5px 0 rgba(0, 0, 0, .15);
+    }
+
+    button:active {
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 rgba(0, 0, 0, .18);
+    }
+
+    .mode {
+      color: var(--ink);
+      background: var(--card);
+      border: 1px solid var(--line);
+      box-shadow: none;
+    }
+
+    .mode.active {
+      color: #052b25;
+      background: linear-gradient(135deg, #99f6e4, #fef3c7);
+      border-color: rgba(20, 184, 166, .45);
+    }
+
+    [data-theme="dark"] .mode {
+      color: var(--ink);
+      background: #232737;
+    }
+
+    [data-theme="dark"] .mode.active {
+      color: #f7f4ff;
+      background: linear-gradient(135deg, #0f766e, #4f46e5);
+    }
+
+    .secondary { background: var(--teal); }
+    .ghost {
+      color: var(--ink);
+      background: rgba(255,255,255,.72);
+      border: 1px solid var(--line);
+      box-shadow: none;
+    }
+
+    [data-theme="dark"] .ghost {
+      background: #232737;
+      color: var(--ink);
+    }
+
+    .msg {
+      min-height: 1.45em;
+      margin: 0;
+      color: var(--muted);
+      font-weight: 900;
+      line-height: 1.4;
+    }
+
+    .side {
+      display: grid;
+      gap: 14px;
+    }
+
+    .side h2,
+    .side h3 {
+      margin: 0;
+      font-family: Fredoka, "Plus Jakarta Sans", system-ui, sans-serif;
+    }
+
+    .side p {
+      margin: 0;
+      color: var(--muted);
+      font-weight: 720;
+      line-height: 1.55;
+    }
+
+    .texture-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .texture {
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 10px;
+      align-items: center;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(99, 102, 241, .08);
+      font-weight: 850;
+    }
+
+    .texture small {
+      display: block;
+      color: var(--muted);
+      font-weight: 720;
+      line-height: 1.35;
+    }
+
+    @media (max-width: 840px) {
+      .app { padding-top: 18px; }
+      .shell { grid-template-columns: 1fr; }
+      .scene { min-height: min(62vh, 520px); }
+      .stats { justify-content: flex-start; }
+    }
+
+    @media (max-width: 520px) {
+      .app {
+        width: min(100% - 20px, 1120px);
+        padding-bottom: 86px;
+      }
+
+      .hero {
+        text-align: left;
+      }
+
+      .panel {
+        padding: 12px;
+        border-radius: 16px;
+      }
+
+      .scene {
+        min-height: 430px;
+      }
+
+      button {
+        flex: 1 1 128px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="hero">
+      <div class="kicker">ASMR Sound Toy</div>
+      <h1>Bubble Pop Calm</h1>
+      <p>Pop soft bubbles, layer gentle sound textures and grow a peaceful soundscape. No timer, no lives, no tap limit.</p>
+    </section>
+
+    <section class="shell">
+      <section class="panel play-panel" aria-label="Bubble Pop Calm play area">
+        <div class="stats" aria-live="polite">
+          <span class="pill" id="mood">Mood 1/12</span>
+          <span class="pill" id="pops">Pops 0</span>
+          <span class="pill">Unlimited taps</span>
+        </div>
+        <div class="scene" id="scene" aria-label="Tap bubbles to pop soft sounds"></div>
+        <div class="meter" style="--calm:0%" aria-label="Calm meter"><span></span></div>
+        <p class="msg" id="msg">Tap any bubble. Each one makes a tiny calm sound.</p>
+        <div class="modes" aria-label="Sound texture">
+          <button class="mode active" type="button" data-mode="drizzle">Drizzle</button>
+          <button class="mode" type="button" data-mode="chimes">Chimes</button>
+          <button class="mode" type="button" data-mode="ocean">Ocean</button>
+          <button class="mode" type="button" data-mode="velvet">Velvet</button>
+        </div>
+        <div class="actions">
+          <button class="secondary" type="button" id="newWave">New wave</button>
+          <button type="button" id="breathe">Breathe</button>
+          <button class="ghost" type="button" id="mute">Sound on</button>
+        </div>
+      </section>
+
+      <aside class="panel side">
+        <section aria-label="How to play">
+          <h2>How to play</h2>
+          <p>Tap bubbles as much as you want. There is no score penalty and no wrong move.</p>
+        </section>
+        <section>
+          <h3>Calm journey</h3>
+          <p>Every few pops unlocks a new mood. Use the texture buttons to change the soft sound layer.</p>
+        </section>
+        <section class="texture-list" aria-label="Sound textures">
+          <div class="texture"><span>Rain</span><span>Drizzle<small>Soft water drops</small></span></div>
+          <div class="texture"><span>Bell</span><span>Chimes<small>Light glass tones</small></span></div>
+          <div class="texture"><span>Wave</span><span>Ocean<small>Low warm swells</small></span></div>
+          <div class="texture"><span>Hum</span><span>Velvet<small>Gentle sleepy pads</small></span></div>
+        </section>
+      </aside>
+    </section>
+  </main>
+
+  <script>
+    (() => {
+      const scene = document.getElementById("scene");
+      const moodEl = document.getElementById("mood");
+      const popsEl = document.getElementById("pops");
+      const msgEl = document.getElementById("msg");
+      const meter = document.querySelector(".meter");
+      const modeButtons = Array.from(document.querySelectorAll("[data-mode]"));
+      const tones = {
+        drizzle: { color: "#14b8a6", base: 420, label: "soft rain drops" },
+        chimes: { color: "#6366f1", base: 620, label: "tiny glass chimes" },
+        ocean: { color: "#0ea5e9", base: 210, label: "slow ocean swells" },
+        velvet: { color: "#fb7185", base: 285, label: "warm velvet hums" }
+      };
+      const moods = [
+        "Morning Mist", "Quiet Pond", "Window Rain", "Cloud Pillow",
+        "Moon Bath", "Cozy Cave", "Lotus Glow", "Star Drizzle",
+        "Soft Harbor", "Dream Chimes", "Deep Breath", "Peace Bloom"
+      ];
+
+      let bubbles = [];
+      let raf = 0;
+      let last = 0;
+      let pops = 0;
+      let calm = 0;
+      let mode = "drizzle";
+      let muted = false;
+      let audio = null;
+
+      function clamp(value, min, max) {
+        return Math.max(min, Math.min(max, value));
+      }
+
+      function rand(min, max) {
+        return min + Math.random() * (max - min);
+      }
+
+      function audioCtx() {
+        if (muted) return null;
+        try {
+          audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+          if (audio.state === "suspended") audio.resume();
+          return audio;
+        } catch {
+          return null;
+        }
+      }
+
+      function playTone(size) {
+        const ctx = audioCtx();
+        if (!ctx) return;
+        const t = tones[mode];
+        const now = ctx.currentTime;
+        const filter = ctx.createBiquadFilter();
+        const gain = ctx.createGain();
+        const delay = ctx.createDelay();
+        const echoGain = ctx.createGain();
+        const osc = ctx.createOscillator();
+        const shimmer = ctx.createOscillator();
+        const sizeFactor = clamp(74 / size, .72, 1.3);
+
+        filter.type = "lowpass";
+        filter.frequency.setValueAtTime(mode === "chimes" ? 2800 : 1500, now);
+        delay.delayTime.setValueAtTime(mode === "ocean" ? .16 : .09, now);
+        echoGain.gain.setValueAtTime(.18, now);
+        gain.gain.setValueAtTime(.001, now);
+        gain.gain.exponentialRampToValueAtTime(mode === "velvet" ? .095 : .13, now + .025);
+        gain.gain.exponentialRampToValueAtTime(.001, now + .48);
+
+        osc.type = mode === "velvet" ? "triangle" : "sine";
+        osc.frequency.setValueAtTime(t.base * sizeFactor, now);
+        shimmer.type = "sine";
+        shimmer.frequency.setValueAtTime(t.base * 1.5 * sizeFactor, now);
+
+        osc.connect(filter);
+        shimmer.connect(filter);
+        filter.connect(gain).connect(ctx.destination);
+        filter.connect(delay).connect(echoGain).connect(ctx.destination);
+
+        osc.start(now);
+        shimmer.start(now);
+        osc.stop(now + .5);
+        shimmer.stop(now + .26);
+      }
+
+      function bubbleCount() {
+        const width = scene.clientWidth || 600;
+        return width < 480 ? 15 : 22;
+      }
+
+      function makeBubble() {
+        const bounds = scene.getBoundingClientRect();
+        const size = rand(44, bounds.width < 480 ? 86 : 104);
+        const toneKeys = Object.keys(tones);
+        const tone = tones[toneKeys[Math.floor(Math.random() * toneKeys.length)]];
+        const btn = document.createElement("button");
+        btn.className = "bubble";
+        btn.type = "button";
+        btn.setAttribute("aria-label", "Pop calm bubble");
+        btn.style.setProperty("--size", `${size}px`);
+        btn.style.setProperty("--tone", tone.color);
+        scene.append(btn);
+        const item = {
+          node: btn,
+          size,
+          x: rand(8, Math.max(12, bounds.width - size - 8)),
+          y: rand(bounds.height * .18, bounds.height - size - 8),
+          speed: rand(6, 18),
+          sway: rand(.4, 1.6),
+          phase: rand(0, Math.PI * 2),
+          popped: false
+        };
+        btn.addEventListener("click", (event) => popBubble(item, event));
+        btn.addEventListener("pointerdown", () => btn.style.filter = "brightness(1.08)");
+        btn.addEventListener("pointerup", () => btn.style.filter = "");
+        bubbles.push(item);
+        renderBubble(item);
+      }
+
+      function renderBubble(item) {
+        item.node.style.setProperty("--x", `${item.x}px`);
+        item.node.style.setProperty("--y", `${item.y}px`);
+      }
+
+      function ripple(x, y, color) {
+        const fx = document.createElement("span");
+        fx.className = "ripple";
+        fx.style.left = `${x}px`;
+        fx.style.top = `${y}px`;
+        fx.style.setProperty("--tone", color);
+        scene.append(fx);
+        window.setTimeout(() => fx.remove(), 760);
+      }
+
+      function popBubble(item, event) {
+        if (item.popped) return;
+        item.popped = true;
+        pops += 1;
+        calm = clamp(calm + 7, 0, 100);
+        playTone(item.size);
+        const rect = scene.getBoundingClientRect();
+        ripple(event.clientX - rect.left, event.clientY - rect.top, tones[mode].color);
+        item.node.classList.add("pop");
+        window.setTimeout(() => {
+          item.node.remove();
+          bubbles = bubbles.filter((bubble) => bubble !== item);
+          makeBubble();
+        }, 190);
+        updateUI(`${tones[mode].label}. Keep tapping softly.`);
+      }
+
+      function updateUI(message) {
+        const moodIndex = Math.min(moods.length - 1, Math.floor(pops / 8));
+        moodEl.textContent = `Mood ${moodIndex + 1}/${moods.length}: ${moods[moodIndex]}`;
+        popsEl.textContent = `Pops ${pops}`;
+        meter.style.setProperty("--calm", `${calm}%`);
+        msgEl.textContent = message;
+      }
+
+      function fillBubbles() {
+        while (bubbles.length < bubbleCount()) makeBubble();
+      }
+
+      function newWave() {
+        bubbles.forEach((bubble) => bubble.node.remove());
+        bubbles = [];
+        calm = clamp(calm + 4, 0, 100);
+        fillBubbles();
+        updateUI("Fresh bubble wave. Tap any texture you like.");
+      }
+
+      function breathe() {
+        calm = clamp(calm + 12, 0, 100);
+        updateUI("Slow breath in. Slow breath out. The bubbles can wait.");
+        bubbles.forEach((bubble, index) => {
+          bubble.node.animate([
+            { transform: `translate3d(${bubble.x}px, ${bubble.y}px, 0) scale(1)` },
+            { transform: `translate3d(${bubble.x}px, ${bubble.y - 12}px, 0) scale(1.08)` },
+            { transform: `translate3d(${bubble.x}px, ${bubble.y}px, 0) scale(1)` }
+          ], { duration: 1500 + index * 12, easing: "ease-in-out" });
+        });
+      }
+
+      function tick(time) {
+        const dt = last ? Math.min(32, time - last) / 1000 : 0;
+        last = time;
+        const bounds = scene.getBoundingClientRect();
+        bubbles.forEach((bubble) => {
+          if (bubble.popped) return;
+          bubble.phase += dt * bubble.sway;
+          bubble.y -= bubble.speed * dt;
+          bubble.x += Math.sin(bubble.phase) * dt * 10;
+          if (bubble.y < -bubble.size) {
+            bubble.y = bounds.height + rand(8, 80);
+            bubble.x = rand(8, Math.max(12, bounds.width - bubble.size - 8));
+          }
+          renderBubble(bubble);
+        });
+        if (calm > 0) {
+          calm = clamp(calm - dt * .9, 0, 100);
+          meter.style.setProperty("--calm", `${calm}%`);
+        }
+        raf = requestAnimationFrame(tick);
+      }
+
+      modeButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          mode = button.dataset.mode;
+          modeButtons.forEach((item) => item.classList.toggle("active", item === button));
+          updateUI(`${tones[mode].label} selected. Unlimited taps are still on.`);
+        });
+      });
+
+      document.getElementById("newWave").addEventListener("click", newWave);
+      document.getElementById("breathe").addEventListener("click", breathe);
+      document.getElementById("mute").addEventListener("click", (event) => {
+        muted = !muted;
+        event.currentTarget.textContent = muted ? "Sound off" : "Sound on";
+        updateUI(muted ? "Quiet mode. Bubbles still feel soft." : "Sound is back. Tap gently.");
+      });
+
+      window.addEventListener("resize", () => {
+        bubbles.forEach((bubble) => bubble.node.remove());
+        bubbles = [];
+        fillBubbles();
+      });
+
+      fillBubbles();
+      updateUI("Tap any bubble. Each one makes a tiny calm sound.");
+      raf = requestAnimationFrame(tick);
+      window.addEventListener("pagehide", () => cancelAnimationFrame(raf));
+    })();
+  </script>
+  <script src="../game-shell.js?v=20260825-help5"></script>
+</body>
+</html>

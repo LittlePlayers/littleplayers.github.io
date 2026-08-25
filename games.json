@@ -213,6 +213,15 @@
       "description": "Listen, remember and tap musical patterns to help the garden bloom."
     },
     {
+      "title": "Bubble Pop Calm",
+      "slug": "bubble-pop-calm",
+      "url": "https://littleplayers.github.io/bubble-pop-calm/",
+      "category": "creativity",
+      "icon": "🫧",
+      "color": "#14b8a6",
+      "description": "Pop soft bubbles, layer calming ASMR sounds and play freely with unlimited taps."
+    },
+    {
       "title": "Pendulum Painter",
       "slug": "pendulum-painter",
       "url": "https://littleplayers.github.io/pendulum-painter/",

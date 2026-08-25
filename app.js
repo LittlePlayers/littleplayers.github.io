@@ -6,10 +6,10 @@ const STORE = { favs: "lp_favorites" };
 const FEATURED_SLUGS = [
   "hanuman-run",
   "rhythm-garden",
+  "bubble-pop-calm",
   "rocket-launch-lab",
   "treasure-weigh-in",
   "color-chemistry",
-  "mini-architect",
 ];
 const DEFAULT_LIBRARY_LIMIT = 12;
 
@@ -296,7 +296,7 @@ if (els.showAllBtn) {
 }
 
 // ---- boot ----
-fetch("games.json")
+fetch("games.json?v=20260825-bubble")
   .then((r) => {
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     return r.json();

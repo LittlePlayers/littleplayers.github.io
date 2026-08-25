@@ -403,6 +403,7 @@
     "animal-band": ["Make a tiny song with animal sounds.", "Tap animals to play sounds, record a pattern, then play it back.", "Repeat a simple beat first, then add extra taps."],
     "dress-up": ["Create a character with outfits and accessories.", "Tap clothing, hair and accessory options to swap the look.", "Pick one theme, then tune colors and details."],
     "rhythm-garden": ["Listen, remember and repeat musical patterns through the full song journey.", "Tap the garden pads in the same order you hear them.", "Count the beat in your head before tapping back."],
+    "bubble-pop-calm": ["Pop soft bubbles and grow a calm soundscape.", "Tap bubbles freely, switch sound textures and use Breathe whenever you want.", "There is no fail state and no tap limit."],
     "pendulum-painter": ["Explore pendulum motion and turn swings into art.", "Adjust length, arc and rhythm controls, then watch the painter move.", "Longer swings feel slower; shorter swings change direction faster."],
     "nonogram": ["Use number clues to reveal the hidden picture.", "Tap cells to fill or mark them, then compare each row and column with its clues.", "Solve the rows with the biggest clue numbers first."],
     "code-breaker": ["Crack the secret color code using feedback clues.", "Tap colors into a guess, submit it, then use the clue dots to improve.", "Change one or two colors at a time so clues stay readable."],
@@ -463,7 +464,7 @@
       ["hanuman-run","Hanuman Run"],["krishnas-cows","Krishna's Cows"],["arjunas-aim","Arjuna's Aim"],["word-scramble","Word Scramble"],
       ["spelling-bee","Spelling Bee"],["brain-quest","Brain Quest"],["math-blast","Math Blast"],["maze-runner","Maze Runner"],
       ["spirograph","Spirograph"],["doodle-pad","Doodle Pad"],["kaleidoscope-draw","Kaleidoscope Draw"],["animal-band","Animal Band"],
-      ["dress-up","Dress Up"],["rhythm-garden","Rhythm Garden"],["nonogram","Nonogram"],["code-breaker","Code Breaker"],
+      ["dress-up","Dress Up"],["rhythm-garden","Rhythm Garden"],["bubble-pop-calm","Bubble Pop Calm"],["nonogram","Nonogram"],["code-breaker","Code Breaker"],
       ["logic-bot","Logic Bot"],["cipher-school","Cipher School"],["circuit-logic","Circuit Logic"],["rocket-launch-lab","Rocket Launch Lab"],
       ["pendulum-painter","Pendulum Painter"],["mini-architect","Mini Architect"],["catapult-castle","Catapult Castle"],["marble-maze-makers","Marble Maze Makers"],["world-quiz","World Quiz"],
       ["star-map-navigator","Star Map Navigator"],["treasure-weigh-in","Treasure Weigh-In"],["mirror-maze","Mirror Maze"],["color-chemistry","Color Chemistry"]
