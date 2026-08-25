@@ -23,6 +23,7 @@ Date: 2026-08-25
 - `maze-runner/index.html`: removed a partial duplicate `draw()` block that caused `Unexpected end of input`.
 - Follow-up mobile pass: changed visible player instructions to touch-first language and added a visible D-pad to `krishnas-cows/index.html`.
 - Shell polish pass: standardized the visible return label to `Game hub`, hid legacy per-game back links when the shared shell loads, moved Journey away from bottom touch controls, and added optional widescreen playfield support for canvas games.
+- Standalone games pass: converted the 10 new lab-runtime games into separate self-contained pages, removed the shared `little-game-lab.js` runtime, replaced Treasure Weigh-In text prompts with tap controls, expanded Rhythm Garden to 20 songs, and added smoother animated motion to Rocket, Catapult, and Pendulum.
 
 ## Final Automated Results
 
@@ -68,6 +69,7 @@ Date: 2026-08-25
 - Confirm each game has a satisfying reason to continue after the first win.
 - Confirm every mobile session can be played with visible buttons, taps, swipes, drags, or sliders before relying on keyboard shortcuts.
 - Confirm wide canvas games remain comfortable in portrait and with the optional widescreen playfield enabled.
+- Confirm new games remain individually owned pages instead of depending on a shared game runtime.
 - Check dark mode visually, not just by DOM smoke test.
 - Confirm sound games feel good with audio on and remain understandable with audio muted.
 - Replace any remaining prompt-based interactions with in-page choices during future polish passes.

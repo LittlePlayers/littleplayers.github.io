@@ -20,7 +20,66 @@
 <body data-lab-game="catapultCastle">
   <main id="gameRoot"></main>
   <script src="../game-shell.js"></script>
-  <script src="../little-game-lab.js"></script>
-  <script>LittleGameLab.start("catapultCastle");</script>
+  <script>
+(() => {
+  const games = {};
+  const $ = (sel, root = document) => root.querySelector(sel);
+  const el = (tag, props = {}, kids = []) => {
+    const node = document.createElement(tag);
+    Object.entries(props).forEach(([k, v]) => {
+      if (k === "class") node.className = v;
+      else if (k === "html") node.innerHTML = v;
+      else if (k === "style") Object.assign(node.style, v);
+      else if (k.startsWith("on")) node.addEventListener(k.slice(2).toLowerCase(), v);
+      else node.setAttribute(k, v);
+    });
+    kids.forEach((kid) => node.append(kid));
+    return node;
+  };
+  const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
+
+  function injectStyles() {
+    if ($("#lp-lab-style")) return;
+    document.head.append(el("style", { id: "lp-lab-style", html: `
+      :root{--lab-bg:#f7fbff;--lab-card:#fff;--lab-ink:#172033;--lab-muted:#5d6980;--lab-accent:#5b6cff;--lab-good:#16a34a;--lab-bad:#e11d48;--lab-line:#dce5f6;--lab-shadow:0 14px 34px rgba(39,51,91,.14)}
+      [data-theme="dark"]{--lab-bg:#0f1123;--lab-card:#181b36;--lab-ink:#f4f3fd;--lab-muted:#b9b4d9;--lab-line:#353a67;--lab-shadow:0 16px 38px rgba(0,0,0,.36)}
+      *{box-sizing:border-box} body{margin:0;min-height:100vh;background:linear-gradient(135deg,var(--lab-bg),#eef7ff);color:var(--lab-ink);font-family:"Plus Jakarta Sans",system-ui,-apple-system,sans-serif} [data-theme="dark"] body{background:#0f1123!important}
+      .lab-app{width:min(1120px,94vw);margin:0 auto;padding:28px 0 54px}.lab-hero{display:grid;gap:10px;text-align:center;margin:0 auto 18px}.lab-kicker{font-weight:900;color:var(--lab-accent);letter-spacing:.04em;text-transform:uppercase;font-size:.8rem}.lab-hero h1{margin:0;font-size:clamp(2rem,6vw,3.5rem);line-height:1;font-family:Fredoka,system-ui,sans-serif}.lab-hero p{margin:0 auto;color:var(--lab-muted);font-weight:700;max-width:680px;line-height:1.55}
+      .lab-shell{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(260px,.75fr);gap:18px;align-items:start}.lab-card{background:var(--lab-card);border:1px solid var(--lab-line);border-radius:18px;box-shadow:var(--lab-shadow);padding:18px}.lab-card h2,.lab-card h3{margin:0 0 10px;font-family:Fredoka,system-ui,sans-serif}.lab-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.lab-stat{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--lab-line);background:rgba(91,108,255,.08);padding:8px 12px;border-radius:999px;font-weight:900}.lab-btn{border:0;border-radius:999px;background:var(--lab-accent);color:#fff;font:900 1rem/1 system-ui,sans-serif;padding:11px 16px;cursor:pointer;box-shadow:0 5px 0 rgba(0,0,0,.16)}.lab-btn:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(0,0,0,.18)}.lab-btn:disabled{opacity:.62;cursor:not-allowed;transform:none}.lab-btn.secondary{background:#14b8a6}.lab-btn.warn{background:#f59e0b;color:#2f1f00}.lab-btn.ghost{background:#edf1ff;color:#3340a0}[data-theme="dark"] .lab-btn.ghost{background:#252a55;color:#f4f3fd}.lab-msg{min-height:1.5em;font-weight:900;color:var(--lab-muted)}.lab-msg.good{color:var(--lab-good)}.lab-msg.bad{color:var(--lab-bad)}.lab-grid{display:grid;gap:6px;touch-action:manipulation}.lab-cell{border:1px solid var(--lab-line);border-radius:10px;background:#f8fbff;min-height:54px;display:grid;place-items:center;font-size:1.55rem;font-weight:900;cursor:pointer;user-select:none;position:relative;overflow:hidden}.lab-cell.on{outline:3px solid #ffd23f}.lab-cell.beam{background:#fff6bf}.lab-cell.block{background:#334155;color:#fff}.lab-cell.target{background:#dcfce7}.lab-cell.source{background:#dbeafe}.lab-cell.path::after{content:"";position:absolute;inset:45% 4px auto;height:5px;border-radius:999px;background:#ffd23f;box-shadow:0 0 16px #ffd23f}.lab-palette{display:grid;grid-template-columns:repeat(auto-fit,minmax(74px,1fr));gap:10px}.lab-swatch{border:0;border-radius:16px;min-height:76px;cursor:pointer;font-weight:900;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.45);box-shadow:0 5px 0 rgba(0,0,0,.16)}.lab-color-sample{height:130px;border-radius:18px;border:1px solid var(--lab-line);box-shadow:inset 0 0 0 5px rgba(255,255,255,.4)}.lab-scene{position:relative;min-height:260px;border:1px solid var(--lab-line);border-radius:18px;background:linear-gradient(#dff7ff 0 58%,#a7f3d0 58%);overflow:hidden}.lab-scene.space{background:radial-gradient(circle at 15% 18%,#fff 0 2px,transparent 3px),radial-gradient(circle at 74% 30%,#fff 0 2px,transparent 3px),linear-gradient(#24325f,#10162e 62%,#25304b 62%)}.lab-scene svg{position:absolute;inset:0;width:100%;height:100%}.lab-meter{height:10px;border-radius:999px;background:rgba(91,108,255,.14);border:1px solid var(--lab-line);overflow:hidden}.lab-meter span{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#14b8a6,#f59e0b,#ec4899)}.lab-slider{width:100%;accent-color:var(--lab-accent)}.lab-control{display:grid;gap:6px;min-width:150px;flex:1}.lab-control label{font-weight:900;color:var(--lab-muted)}.rhythm-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.rhythm-pad{min-height:108px;border:0;border-radius:18px;color:white;font:900 1.05rem/1.1 system-ui,sans-serif;cursor:pointer;box-shadow:0 7px 0 rgba(0,0,0,.18);transition:transform .12s ease,filter .12s ease}.rhythm-pad.active,.rhythm-pad:active{transform:translateY(5px) scale(.98);filter:saturate(1.3) brightness(1.12);box-shadow:0 2px 0 rgba(0,0,0,.2)}.pendulum-art{width:100%;min-height:260px;border:1px solid var(--lab-line);border-radius:18px;background:radial-gradient(circle at 50% 0,rgba(255,255,255,.7),transparent 18%),var(--lab-card)}.scale{display:grid;grid-template-columns:1fr 80px 1fr;gap:10px;align-items:end}.pan{min-height:128px;border:3px dashed var(--lab-line);border-radius:18px;background:rgba(91,108,255,.06);display:flex;gap:6px;align-items:center;justify-content:center;flex-wrap:wrap;padding:10px}.beam-center{height:10px;background:#64748b;border-radius:999px;margin-bottom:34px}.treasure{border:1px solid var(--lab-line);background:#fff8dc;border-radius:16px;padding:10px 12px;font-size:1.65rem;cursor:pointer}.treasure.sel{outline:3px solid #ffd23f}.map-grid{grid-template-columns:repeat(var(--size),1fr)}.map-grid .lab-cell{aspect-ratio:1;min-height:auto}.build-grid{grid-template-columns:repeat(7,1fr);background:#dbeafe;padding:8px;border-radius:18px}.build-grid .lab-cell{aspect-ratio:1;min-height:auto;background:#eef6ff}.build-grid .solid{background:#64748b;color:#fff}.build-grid .wood{background:#c08448}.build-grid .stone{background:#94a3b8}.build-grid .glass{background:#7dd3fc}.build-grid .roof{background:#ef4444}.material{border:1px solid var(--lab-line);background:var(--lab-card);border-radius:14px;padding:10px;cursor:pointer;font-weight:900}.material.on{outline:3px solid #ffd23f}.stars{font-size:1.25rem;letter-spacing:2px;color:#f59e0b}@media(max-width:820px){.lab-shell{grid-template-columns:1fr}.lab-card{padding:14px}.lab-cell{min-height:46px}.scale{grid-template-columns:1fr}.beam-center{display:none}.rhythm-pad{min-height:88px}}` }));
+  }
+
+  function layout(meta, render) {
+    injectStyles();
+    const root = $("#gameRoot") || document.body.appendChild(el("div", { id: "gameRoot" }));
+    root.className = "lab-app";
+    root.innerHTML = `<section class="lab-hero"><div class="lab-kicker">${meta.kicker}</div><h1>${meta.icon} ${meta.title}</h1><p>${meta.desc}</p></section><section class="lab-shell"><div class="lab-card" id="play"></div><aside class="lab-card" id="side"></aside></section>`;
+    render($("#play", root), $("#side", root));
+  }
+
+
+  games.catapultCastle = () => {
+    const stages=[
+      {name:"Training Yard",target:[300,172],wall:0,wind:0},
+      {name:"Garden Wall",target:[330,150],wall:120,wind:.2},
+      {name:"Hill Keep",target:[265,128],wall:170,wind:-.15},
+      {name:"Twin Towers",target:[350,116],wall:205,wind:.28},
+      {name:"Moon Castle",target:[310,92],wall:235,wind:-.22},
+      {name:"Final Gate",target:[360,138],wall:255,wind:.36}
+    ];
+    let level=0,angle=42,pull=62,stone=2,msg="Set angle and pull, then send the soft practice ball to the target.",medals=Array(stages.length).fill(0),last=[],visible=[],anim=0,flying=false;
+    const simulate=(s)=>{let x=36,y=186,rad=angle*Math.PI/180,vx=Math.cos(rad)*(pull/8+stone*.45)+s.wind,vy=-Math.sin(rad)*(pull/7.8+stone*.35),pts=[];for(let i=0;i<90;i++){x+=vx;y+=vy;vy+=.95+stone*.08;pts.push([clamp(x,10,408),clamp(y,22,206)]);if(y>=186&&i>10)break}return pts};
+    const score=(pts,t)=>{const p=pts[pts.length-1]||[36,186];return Math.max(0,100-Math.round(Math.hypot(p[0]-t[0],p[1]-t[1])/1.35))};
+    const medal=v=>v>88?3:v>72?2:v>58?1:0,stars=n=>n===3?"★★★":n===2?"★★☆":n===1?"★☆☆":"☆☆☆";
+    layout({kicker:"Physics Challenge",icon:"🏰",title:"Catapult Castle",desc:"Learn force, angle and mass by landing soft practice shots on castle targets."},(play,side)=>{
+      function animate(points,done){cancelAnimationFrame(anim);visible=[];flying=true;let start=0;const step=t=>{if(!start)start=t;const n=clamp(Math.ceil((t-start)/18),1,points.length);visible=points.slice(0,n);paint();if(n<points.length)anim=requestAnimationFrame(step);else{flying=false;done();paint()}};anim=requestAnimationFrame(step)}
+      function fire(){const s=stages[level],pts=simulate(s);msg="Soft ball is flying. Watch the force curve.";animate(pts,()=>{last=pts;visible=[];const sc=score(last,s.target),m=medal(sc);medals[level]=Math.max(medals[level],m);msg=m>=2?`Target tagged: ${sc}/100.`:`Score ${sc}/100. Try ${score(simulate({...s,wind:0}),s.target)<sc?'watching the wind':'a new pull strength'}.`})}
+      function paint(){const s=stages[level],pts=visible.length?visible:last,sc=last.length?score(last,s.target):0,m=medal(sc),trail=pts.map(p=>p.join(",")).join(" "),end=pts[pts.length-1]||[36,186];play.innerHTML=`<div class="lab-row" style="justify-content:space-between;margin-bottom:12px"><span class="lab-stat">Castle ${level+1}/${stages.length}</span><span class="lab-stat">Wind ${s.wind>0?"→":"←"} ${Math.abs(s.wind).toFixed(2)}</span><span class="lab-stat">Score ${sc}</span></div><div class="lab-scene"><svg viewBox="0 0 420 225"><rect x="${s.wall}" y="145" width="28" height="48" fill="#94a3b8"/><text x="22" y="194" font-size="32">🛠️</text><circle cx="${s.target[0]}" cy="${s.target[1]}" r="18" fill="#f43f5e" opacity=".9"/><circle cx="${s.target[0]}" cy="${s.target[1]}" r="8" fill="#fff"/><polyline points="${trail}" fill="none" stroke="#7c3aed" stroke-width="4" stroke-linecap="round"/><text x="${end[0]-10}" y="${end[1]+8}" font-size="22">⚪</text></svg></div><div class="lab-row" style="margin-top:14px"><span class="lab-control"><label>Angle ${angle}°</label><input class="lab-slider" id="angle" type="range" min="18" max="72" value="${angle}"></span><span class="lab-control"><label>Pull ${pull}</label><input class="lab-slider" id="pull" type="range" min="30" max="95" value="${pull}"></span><span class="lab-control"><label>Mass ${stone}</label><input class="lab-slider" id="stone" type="range" min="1" max="4" value="${stone}"></span></div><p class="lab-msg ${sc>88?'good':''}">${msg}</p><div class="lab-row"><button class="lab-btn" id="fire" ${flying?'disabled':''}>${flying?'Flying...':'Fire'}</button><button class="lab-btn secondary" id="next">Next castle</button><button class="lab-btn ghost" id="clear">Clear trail</button></div>`;['angle','pull','stone'].forEach(id=>{$('#'+id,play).oninput=e=>{cancelAnimationFrame(anim);flying=false;if(id==='angle')angle=+e.target.value;if(id==='pull')pull=+e.target.value;if(id==='stone')stone=+e.target.value;last=[];visible=[];msg='Setup changed. Fire again to see the new motion.';paint()}});$('#fire',play).onclick=fire;$('#next',play).onclick=()=>{cancelAnimationFrame(anim);flying=false;level=(level+1)%stages.length;last=[];visible=[];msg=`New target: ${stages[level].name}.`;paint()};$('#clear',play).onclick=()=>{cancelAnimationFrame(anim);flying=false;last=[];visible=[];msg='Trail cleared.';paint()};side.innerHTML=`<h2>Launch notes</h2><p class="stars">${stars(Math.max(medals[level],m))}</p><p>Angle controls the arc. Pull controls force. Heavier balls carry differently and drop faster.</p>`}
+      paint();
+    });
+  };
+
+  games.catapultCastle();
+})();
+  </script>
 </body>
 </html>
