@@ -204,6 +204,24 @@
       "description": "Mix and match characters, hats and accessories to create your own friend. Save it!"
     },
     {
+      "title": "Rhythm Garden",
+      "slug": "rhythm-garden",
+      "url": "https://littleplayers.github.io/rhythm-garden/",
+      "category": "creativity",
+      "icon": "🎵",
+      "color": "#22c55e",
+      "description": "Listen, remember and tap musical patterns to help the garden bloom."
+    },
+    {
+      "title": "Pendulum Painter",
+      "slug": "pendulum-painter",
+      "url": "https://littleplayers.github.io/pendulum-painter/",
+      "category": "creativity",
+      "icon": "〰️",
+      "color": "#ec4899",
+      "description": "Explore swing length, arc and rhythm to make graceful motion art."
+    },
+    {
       "title": "Nonogram",
       "slug": "nonogram",
       "url": "https://littleplayers.github.io/nonogram/",
@@ -249,6 +267,33 @@
       "description": "Flip the switches and pick the right gates to light the bulb. Learn how logic works!"
     },
     {
+      "title": "Rocket Launch Lab",
+      "slug": "rocket-launch-lab",
+      "url": "https://littleplayers.github.io/rocket-launch-lab/",
+      "category": "stem",
+      "icon": "🚀",
+      "color": "#6366f1",
+      "description": "Adjust angle, thrust and fuel to land rockets across changing gravity worlds."
+    },
+    {
+      "title": "Catapult Castle",
+      "slug": "catapult-castle",
+      "url": "https://littleplayers.github.io/catapult-castle/",
+      "category": "stem",
+      "icon": "🏰",
+      "color": "#7c3aed",
+      "description": "Learn force, angle and mass by landing soft practice shots on castle targets."
+    },
+    {
+      "title": "Marble Maze Makers",
+      "slug": "marble-maze-makers",
+      "url": "https://littleplayers.github.io/marble-maze-makers/",
+      "category": "stem",
+      "icon": "🟣",
+      "color": "#14b8a6",
+      "description": "Two builders place ramps, gates and bumpers, then test the marble path together."
+    },
+    {
       "title": "World Quiz",
       "slug": "world-quiz",
       "url": "https://littleplayers.github.io/world-quiz/",
@@ -256,6 +301,51 @@
       "icon": "🗺️",
       "color": "#0891b2",
       "description": "Test your geography — flags, capitals and continents from around the world!"
+    },
+    {
+      "title": "Treasure Weigh-In",
+      "slug": "treasure-weigh-in",
+      "url": "https://littleplayers.github.io/treasure-weigh-in/",
+      "category": "brain",
+      "icon": "⚖️",
+      "color": "#f59e0b",
+      "description": "Use a balance scale to compare treasures and find the one with the odd weight."
+    },
+    {
+      "title": "Mirror Maze",
+      "slug": "mirror-maze",
+      "url": "https://littleplayers.github.io/mirror-maze/",
+      "category": "logic",
+      "icon": "🪞",
+      "color": "#8b5cf6",
+      "description": "Rotate mirrors, trace the beam and light the crystal in clever reflection puzzles."
+    },
+    {
+      "title": "Mini Architect",
+      "slug": "mini-architect",
+      "url": "https://littleplayers.github.io/mini-architect/",
+      "category": "stem",
+      "icon": "🏗️",
+      "color": "#14b8a6",
+      "description": "Build stable towers with smart supports and simple engineering choices."
+    },
+    {
+      "title": "Star Map Navigator",
+      "slug": "star-map-navigator",
+      "url": "https://littleplayers.github.io/star-map-navigator/",
+      "category": "explore",
+      "icon": "🧭",
+      "color": "#0ea5e9",
+      "description": "Fly by coordinates and compass directions while collecting constellation stars."
+    },
+    {
+      "title": "Color Chemistry",
+      "slug": "color-chemistry",
+      "url": "https://littleplayers.github.io/color-chemistry/",
+      "category": "creativity",
+      "icon": "🧪",
+      "color": "#ec4899",
+      "description": "Mix color drops, tints and shades to match each target potion."
     }
   ]
 }

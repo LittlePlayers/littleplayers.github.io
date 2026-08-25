@@ -29,7 +29,10 @@
 
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="apple-touch-icon" href="icon-512.png" />
-  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" />
+  <link rel="stylesheet" href="style.css?v=20260815-play" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎮</text></svg>" />
 
   <!-- Structured data: the site -->
@@ -41,6 +44,7 @@
     "url": "https://littleplayers.github.io/",
     "description": "A free game zone for kids with life-skills, Indian-mythology, word, brain, math and creativity games."
   }
+  </script>
   <script>
     (function(){
       var saved = localStorage.getItem("lp_theme");
@@ -50,18 +54,10 @@
   </script>
 </head>
 <body>
-  <div class="floating-bg-icons" aria-hidden="true">
-    <span class="float-icon i1">🚀</span>
-    <span class="float-icon i2">🎲</span>
-    <span class="float-icon i3">🧩</span>
-    <span class="float-icon i4">🏹</span>
-    <span class="float-icon i5">🎨</span>
-    <span class="float-icon i6">⭐</span>
-  </div>
-
   <header class="hero">
     <button id="themeToggleBtn" class="theme-toggle-btn" type="button" aria-label="Toggle theme" title="Toggle theme">🌙 Dark</button>
     <div class="hero-inner">
+      <div class="hero-badge"><span class="badge-dot"></span> Play, learn, create</div>
       <h1><span class="animated-icon">🎮</span> Little Players</h1>
       <p class="tagline">Free educational games for kids — learn real life skills and have fun!</p>
       <button id="shareBtn" class="share-btn" type="button">🔗 Share Little Players</button>
@@ -73,6 +69,7 @@
       <div class="search-wrap">
         <input id="searchInput" class="search" type="search" placeholder="🔍 Search games…"
                aria-label="Search games" autocomplete="off" />
+        <button id="searchClear" class="search-clear hidden" type="button" aria-label="Clear search">×</button>
       </div>
       <div class="filters" id="categoryFilters">
         <!-- category chips injected here -->
@@ -85,6 +82,7 @@
       </div>
     </section>
 
+    <p id="resultsSummary" class="results-summary" aria-live="polite"></p>
     <div id="sections"><!-- grouped category sections injected here --></div>
     <p id="emptyMsg" class="empty hidden">No games here yet — try another type! 🧩</p>
   </main>
@@ -100,30 +98,40 @@
       <li><a href="https://littleplayers.github.io/cross-the-road/">Cross the Road Smart — life skills game for kids</a></li>
       <li><a href="https://littleplayers.github.io/healthy-plate/">Healthy Plate — life skills game for kids</a></li>
       <li><a href="https://littleplayers.github.io/hanuman-run/">Hanuman Run — indian mythology game for kids</a></li>
-      <li><a href="https://littleplayers.github.io/krishnas-cows/">Krishna's Cows — indian mythology game for kids</a></li>
-      <li><a href="https://littleplayers.github.io/arjunas-aim/">Arjuna's Aim — indian mythology game for kids</a></li>
-      <li><a href="https://littleplayers.github.io/word-scramble/">Word Scramble — words & letters game for kids</a></li>
-      <li><a href="https://littleplayers.github.io/spelling-bee/">Spelling Bee — words & letters game for kids</a></li>
-      <li><a href="https://littleplayers.github.io/brain-quest/">Brain Quest — brain & numbers game for kids</a></li>
-      <li><a href="https://littleplayers.github.io/math-blast/">Math Blast — brain & numbers game for kids</a></li>
-      <li><a href="https://littleplayers.github.io/maze-runner/">Maze Runner — brain & numbers game for kids</a></li>
+      <li><a href="https://littleplayers.github.io/krishnas-cows/">Krishna&#39;s Cows — indian mythology game for kids</a></li>
+      <li><a href="https://littleplayers.github.io/arjunas-aim/">Arjuna&#39;s Aim — indian mythology game for kids</a></li>
+      <li><a href="https://littleplayers.github.io/word-scramble/">Word Scramble — words &amp; letters game for kids</a></li>
+      <li><a href="https://littleplayers.github.io/spelling-bee/">Spelling Bee — words &amp; letters game for kids</a></li>
+      <li><a href="https://littleplayers.github.io/brain-quest/">Brain Quest — brain &amp; numbers game for kids</a></li>
+      <li><a href="https://littleplayers.github.io/math-blast/">Math Blast — brain &amp; numbers game for kids</a></li>
+      <li><a href="https://littleplayers.github.io/maze-runner/">Maze Runner — brain &amp; numbers game for kids</a></li>
+      <li><a href="https://littleplayers.github.io/treasure-weigh-in/">Treasure Weigh-In — brain &amp; numbers game for kids</a></li>
       <li><a href="https://littleplayers.github.io/spirograph/">Spirograph — creativity game for kids</a></li>
       <li><a href="https://littleplayers.github.io/doodle-pad/">Doodle Pad — creativity game for kids</a></li>
       <li><a href="https://littleplayers.github.io/kaleidoscope-draw/">Kaleidoscope Draw — creativity game for kids</a></li>
       <li><a href="https://littleplayers.github.io/animal-band/">Animal Band — creativity game for kids</a></li>
       <li><a href="https://littleplayers.github.io/dress-up/">Dress Up — creativity game for kids</a></li>
-      <li><a href="https://littleplayers.github.io/nonogram/">Nonogram — logic & strategy game for kids</a></li>
-      <li><a href="https://littleplayers.github.io/code-breaker/">Code Breaker — logic & strategy game for kids</a></li>
-      <li><a href="https://littleplayers.github.io/logic-bot/">Logic Bot — stem & code game for kids</a></li>
-      <li><a href="https://littleplayers.github.io/cipher-school/">Cipher School — stem & code game for kids</a></li>
-      <li><a href="https://littleplayers.github.io/circuit-logic/">Circuit Logic — stem & code game for kids</a></li>
+      <li><a href="https://littleplayers.github.io/rhythm-garden/">Rhythm Garden — creativity game for kids</a></li>
+      <li><a href="https://littleplayers.github.io/pendulum-painter/">Pendulum Painter — creativity game for kids</a></li>
+      <li><a href="https://littleplayers.github.io/color-chemistry/">Color Chemistry — creativity game for kids</a></li>
+      <li><a href="https://littleplayers.github.io/nonogram/">Nonogram — logic &amp; strategy game for kids</a></li>
+      <li><a href="https://littleplayers.github.io/code-breaker/">Code Breaker — logic &amp; strategy game for kids</a></li>
+      <li><a href="https://littleplayers.github.io/mirror-maze/">Mirror Maze — logic &amp; strategy game for kids</a></li>
+      <li><a href="https://littleplayers.github.io/logic-bot/">Logic Bot — stem &amp; code game for kids</a></li>
+      <li><a href="https://littleplayers.github.io/cipher-school/">Cipher School — stem &amp; code game for kids</a></li>
+      <li><a href="https://littleplayers.github.io/circuit-logic/">Circuit Logic — stem &amp; code game for kids</a></li>
+      <li><a href="https://littleplayers.github.io/rocket-launch-lab/">Rocket Launch Lab — stem &amp; code game for kids</a></li>
+      <li><a href="https://littleplayers.github.io/catapult-castle/">Catapult Castle — stem &amp; code game for kids</a></li>
+      <li><a href="https://littleplayers.github.io/marble-maze-makers/">Marble Maze Makers — stem &amp; code game for kids</a></li>
+      <li><a href="https://littleplayers.github.io/mini-architect/">Mini Architect — stem &amp; code game for kids</a></li>
       <li><a href="https://littleplayers.github.io/world-quiz/">World Quiz — explore the world game for kids</a></li>
+      <li><a href="https://littleplayers.github.io/star-map-navigator/">Star Map Navigator — explore the world game for kids</a></li>
   <!-- GAMES_NAV:END -->
     </ul>
   </nav>
 
   <footer class="footer">
-    <p>Made with ❤️ by <a href="https://github.com/LittlePlayers/littleplayers.github.io" target="_blank" rel="noopener">Gaurav Sharma</a></p>
+    <p>Made with ❤️ by <a href="https://github.com/gauravs19" target="_blank" rel="noopener">Gaurav Sharma</a></p>
   </footer>
 
   <!-- GAMES_JSONLD:BEGIN (auto-generated by build.js — do not edit) -->
@@ -208,68 +216,128 @@
       {
         "@type": "ListItem",
         "position": 13,
+        "url": "https://littleplayers.github.io/treasure-weigh-in/",
+        "name": "Treasure Weigh-In"
+      },
+      {
+        "@type": "ListItem",
+        "position": 14,
         "url": "https://littleplayers.github.io/spirograph/",
         "name": "Spirograph"
       },
       {
         "@type": "ListItem",
-        "position": 14,
+        "position": 15,
         "url": "https://littleplayers.github.io/doodle-pad/",
         "name": "Doodle Pad"
       },
       {
         "@type": "ListItem",
-        "position": 15,
+        "position": 16,
         "url": "https://littleplayers.github.io/kaleidoscope-draw/",
         "name": "Kaleidoscope Draw"
       },
       {
         "@type": "ListItem",
-        "position": 16,
+        "position": 17,
         "url": "https://littleplayers.github.io/animal-band/",
         "name": "Animal Band"
       },
       {
         "@type": "ListItem",
-        "position": 17,
+        "position": 18,
         "url": "https://littleplayers.github.io/dress-up/",
         "name": "Dress Up"
       },
       {
         "@type": "ListItem",
-        "position": 18,
+        "position": 19,
+        "url": "https://littleplayers.github.io/rhythm-garden/",
+        "name": "Rhythm Garden"
+      },
+      {
+        "@type": "ListItem",
+        "position": 20,
+        "url": "https://littleplayers.github.io/pendulum-painter/",
+        "name": "Pendulum Painter"
+      },
+      {
+        "@type": "ListItem",
+        "position": 21,
+        "url": "https://littleplayers.github.io/color-chemistry/",
+        "name": "Color Chemistry"
+      },
+      {
+        "@type": "ListItem",
+        "position": 22,
         "url": "https://littleplayers.github.io/nonogram/",
         "name": "Nonogram"
       },
       {
         "@type": "ListItem",
-        "position": 19,
+        "position": 23,
         "url": "https://littleplayers.github.io/code-breaker/",
         "name": "Code Breaker"
       },
       {
         "@type": "ListItem",
-        "position": 20,
+        "position": 24,
+        "url": "https://littleplayers.github.io/mirror-maze/",
+        "name": "Mirror Maze"
+      },
+      {
+        "@type": "ListItem",
+        "position": 25,
         "url": "https://littleplayers.github.io/logic-bot/",
         "name": "Logic Bot"
       },
       {
         "@type": "ListItem",
-        "position": 21,
+        "position": 26,
         "url": "https://littleplayers.github.io/cipher-school/",
         "name": "Cipher School"
       },
       {
         "@type": "ListItem",
-        "position": 22,
+        "position": 27,
         "url": "https://littleplayers.github.io/circuit-logic/",
         "name": "Circuit Logic"
       },
       {
         "@type": "ListItem",
-        "position": 23,
+        "position": 28,
+        "url": "https://littleplayers.github.io/rocket-launch-lab/",
+        "name": "Rocket Launch Lab"
+      },
+      {
+        "@type": "ListItem",
+        "position": 29,
+        "url": "https://littleplayers.github.io/catapult-castle/",
+        "name": "Catapult Castle"
+      },
+      {
+        "@type": "ListItem",
+        "position": 30,
+        "url": "https://littleplayers.github.io/marble-maze-makers/",
+        "name": "Marble Maze Makers"
+      },
+      {
+        "@type": "ListItem",
+        "position": 31,
+        "url": "https://littleplayers.github.io/mini-architect/",
+        "name": "Mini Architect"
+      },
+      {
+        "@type": "ListItem",
+        "position": 32,
         "url": "https://littleplayers.github.io/world-quiz/",
         "name": "World Quiz"
+      },
+      {
+        "@type": "ListItem",
+        "position": 33,
+        "url": "https://littleplayers.github.io/star-map-navigator/",
+        "name": "Star Map Navigator"
       }
     ]
   }

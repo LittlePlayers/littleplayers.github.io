@@ -3,175 +3,288 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-<meta name="description" content="Dress Up — mix and match characters, hats, glasses and more to create your own friend, then save it! A creative game for kids." />
-  <link rel="canonical" href="https://littleplayers.github.io/dress-up/" />
-  <meta name="keywords" content="kids games, creativity game, Dress Up, free online game for kids, Little Players, Indian mythology games" />
-  <meta name="author" content="gauravs19" />
-  <meta name="theme-color" content="#ff5d9e" />
-  <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="Little Players" />
-  <meta property="og:title" content="Dress Up — Little Players" />
-  <meta property="og:description" content="Dress Up — mix and match characters, hats, glasses and more to create your own friend, then save it! A creative game for kids." />
-  <meta property="og:url" content="https://littleplayers.github.io/dress-up/" />
-  <meta property="og:image" content="https://littleplayers.github.io/og-image.png" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Dress Up — Little Players" />
-  <meta name="twitter:description" content="Dress Up — mix and match characters, hats, glasses and more to create your own friend, then save it! A creative game for kids." />
-  <meta name="twitter:image" content="https://littleplayers.github.io/og-image.png" />
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "VideoGame", "name": "Dress Up", "url": "https://littleplayers.github.io/dress-up/", "image": "https://littleplayers.github.io/og-image.png", "description": "Dress Up — mix and match characters, hats, glasses and more to create your own friend, then save it! A creative game for kids.", "applicationCategory": "Game", "operatingSystem": "Web Browser", "genre": "creativity", "author": {"@type": "Organization", "name": "Little Players"}, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "audience": {"@type": "PeopleAudience", "suggestedMinAge": 5}, "isPartOf": {"@type": "WebSite", "name": "Little Players", "url": "https://littleplayers.github.io/"}}</script>
-<title>👗 Dress Up — Little Players</title>
+<meta name="description" content="Dress Up - design aligned outfits across style journey stages, score each look, and save your character." />
+<link rel="canonical" href="https://littleplayers.github.io/dress-up/" />
+<meta name="keywords" content="kids games, creativity game, Dress Up, free online game for kids, Little Players" />
+<meta name="author" content="gauravs19" />
+<meta name="theme-color" content="#ff5d9e" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Little Players" />
+<meta property="og:title" content="Dress Up - Little Players" />
+<meta property="og:description" content="Design aligned outfits across style journey stages, score each look, and save your character." />
+<meta property="og:url" content="https://littleplayers.github.io/dress-up/" />
+<meta property="og:image" content="https://littleplayers.github.io/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Dress Up - Little Players" />
+<meta name="twitter:description" content="Design aligned outfits across style journey stages, score each look, and save your character." />
+<meta name="twitter:image" content="https://littleplayers.github.io/og-image.png" />
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"VideoGame","name":"Dress Up","url":"https://littleplayers.github.io/dress-up/","image":"https://littleplayers.github.io/og-image.png","description":"Dress Up - design aligned outfits across style journey stages, score each look, and save your character.","applicationCategory":"Game","operatingSystem":"Web Browser","genre":"creativity","author":{"@type":"Organization","name":"Little Players"},"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"audience":{"@type":"PeopleAudience","suggestedMinAge":5},"isPartOf":{"@type":"WebSite","name":"Little Players","url":"https://littleplayers.github.io/"}}</script>
+<title>Dress Up - Little Players</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👗</text></svg>" />
 <style>
   :root{
-    --bg:#fff0f6; --card:#fff; --ink:#4a2340; --muted:#9a7088;
-    --accent:#ff5d9e; --accent2:#c93f86; --shadow:0 10px 28px rgba(190,60,130,.16); --radius:16px;
+    --bg:#fff7fb; --panel:#ffffff; --panel2:#fff0f7; --ink:#37213a; --muted:#7b5a73;
+    --accent:#ff5d9e; --accent2:#7c5cff; --good:#18a874; --line:rgba(92,45,83,.14);
+    --shadow:0 18px 42px rgba(117,50,100,.14); --radius:18px;
   }
   *{box-sizing:border-box}
+  html,body{overflow-x:hidden}
   body{
     margin:0; min-height:100vh; color:var(--ink);
-    font-family:"Baloo 2","Comic Sans MS","Trebuchet MS",system-ui,sans-serif;
+    font-family:"Baloo 2","Trebuchet MS",system-ui,sans-serif;
     background:
-      radial-gradient(circle at 12% 10%,#ffd9e9 0,transparent 42%),
-      radial-gradient(circle at 88% 8%,#ffe1ef 0,transparent 44%),
-      var(--bg);
-    display:flex; flex-direction:column; align-items:center; padding:16px;
+      linear-gradient(90deg,rgba(255,93,158,.055) 1px,transparent 1px),
+      linear-gradient(0deg,rgba(124,92,255,.045) 1px,transparent 1px),
+      linear-gradient(135deg,#fff7fb,#f8fbff 55%,#fff7ec);
+    background-size:34px 34px,34px 34px,auto;
+    padding:18px;
   }
-  header{text-align:center; margin:8px 0 4px}
-  h1{margin:0; font-size:clamp(1.7rem,6vw,2.6rem)}
-  .sub{margin:5px 0 0; color:var(--muted); font-weight:700}
-
-  .stage{background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); padding:10px; margin-top:12px}
-  canvas{display:block; border-radius:10px}
-
-  .panel{background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow);
-    padding:12px 14px; margin-top:14px; width:min(420px,94vw)}
-  .ctl{display:flex; align-items:center; justify-content:space-between; gap:10px; margin:8px 0}
-  .ctl .label{font-weight:800; color:var(--muted); width:84px}
-  .ctl .pick{flex:1; text-align:center; font-size:1.6rem; background:#fff0f6; border-radius:12px; padding:4px 0}
-  .ctl button{border:none; cursor:pointer; font-weight:900; font-size:1.1rem; width:38px; height:38px;
-    border-radius:12px; background:var(--accent); color:#fff; box-shadow:var(--shadow)}
-  .ctl button:active{transform:scale(.92)}
-
-  .actions{display:flex; gap:10px; margin-top:14px; flex-wrap:wrap; justify-content:center}
-  .actions button{border:none; cursor:pointer; font:inherit; font-weight:800; padding:11px 18px;
-    border-radius:999px; color:#fff; box-shadow:var(--shadow); transition:transform .1s}
-  .actions button:hover{transform:translateY(-2px)}
-  .b-rnd{background:#a14be8}.b-save{background:#22b07d}
-
-  .back{margin-top:14px}
-  .back a{color:var(--accent2); font-weight:800; text-decoration:none}
-  /* --- mobile/tablet responsiveness guard --- */
-  html,body{overflow-x:hidden}
-  body>*{max-width:100%}
-  @media (max-width:600px){ .sub,.help{font-size:.84rem} }
-
-/* --- Global Dark Mode Theme Overrides --- */
-[data-theme="dark"] body { background: #0f1123 !important; color: #f4f3fd !important; }
-[data-theme="dark"] .panel, [data-theme="dark"] .scoreboard, [data-theme="dark"] .stage, [data-theme="dark"] .overlay .panel, [data-theme="dark"] header { background: #181b36 !important; color: #f4f3fd !important; border-color: rgba(140,122,230,0.2) !important; }
-[data-theme="dark"] .pill { background: #202448 !important; color: #f4f3fd !important; }
-[data-theme="dark"] p, [data-theme="dark"] .sub, [data-theme="dark"] .note { color: #a098cb !important; }
-[data-theme="dark"] input, [data-theme="dark"] select { background: #1c2042 !important; color: #f4f3fd !important; border-color: rgba(140,122,230,0.3) !important; }
+  .wrap{width:min(980px,100%); margin:0 auto}
+  header{text-align:center; margin:6px auto 14px; max-width:720px}
+  h1{margin:0; font-size:clamp(2rem,7vw,3.2rem); letter-spacing:0}
+  .sub{margin:6px 0 0; color:var(--muted); font-weight:800}
+  .game-layout{display:grid; grid-template-columns:minmax(300px,420px) 1fr; gap:18px; align-items:start}
+  .stage,.panel,.journey-card{
+    background:color-mix(in srgb,var(--panel) 92%,transparent);
+    border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow)
+  }
+  .stage{padding:12px; position:sticky; top:14px}
+  canvas{display:block; width:100%; height:auto; border-radius:14px; background:#fff}
+  .journey-card{padding:14px; margin-bottom:14px}
+  .journey-top{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:8px}
+  .journey-title{font-size:1.24rem; font-weight:900}
+  .journey-step{font-size:.82rem; font-weight:900; color:#fff; background:var(--accent2); padding:5px 10px; border-radius:999px}
+  .brief{margin:0 0 10px; color:var(--muted); font-weight:800; line-height:1.35}
+  .targets{display:flex; flex-wrap:wrap; gap:7px}
+  .target{font-size:.78rem; font-weight:900; color:var(--accent2); background:#f0edff; padding:5px 9px; border-radius:999px}
+  .score-line{margin-top:10px; min-height:24px; font-weight:900; color:var(--good)}
+  .panel{padding:12px}
+  .ctl{display:grid; grid-template-columns:84px 40px minmax(86px,1fr) 40px; gap:8px; align-items:center; margin:8px 0}
+  .label{font-weight:900; color:var(--muted)}
+  .pick{min-height:40px; display:flex; align-items:center; justify-content:center; gap:8px;
+    background:var(--panel2); border:1px solid var(--line); border-radius:14px; padding:6px 8px; font-weight:900}
+  .swatch{width:16px; height:16px; border-radius:50%; border:2px solid rgba(255,255,255,.8); box-shadow:0 0 0 1px var(--line)}
+  .ctl button,.actions button{
+    border:none; cursor:pointer; font:inherit; font-weight:900; color:#fff; border-radius:14px;
+    box-shadow:0 8px 18px rgba(117,50,100,.14); transition:transform .1s ease, filter .16s ease
+  }
+  .ctl button{width:40px; height:40px; background:var(--accent)}
+  .ctl button:hover,.actions button:hover{transform:translateY(-2px); filter:saturate(1.08)}
+  .ctl button:active,.actions button:active{transform:translateY(1px) scale(.97)}
+  .actions{display:flex; gap:9px; flex-wrap:wrap; justify-content:center; margin-top:12px}
+  .actions button{padding:11px 16px}
+  .b-score{background:#7c5cff}.b-next{background:#14b8a6}.b-rnd{background:#ff8a00}.b-save{background:#22a06b}
+  .back{text-align:center; margin:16px 0 0}
+  .back a{color:var(--accent2); font-weight:900; text-decoration:none}
+  button:focus-visible,a:focus-visible{outline:3px solid #fbbf24; outline-offset:3px}
+  @media (max-width:820px){
+    body{padding:14px}
+    .game-layout{grid-template-columns:1fr}
+    .stage{position:static; width:min(420px,100%); margin:0 auto}
+    .ctl{grid-template-columns:78px 38px minmax(80px,1fr) 38px}
+    .ctl button{width:38px;height:38px}
+  }
+  @media (max-width:420px){
+    .ctl{grid-template-columns:1fr 38px minmax(78px,1.2fr) 38px}
+    .label{font-size:.9rem}
+  }
+  [data-theme="dark"] body{background:linear-gradient(90deg,rgba(169,156,255,.055) 1px,transparent 1px),linear-gradient(0deg,rgba(94,234,212,.045) 1px,transparent 1px),linear-gradient(135deg,#0f1117,#151824 55%,#11151d) !important; color:#f7f4ff !important}
+  [data-theme="dark"] .stage,[data-theme="dark"] .panel,[data-theme="dark"] .journey-card{background:#1a1d2a !important; color:#f7f4ff !important; border-color:rgba(226,232,240,.14) !important}
+  [data-theme="dark"] .pick{background:#232737; border-color:rgba(226,232,240,.14)}
+  [data-theme="dark"] .sub,[data-theme="dark"] .brief,[data-theme="dark"] .label{color:#c3bed7 !important}
+  [data-theme="dark"] .target{background:rgba(169,156,255,.18); color:#d7d0ff}
 </style>
 <script>(function(){var s=localStorage.getItem("lp_theme"),d=s==="dark"||(!s&&window.matchMedia("(prefers-color-scheme: dark)").matches);if(d)document.documentElement.setAttribute("data-theme","dark");})();</script>
 </head>
 <body>
-  <header>
-    <h1>👗 Dress Up</h1>
-    <p class="sub">Mix and match to make your own character!</p>
-  </header>
-
-  <div class="stage"><canvas id="cv" width="340" height="400"></canvas></div>
-
-  <div class="panel" id="panel"></div>
-
-  <div class="actions">
-    <button class="b-rnd" id="rnd">🎲 Surprise Me</button>
-    <button class="b-save" id="save">💾 Save</button>
+  <div class="wrap">
+    <header>
+      <h1>👗 Dress Up Studio</h1>
+      <p class="sub">Build complete looks for each stop in the style journey.</p>
+    </header>
+    <main class="game-layout">
+      <section class="stage" aria-label="Character preview">
+        <canvas id="cv" width="360" height="460"></canvas>
+      </section>
+      <section>
+        <div class="journey-card">
+          <div class="journey-top">
+            <div class="journey-title" id="journeyTitle"></div>
+            <div class="journey-step" id="journeyStep"></div>
+          </div>
+          <p class="brief" id="journeyBrief"></p>
+          <div class="targets" id="targets"></div>
+          <div class="score-line" id="scoreLine">Choose pieces, then score the look.</div>
+        </div>
+        <div class="panel" id="panel"></div>
+        <div class="actions">
+          <button class="b-score" id="score">Score Look</button>
+          <button class="b-next" id="next">Next Stage</button>
+          <button class="b-rnd" id="rnd">Surprise Me</button>
+          <button class="b-save" id="save">Save</button>
+        </div>
+      </section>
+    </main>
+    <p class="back"><a href="https://littleplayers.github.io/">← Back to Little Players</a></p>
   </div>
 
-  <p class="back"><a href="https://littleplayers.github.io/">← Back to Little Players</a></p>
-
 <script>
-  const $=id=>document.getElementById(id);
-  const cv=$("cv"), ctx=cv.getContext("2d");
-  const W=cv.width, H=cv.height;
+const $=id=>document.getElementById(id);
+const cv=$("cv"), ctx=cv.getContext("2d");
+const W=cv.width,H=cv.height;
 
-  // each layer: name, options, draw position+size. "" = nothing.
-  const LAYERS=[
-    {key:"scene", label:"Scene", opts:["🌈","⭐","🏞️","🌃","🌊","🌸"], idx:0},
-    {key:"base",  label:"Friend",opts:["🧒","👦","👧","🧑","🐻","🐱","🐰","🦄"], idx:0},
-    {key:"hat",   label:"Hat",   opts:["","🎩","🧢","👑","🎀","⛑️","🎓","🪖"], idx:3},
-    {key:"face",  label:"Glasses",opts:["","🕶️","👓","🥽","🤿"], idx:1},
-    {key:"item",  label:"Holding",opts:["","🎈","🍦","⚽","🪄","🎸","🌻","🧸"], idx:1},
-    {key:"pet",   label:"Pet",   opts:["","🐶","🐥","🐠","🐢","🦋","🐝"], idx:1},
-  ];
+const OPTIONS={
+  skin:[
+    {id:"honey",label:"Honey",color:"#d99b62"},{id:"almond",label:"Almond",color:"#f1c27d"},
+    {id:"rose",label:"Rose",color:"#f3ad91"},{id:"cocoa",label:"Cocoa",color:"#8d5524"}
+  ],
+  hair:[
+    {id:"bob",label:"Bob",color:"#3b2419"},{id:"curls",label:"Curls",color:"#2b1b15"},
+    {id:"waves",label:"Waves",color:"#7a4324"},{id:"short",label:"Short",color:"#1f2937"}
+  ],
+  top:[
+    {id:"tee",label:"Tee",color:"#2f80ed"},{id:"hoodie",label:"Hoodie",color:"#22a06b"},
+    {id:"jacket",label:"Jacket",color:"#ff8a00"},{id:"space",label:"Space",color:"#7c5cff"},
+    {id:"royal",label:"Royal",color:"#e83e8c"},{id:"rain",label:"Raincoat",color:"#f5c542"}
+  ],
+  bottom:[
+    {id:"pants",label:"Pants",color:"#263b8f"},{id:"shorts",label:"Shorts",color:"#0ea5e9"},
+    {id:"skirt",label:"Skirt",color:"#ff5d9e"},{id:"track",label:"Track",color:"#14b8a6"},
+    {id:"royal",label:"Royal",color:"#8b5cf6"}
+  ],
+  shoes:[
+    {id:"sneakers",label:"Sneakers",color:"#ffffff"},{id:"boots",label:"Boots",color:"#7c2d12"},
+    {id:"sandals",label:"Sandals",color:"#f59e0b"},{id:"space",label:"Moon Boots",color:"#c7d2fe"}
+  ],
+  hat:[
+    {id:"none",label:"None",color:"transparent"},{id:"cap",label:"Cap",color:"#2f80ed"},
+    {id:"crown",label:"Crown",color:"#fbbf24"},{id:"helmet",label:"Helmet",color:"#c7d2fe"},
+    {id:"bow",label:"Bow",color:"#ff5d9e"}
+  ],
+  extra:[
+    {id:"none",label:"None",color:"transparent"},{id:"backpack",label:"Backpack",color:"#22a06b"},
+    {id:"wand",label:"Wand",color:"#fbbf24"},{id:"mic",label:"Mic",color:"#64748b"},
+    {id:"umbrella",label:"Umbrella",color:"#38bdf8"}
+  ],
+  pet:[
+    {id:"none",label:"None",color:"transparent"},{id:"pup",label:"Pup",color:"#a16207"},
+    {id:"cat",label:"Cat",color:"#64748b"},{id:"bird",label:"Bird",color:"#22c55e"}
+  ],
+  backdrop:[
+    {id:"park",label:"Park",color:"#bbf7d0"},{id:"rain",label:"Rain",color:"#bae6fd"},
+    {id:"space",label:"Space",color:"#312e81"},{id:"palace",label:"Palace",color:"#fde68a"},
+    {id:"stage",label:"Stage",color:"#fecdd3"},{id:"beach",label:"Beach",color:"#fed7aa"}
+  ]
+};
 
-  function fit(){ const m=Math.min(340,window.innerWidth-52); cv.style.width=m+"px"; cv.style.height=(m*H/W)+"px"; }
+const CONTROLS=[
+  ["skin","Skin"],["hair","Hair"],["top","Top"],["bottom","Bottom"],["shoes","Shoes"],
+  ["hat","Hat"],["extra","Extra"],["pet","Pet"],["backdrop","Scene"]
+];
 
-  function val(k){ const l=LAYERS.find(x=>x.key===k); return l.opts[l.idx]; }
+const JOURNEY=[
+  {name:"Playground Day",brief:"Make a practical, energetic outfit for running, climbing, and laughing.",want:{top:"hoodie",bottom:"shorts",shoes:"sneakers",extra:"backpack",backdrop:"park"}},
+  {name:"Rainy Walk",brief:"Choose pieces that feel ready for puddles and cloudy weather.",want:{top:"rain",bottom:"pants",shoes:"boots",extra:"umbrella",backdrop:"rain"}},
+  {name:"Space Party",brief:"Create a confident explorer look for a moon-base celebration.",want:{top:"space",bottom:"track",shoes:"space",hat:"helmet",backdrop:"space"}},
+  {name:"Royal Parade",brief:"Style a polished celebration outfit with a little sparkle.",want:{top:"royal",bottom:"royal",hat:"crown",extra:"wand",backdrop:"palace"}},
+  {name:"Music Show",brief:"Design a bright performance look that belongs on stage.",want:{top:"jacket",bottom:"skirt",shoes:"sneakers",extra:"mic",backdrop:"stage"}},
+  {name:"Beach Picnic",brief:"Finish with a breezy, relaxed outfit for a sunny day outside.",want:{top:"tee",bottom:"shorts",shoes:"sandals",pet:"bird",backdrop:"beach"}}
+];
 
-  function draw(){
-    ctx.clearRect(0,0,W,H);
-    // scene background: tile the emoji softly
-    ctx.save();
-    ctx.globalAlpha=0.18; ctx.font="54px serif"; ctx.textAlign="center"; ctx.textBaseline="middle";
-    const sc=val("scene");
-    for(let y=40;y<H;y+=80) for(let x=40;x<W;x+=80) ctx.fillText(sc,x,y);
-    ctx.restore();
+const state={stage:0,picks:{skin:1,hair:0,top:0,bottom:0,shoes:0,hat:0,extra:0,pet:0,backdrop:0}};
 
-    ctx.textAlign="center"; ctx.textBaseline="middle";
+function opt(key){return OPTIONS[key][state.picks[key]]}
+function roundRect(x,y,w,h,r){ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fill()}
+function pick(key,step){state.picks[key]=(state.picks[key]+step+OPTIONS[key].length)%OPTIONS[key].length; render(); draw()}
 
-    // --- figure anchored to a head model so accessories line up ---
-    const cx=W/2;
-    const baseSize=180;          // base emoji size
-    const baseCY=232;            // base emoji vertical centre
-    // for a person emoji at this size, the head occupies the upper part:
-    const headTop=baseCY-baseSize*0.50;   // ~142
-    const eyeLine=baseCY-baseSize*0.24;    // ~189
+function render(){
+  const j=JOURNEY[state.stage];
+  $("journeyTitle").textContent=j.name;
+  $("journeyStep").textContent=`Stage ${state.stage+1}/${JOURNEY.length}`;
+  $("journeyBrief").textContent=j.brief;
+  $("targets").innerHTML=Object.entries(j.want).map(([k,v])=>`<span class="target">${CONTROLS.find(c=>c[0]===k)?.[1]||k}: ${OPTIONS[k].find(o=>o.id===v).label}</span>`).join("");
+  $("panel").innerHTML=CONTROLS.map(([key,label])=>{
+    const o=opt(key);
+    return `<div class="ctl">
+      <span class="label">${label}</span>
+      <button type="button" aria-label="Previous ${label}" data-k="${key}" data-s="-1">◀</button>
+      <span class="pick"><span class="swatch" style="background:${o.color}"></span>${o.label}</span>
+      <button type="button" aria-label="Next ${label}" data-k="${key}" data-s="1">▶</button>
+    </div>`;
+  }).join("");
+  $("panel").querySelectorAll("button").forEach(b=>b.onclick=()=>pick(b.dataset.k,+b.dataset.s));
+}
 
-    // base
-    ctx.font=baseSize+"px serif"; ctx.fillText(val("base"), cx, baseCY);
-    // hat — bottom of the hat rests just over the top of the head
-    if(val("hat")){ ctx.font="80px serif"; ctx.fillText(val("hat"), cx, headTop+4); }
-    // glasses — centred on the eye line
-    if(val("face")){ ctx.font="54px serif"; ctx.fillText(val("face"), cx, eyeLine); }
-    // item held (lower right, by the hand)
-    if(val("item")){ ctx.font="70px serif"; ctx.fillText(val("item"), W-62, baseCY+74); }
-    // pet (lower left, beside the feet)
-    if(val("pet")){ ctx.font="60px serif"; ctx.fillText(val("pet"), 62, baseCY+100); }
-  }
+function drawBackdrop(){
+  const b=opt("backdrop");
+  const g=ctx.createLinearGradient(0,0,W,H);
+  if(b.id==="space"){g.addColorStop(0,"#17153d");g.addColorStop(1,"#111827")}
+  else {g.addColorStop(0,b.color);g.addColorStop(1,"#ffffff")}
+  ctx.fillStyle=g; roundRect(0,0,W,H,22);
+  ctx.save();
+  ctx.globalAlpha=b.id==="space"?.45:.18;
+  ctx.fillStyle=b.id==="space"?"#fff":"#7c5cff";
+  for(let i=0;i<28;i++){const x=(i*53)%W,y=34+((i*89)%320);ctx.beginPath();ctx.arc(x,y,(i%3)+1.8,0,Math.PI*2);ctx.fill()}
+  ctx.restore();
+  ctx.fillStyle="rgba(0,0,0,.12)"; ctx.beginPath(); ctx.ellipse(180,405,78,18,0,0,Math.PI*2); ctx.fill();
+}
 
-  function buildPanel(){
-    $("panel").innerHTML="";
-    LAYERS.forEach(l=>{
-      const row=document.createElement("div"); row.className="ctl";
-      row.innerHTML=`<span class="label">${l.label}</span>
-        <button data-k="${l.key}" data-s="-1">◀</button>
-        <span class="pick" id="pick-${l.key}">${l.opts[l.idx]||"—"}</span>
-        <button data-k="${l.key}" data-s="1">▶</button>`;
-      $("panel").appendChild(row);
-    });
-    $("panel").querySelectorAll("button").forEach(b=>{
-      b.onclick=()=>{ const l=LAYERS.find(x=>x.key===b.dataset.k); const n=l.opts.length;
-        l.idx=(l.idx + (+b.dataset.s) + n)%n;
-        $("pick-"+l.key).textContent=l.opts[l.idx]||"—"; draw(); };
-    });
-  }
+function drawAvatar(){
+  const skin=opt("skin").color, hair=opt("hair"), top=opt("top"), bottom=opt("bottom"), shoes=opt("shoes"), hat=opt("hat"), extra=opt("extra");
+  const cx=180;
+  ctx.lineWidth=5; ctx.strokeStyle="rgba(55,33,58,.18)";
+  ctx.fillStyle=skin; ctx.beginPath(); ctx.arc(cx,118,42,0,Math.PI*2); ctx.fill(); ctx.stroke();
+  ctx.fillStyle=skin; roundRect(cx-15,154,30,28,10);
+  ctx.fillStyle=hair.color;
+  if(hair.id==="bob"){ctx.beginPath();ctx.arc(cx,112,48,Math.PI*.95,Math.PI*2.05);ctx.fill(); roundRect(cx-44,111,24,48,12); roundRect(cx+20,111,24,48,12)}
+  if(hair.id==="curls"){for(let i=-4;i<=4;i++){ctx.beginPath();ctx.arc(cx+i*12,84+Math.abs(i)*3,16,0,Math.PI*2);ctx.fill()}}
+  if(hair.id==="waves"){ctx.beginPath();ctx.ellipse(cx,105,52,34,0,Math.PI,Math.PI*2);ctx.fill(); roundRect(cx-48,108,18,66,10)}
+  if(hair.id==="short"){ctx.beginPath();ctx.ellipse(cx,91,44,24,0,Math.PI,Math.PI*2);ctx.fill()}
+  ctx.fillStyle="#1f2937"; ctx.beginPath();ctx.arc(cx-14,118,3,0,Math.PI*2);ctx.arc(cx+14,118,3,0,Math.PI*2);ctx.fill();
+  ctx.strokeStyle="#9f5a50";ctx.lineWidth=3;ctx.beginPath();ctx.arc(cx,132,14,0,Math.PI);ctx.stroke();
+  ctx.fillStyle=top.color; ctx.beginPath();ctx.moveTo(cx-56,180);ctx.quadraticCurveTo(cx,154,cx+56,180);ctx.lineTo(cx+43,278);ctx.lineTo(cx-43,278);ctx.closePath();ctx.fill();ctx.stroke();
+  ctx.fillStyle=colorMix(top.color,"#ffffff",.18); roundRect(cx-28,198,56,42,12);
+  ctx.strokeStyle=top.color;ctx.lineWidth=16;ctx.beginPath();ctx.moveTo(cx-49,190);ctx.lineTo(cx-82,250);ctx.moveTo(cx+49,190);ctx.lineTo(cx+82,250);ctx.stroke();
+  ctx.fillStyle=skin;ctx.beginPath();ctx.arc(cx-84,254,12,0,Math.PI*2);ctx.arc(cx+84,254,12,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle=bottom.color;
+  if(bottom.id==="skirt"||bottom.id==="royal"){ctx.beginPath();ctx.moveTo(cx-42,278);ctx.lineTo(cx+42,278);ctx.lineTo(cx+70,342);ctx.lineTo(cx-70,342);ctx.closePath();ctx.fill();ctx.stroke()}
+  else {roundRect(cx-43,278,36,86,14);roundRect(cx+7,278,36,86,14)}
+  ctx.fillStyle=skin; roundRect(cx-40,350,30,36,12); roundRect(cx+10,350,30,36,12);
+  ctx.fillStyle=shoes.color; roundRect(cx-54,382,48,18,9); roundRect(cx+6,382,48,18,9);
+  if(hat.id==="cap"){ctx.fillStyle=hat.color;roundRect(cx-38,70,76,26,13);roundRect(cx+20,88,44,10,5)}
+  if(hat.id==="crown"){ctx.fillStyle=hat.color;ctx.beginPath();ctx.moveTo(cx-38,77);ctx.lineTo(cx-20,48);ctx.lineTo(cx,76);ctx.lineTo(cx+20,48);ctx.lineTo(cx+38,77);ctx.closePath();ctx.fill()}
+  if(hat.id==="helmet"){ctx.strokeStyle=hat.color;ctx.lineWidth=9;ctx.beginPath();ctx.arc(cx,114,56,Math.PI*1.08,Math.PI*1.92);ctx.stroke()}
+  if(hat.id==="bow"){ctx.fillStyle=hat.color;ctx.beginPath();ctx.ellipse(cx-20,76,18,12,-.3,0,Math.PI*2);ctx.ellipse(cx+20,76,18,12,.3,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(cx,76,8,0,Math.PI*2);ctx.fill()}
+  drawExtra(extra,cx); drawPet(opt("pet"));
+}
 
-  $("rnd").onclick=()=>{
-    LAYERS.forEach(l=>{ l.idx=Math.floor(Math.random()*l.opts.length); $("pick-"+l.key).textContent=l.opts[l.idx]||"—"; });
-    draw();
-  };
-  $("save").onclick=()=>{
-    const out=document.createElement("canvas"); out.width=W; out.height=H;
-    const o=out.getContext("2d"); o.fillStyle="#fff"; o.fillRect(0,0,W,H); o.drawImage(cv,0,0);
-    const a=document.createElement("a"); a.download="my-character.png"; a.href=out.toDataURL("image/png"); a.click();
-  };
-
-  fit(); buildPanel(); draw();
-  window.addEventListener("resize",fit);
+function colorMix(a,b,t){const pa=parseInt(a.slice(1),16),pb=parseInt(b.slice(1),16);const ar=[pa>>16,pa>>8&255,pa&255],br=[pb>>16,pb>>8&255,pb&255];return `rgb(${ar.map((v,i)=>Math.round(v*(1-t)+br[i]*t)).join(",")})`}
+function drawExtra(extra,cx){
+  if(extra.id==="backpack"){ctx.fillStyle=extra.color;roundRect(cx+54,205,42,72,16);ctx.strokeStyle="rgba(0,0,0,.18)";ctx.stroke()}
+  if(extra.id==="wand"){ctx.strokeStyle="#7c2d12";ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(cx+82,250);ctx.lineTo(cx+122,198);ctx.stroke();ctx.fillStyle=extra.color;ctx.font="28px serif";ctx.fillText("★",cx+126,190)}
+  if(extra.id==="mic"){ctx.fillStyle=extra.color;ctx.beginPath();ctx.arc(cx+102,236,13,0,Math.PI*2);ctx.fill();ctx.strokeStyle=extra.color;ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(cx+94,248);ctx.lineTo(cx+76,278);ctx.stroke()}
+  if(extra.id==="umbrella"){ctx.fillStyle=extra.color;ctx.beginPath();ctx.arc(cx+86,220,42,Math.PI,Math.PI*2);ctx.closePath();ctx.fill();ctx.strokeStyle="#334155";ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(cx+86,220);ctx.lineTo(cx+86,286);ctx.stroke()}
+}
+function drawPet(p){
+  if(p.id==="none")return; const x=78,y=366; ctx.fillStyle=p.color;
+  if(p.id==="bird"){ctx.beginPath();ctx.ellipse(x,y,24,16,0,0,Math.PI*2);ctx.fill();ctx.fillStyle="#fbbf24";ctx.beginPath();ctx.moveTo(x+21,y);ctx.lineTo(x+38,y-7);ctx.lineTo(x+38,y+7);ctx.fill()}
+  else {ctx.beginPath();ctx.arc(x,y,24,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(x-13,y-22,8,0,Math.PI*2);ctx.arc(x+13,y-22,8,0,Math.PI*2);ctx.fill();ctx.fillStyle="#fff";ctx.beginPath();ctx.arc(x-8,y-3,3,0,Math.PI*2);ctx.arc(x+8,y-3,3,0,Math.PI*2);ctx.fill()}
+}
+function draw(){ctx.clearRect(0,0,W,H);drawBackdrop();drawAvatar()}
+function scoreLook(){
+  const want=JOURNEY[state.stage].want; let hit=0,total=Object.keys(want).length;
+  Object.entries(want).forEach(([k,v])=>{if(opt(k).id===v)hit++});
+  const pct=Math.round(hit/total*100);
+  $("scoreLine").textContent=pct===100?"Perfect brief match. Ready for the next stage.":`${pct}% match - ${hit}/${total} brief pieces. Keep styling.`;
+}
+function nextStage(){state.stage=(state.stage+1)%JOURNEY.length;$("scoreLine").textContent="New brief loaded. Build the look.";render();draw()}
+function surprise(){Object.keys(state.picks).forEach(k=>state.picks[k]=Math.floor(Math.random()*OPTIONS[k].length));$("scoreLine").textContent="Fresh look generated. Score it against the brief.";render();draw()}
+function save(){const a=document.createElement("a");a.download=`dress-up-${JOURNEY[state.stage].name.toLowerCase().replace(/\s+/g,"-")}.png`;a.href=cv.toDataURL("image/png");a.click()}
+$("score").onclick=scoreLook;$("next").onclick=nextStage;$("rnd").onclick=surprise;$("save").onclick=save;
+render();draw();
 </script>
+<script src="../game-shell.js"></script>
 </body>
 </html>
