@@ -236,15 +236,14 @@
         // Right Wing Cell
         const rCell = document.createElement("div");
         rCell.className = "cell";
+        rCell.dataset.x = x;
+        rCell.dataset.y = y;
         rCell.style.background = COLORS[rightGrid[y][x]].hex;
         
         // Interaction
-        rCell.onpointerdown = (e) => {
-          e.preventDefault(); // prevent scroll
-          paintCell(x, y, rCell);
-        };
+        rCell.onclick = () => paintCell(x, y, rCell, false);
         rCell.onpointerenter = (e) => {
-          if (e.buttons > 0) paintCell(x, y, rCell);
+          if (e.pointerType === 'mouse' && e.buttons > 0) paintCell(x, y, rCell, true);
         };
         
         rWrap.appendChild(rCell);
@@ -252,12 +251,28 @@
     }
   }
 
-  function paintCell(x, y, el) {
-    // If painting same color, erase it (set to 0)
-    if(rightGrid[y][x] === activeColor) {
-      rightGrid[y][x] = 0;
-    } else {
+  $("wingRight").addEventListener('touchmove', (e) => {
+    e.preventDefault();
+    const touch = e.touches[0];
+    const el = document.elementFromPoint(touch.clientX, touch.clientY);
+    if(el && el.classList.contains('cell') && el.parentElement === $("wingRight")) {
+      const x = parseInt(el.dataset.x);
+      const y = parseInt(el.dataset.y);
+      paintCell(x, y, el, true);
+    }
+  }, {passive: false});
+
+  function paintCell(x, y, el, isDrag) {
+    if (isDrag) {
+      if (rightGrid[y][x] === activeColor) return; // Prevent spamming / erasing while dragging
       rightGrid[y][x] = activeColor;
+    } else {
+      // Tap toggles it on or off (eraser)
+      if (rightGrid[y][x] === activeColor) {
+        rightGrid[y][x] = 0;
+      } else {
+        rightGrid[y][x] = activeColor;
+      }
     }
     el.style.background = COLORS[rightGrid[y][x]].hex;
     SFX.pop();
