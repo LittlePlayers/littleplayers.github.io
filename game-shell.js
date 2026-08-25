@@ -41,6 +41,7 @@
       .lp-shell-toggle,
       .lp-home-fab,
       .lp-journey-fab,
+      .lp-wide-fab,
       .lp-journey-panel {
         position: fixed;
         z-index: 1000;
@@ -67,6 +68,13 @@
       .lp-home-fab { top: calc(max(12px, env(safe-area-inset-top)) + 48px); padding: 0 15px; }
       .lp-journey-fab {
         left: max(12px, env(safe-area-inset-left));
+        top: max(12px, env(safe-area-inset-top));
+        border-radius: 999px;
+        padding: 0 16px;
+        cursor: pointer;
+      }
+      .lp-wide-fab {
+        right: max(12px, env(safe-area-inset-right));
         bottom: max(14px, env(safe-area-inset-bottom));
         border-radius: 999px;
         padding: 0 16px;
@@ -74,7 +82,7 @@
       }
       .lp-journey-panel {
         left: max(12px, env(safe-area-inset-left));
-        bottom: calc(max(14px, env(safe-area-inset-bottom)) + 52px);
+        top: calc(max(12px, env(safe-area-inset-top)) + 52px);
         width: min(360px, calc(100vw - 24px));
         display: none;
         align-items: stretch;
@@ -103,6 +111,7 @@
       .lp-shell-toggle:hover,
       .lp-home-fab:hover,
       .lp-journey-fab:hover,
+      .lp-wide-fab:hover,
       .lp-journey-link:hover {
         border-color: color-mix(in srgb, var(--lp-shell-accent) 48%, var(--lp-shell-border));
         transform: translateY(-1px);
@@ -110,6 +119,7 @@
       .lp-shell-toggle:focus-visible,
       .lp-home-fab:focus-visible,
       .lp-journey-fab:focus-visible,
+      .lp-wide-fab:focus-visible,
       .lp-journey-link:focus-visible,
       button:focus-visible,
       a:focus-visible,
@@ -120,6 +130,43 @@
         outline-offset: 3px !important;
       }
       button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
+      .back { display: none !important; }
+      body.lp-wide-mode {
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+      body.lp-wide-mode canvas {
+        width: min(100%, calc((100vh - 138px) * 2.15)) !important;
+        max-width: calc(100vw - 18px) !important;
+        max-height: calc(100vh - 138px) !important;
+        height: auto !important;
+        object-fit: contain;
+      }
+      .frame:fullscreen,
+      .stage:fullscreen,
+      .game:fullscreen,
+      canvas:fullscreen {
+        width: 100vw !important;
+        height: 100vh !important;
+        max-width: none !important;
+        max-height: none !important;
+        margin: 0 !important;
+        border-radius: 0 !important;
+        background: var(--lp-shell-bg) !important;
+        display: grid !important;
+        place-items: center !important;
+        padding: clamp(8px, 2vw, 18px) !important;
+      }
+      .frame:fullscreen canvas,
+      .stage:fullscreen canvas,
+      .game:fullscreen canvas,
+      canvas:fullscreen {
+        width: min(100vw, calc(100vh * 2.35)) !important;
+        max-width: 100vw !important;
+        max-height: 100vh !important;
+        height: auto !important;
+        object-fit: contain;
+      }
       [data-theme="dark"] body {
         background: linear-gradient(135deg, #0f1117, #151824 54%, #10151a) !important;
         color: var(--lp-shell-ink) !important;
@@ -127,6 +174,7 @@
       [data-theme="dark"] .lp-shell-toggle,
       [data-theme="dark"] .lp-home-fab,
       [data-theme="dark"] .lp-journey-fab,
+      [data-theme="dark"] .lp-wide-fab,
       [data-theme="dark"] .lp-journey-panel {
         background: color-mix(in srgb, var(--lp-shell-surface) 92%, transparent);
         color: var(--lp-shell-ink);
@@ -230,13 +278,29 @@
         .lp-shell-toggle { min-width: 40px; width: 40px; padding: 0; font-size: 0; }
         .lp-home-fab { min-width: 40px; width: 40px; padding: 0; font-size: 0; }
         .lp-journey-fab { min-width: 44px; height: 44px; padding: 0 12px; font-size: 0; }
+        .lp-wide-fab { min-width: 44px; height: 44px; padding: 0 12px; font-size: 0; }
         .lp-shell-toggle::before,
         .lp-home-fab::before,
-        .lp-journey-fab::before { font-size: 16px; line-height: 1; }
+        .lp-journey-fab::before,
+        .lp-wide-fab::before { font-size: 16px; line-height: 1; }
         .lp-shell-toggle[aria-pressed="true"]::before { content: "☀️"; }
         .lp-shell-toggle[aria-pressed="false"]::before { content: "🌙"; }
         .lp-home-fab::before { content: "🏠"; }
         .lp-journey-fab::before { content: "🧭"; }
+        .lp-wide-fab::before { content: "↔"; }
+      }
+      @media (orientation: landscape) and (max-height: 560px) {
+        .lp-shell-toggle,
+        .lp-home-fab,
+        .lp-journey-fab,
+        .lp-wide-fab {
+          min-height: 36px;
+          box-shadow: 0 6px 18px rgba(31, 23, 71, .16);
+        }
+        .lp-home-fab { top: calc(max(8px, env(safe-area-inset-top)) + 42px); }
+        .lp-shell-toggle { top: max(8px, env(safe-area-inset-top)); }
+        .lp-journey-fab { top: max(8px, env(safe-area-inset-top)); }
+        .lp-journey-panel { top: calc(max(8px, env(safe-area-inset-top)) + 44px); }
       }
       @media (prefers-reduced-motion: reduce) {
         *, *::before, *::after {
@@ -282,11 +346,12 @@
       const home = document.createElement("a");
       home.className = "lp-home-fab";
       home.href = "../";
-      home.textContent = "🏠 Home";
-      home.setAttribute("aria-label", "Back to Little Players home");
+      home.textContent = "🏠 Game hub";
+      home.setAttribute("aria-label", "Back to game hub");
       document.body.appendChild(home);
     }
     if (!onHome && !document.querySelector(".lp-journey-fab")) addJourney();
+    if (!onHome && !document.querySelector(".lp-wide-fab")) addWideMode();
   }
 
   function gameSlug() {
@@ -346,6 +411,50 @@
     const prev = games[(idx - 1 + games.length) % games.length] || current;
     const pct = games.length ? Math.round((new Set(seen).size / games.length) * 100) : 0;
     panel.innerHTML = `<p class="lp-journey-title">${current.title}</p><p class="lp-journey-copy">Journey progress: ${new Set(seen).size}/${games.length} games explored.</p><div class="lp-journey-progress" style="--lp-progress:${pct}%"><span></span></div><div class="lp-journey-actions"><a class="lp-journey-link" href="${absoluteGameUrl(prev.slug)}">Previous</a><a class="lp-journey-link" href="${absoluteGameUrl(next.slug)}">Next game</a><a class="lp-journey-link" href="../">Game hub</a><a class="lp-journey-link" href="${absoluteGameUrl(slug)}">Restart</a></div>`;
+  }
+
+  function addWideMode() {
+    const canvas = Array.from(document.querySelectorAll("canvas")).find((item) => {
+      const name = `${item.id || ""} ${item.className || ""}`;
+      const style = getComputedStyle(item);
+      const box = item.getBoundingClientRect();
+      return !/(confetti|particle|spark|fx)/i.test(name)
+        && style.position !== "fixed"
+        && box.width >= 120
+        && box.height >= 100;
+    });
+    if (!canvas) return;
+    const isWideGame = (canvas.width || canvas.clientWidth || 0) >= (canvas.height || canvas.clientHeight || 0);
+    if (!isWideGame) return;
+    const btn = document.createElement("button");
+    btn.className = "lp-wide-fab";
+    btn.type = "button";
+    btn.textContent = "↔ Widescreen";
+    btn.setAttribute("aria-label", "Toggle widescreen playfield");
+    btn.setAttribute("aria-pressed", "false");
+    btn.addEventListener("click", () => toggleWideMode(btn));
+    document.body.appendChild(btn);
+    document.addEventListener("fullscreenchange", () => {
+      const active = Boolean(document.fullscreenElement) || document.body.classList.contains("lp-wide-mode");
+      updateWideButton(btn, active);
+    });
+  }
+
+  async function toggleWideMode(btn) {
+    const active = document.body.classList.toggle("lp-wide-mode");
+    updateWideButton(btn, active);
+    const target = document.querySelector(".frame, .stage, .game, canvas");
+    try {
+      if (active && target && target.requestFullscreen && !document.fullscreenElement) await target.requestFullscreen();
+      if (!active && document.fullscreenElement && document.exitFullscreen) await document.exitFullscreen();
+    } catch {}
+    window.dispatchEvent(new Event("resize"));
+  }
+
+  function updateWideButton(btn, active) {
+    btn.textContent = active ? "↙ Exit wide" : "↔ Widescreen";
+    btn.setAttribute("aria-pressed", String(active));
+    btn.setAttribute("title", active ? "Exit widescreen playfield" : "Open a larger playfield");
   }
 
   const meta = document.querySelector('meta[name="theme-color"]');

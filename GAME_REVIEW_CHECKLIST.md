@@ -13,12 +13,13 @@ Use this checklist before publishing new games or changing shared UX. The goal i
 
 - Route: page returns `200` locally and from the intended deployed path.
 - Identity: title, game goal, category, and icon match the homepage card.
-- Shell: dark toggle, home link, and Journey drawer appear consistently.
+- Shell: dark toggle, one visible `Game hub` return, and Journey drawer appear consistently.
 - First action: player can understand the next action within 5 seconds.
 - Feedback: every tap/click has visible response; success and failure explain what changed.
 - Journey: stage/level/round progress is visible and next/restart are available.
 - Controls: every core action has a touch-first control; keyboard support is optional and never required.
 - Mobile copy: visible instructions must lead with tap, swipe, drag, sliders, or on-screen buttons; keyboard shortcuts belong only as optional helpers.
+- Orientation: wide canvas games offer an optional widescreen playfield; portrait users are never forced to use keyboard controls.
 - Accessibility: game is playable without color alone; audio games have visible pattern feedback; drag-heavy games have click/tap alternatives.
 - Performance: no console errors, no blank canvas/SVG, no horizontal overflow at 390px mobile and 1280px desktop.
 - Theme: dark mode does not create low-contrast text, invisible borders, or mismatched white panels.
